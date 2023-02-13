@@ -8,11 +8,11 @@
                 <form action="/listings/<%=listing._id%>?_method=PUT" method="post">
                     <div class="mb-3">
                         <label class="form-label" for="name">Product name</label>
-                        <input class="form-control" type="text" name="name" id="name" value="<%= listing.listingName %> " required>
+                        <input class="form-control" type="text" name="listingName" id="listingName" value="<%= listing.listingName %> " required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="location">location</label>
-                        <input class="form-control" type="text" name="location" id="location" required>
+                        <input class="form-control" type="text" name="location" id="location" value="<%= listing.location %>" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="description">Description</label>

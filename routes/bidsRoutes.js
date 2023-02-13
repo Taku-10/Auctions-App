@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 const Bid = require("../models/bid");
 const Listing = require("../models/listing");
 

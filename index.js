@@ -37,45 +37,7 @@ app.use("/listings/:id/bids", bidRoutes);
 app.get("/", (req, res) => {
     res.render("home.ejs");
 });
-
-
-  
+ 
 app.listen(3000, () => {
     console.log("Tiripo pa port 3000");
 });
-
-/*
-// Working version
-app.post("/listings/:id/bids", async (req, res) => {
-    const listing = await Listing.findById(req.params.id);
-    const startingPrice = listing.price;
-    const currentBids = await Bid.find({ _id: { $in: listing.bids } });
-    const currentMaxBid = currentBids.reduce((max, bid) => (bid.bidAmount > max ? bid.bidAmount : max), 0);
-  
-    if (req.body.bidAmount <= currentMaxBid) {
-      return res.status(400).send("Bid amount must be higher than current highest bid.");
-    }
-  
-    const bid = new Bid(req.body);
-    listing.bids.push(bid);
-    await bid.save();
-    await listing.save();
-    res.redirect("/listings");
-  });
-  
-*/
-
-// app.post("/listings/:id/bids", async (req, res) => {
-//     const listing = await Listing.findById(req.params.id);
-//     const startingPrice = listing.price;
-//     const currentHighestBid = listing.bids.reduce((prev, curr) => {
-//       return (prev.bidAmount > curr.bidAmount) ? prev : curr;
-//     }, { bidAmount: 0 });
-
-//     if (req.body.bidAmount > currentHighestBid.bidAmount) {
-//         const bid = new Bid(req.body);
-//         listing.bids.push(bid);
-//         await bid.save();
-//         await listing.save();
-//         res.redirect("/listings");
-
