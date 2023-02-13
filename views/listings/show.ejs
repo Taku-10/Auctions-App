@@ -1,0 +1,116 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="row">
+  <div class="col-6 offset-3">
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="h1 card-heading"><%= listing.listingName %></div>
+        <img src="<%= listing.image%> " alt="<%= listing.listingName %>" class="img-fluid card-img-top">
+        <p class="card-text"><%= listing.description %></p>
+        <div class="card-text h6 text-muted"><%= listing.location%></div>
+        <h6 class="card-text">Seller: <%= listing.owner %> </h6>
+        <h6 class="card-text">Starting Bid: <%= listing.price %> </h6>
+        <div class="card-text" id="countdown"></div>
+
+        <!-- Place bid for a listing -->
+        
+        <form action="/listings/<%=listing._id%>/bids" class="needs-validation" method="post" novalidate id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
+          
+          <div class="mb-3">
+              <label class="form-label" for="owner">Bidder name</label>
+              <input required class="form-control" type="text" name="bidderName" id="bidderName" >
+          </div>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+          <div class="invalid-feedback">
+            Please choose a valid name.
+          </div>
+          
+          <div class="mb-3">
+              <label class="form-label" for="listingName" >Bidder Amount</label>
+              <input class="form-control" type="text" name="bidAmount" id="bidAmount" required>
+          </div>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+          <div class="invalid-feedback">
+            Please choose a valid amount.
+          </div>
+          <Button class="btn btn-success mr-3">Place Bid</Button>
+      </form>
+
+      <% if (endTime) { %>
+        <% if (new Date() >= new Date(endTime)) { %>
+          <div class="summary">
+            <h1>Auction Summary</h1>
+            <h6 class="card-text">Opened: <%= listing.startTime %> </h6>
+            <h6 class="card-text">Closed: <%= listing.endTime %> </h6>
+            <h6 class="card-text">bidders: <%= numBidders %> </h6>
+            <%if (listing.bids.length >= 1) {%>
+              <h6 class="card-text">bids: <%= listing.bids.length %> </h6>
+            <%}%>
+            <% let highestBid = 0; %>
+            <% for (let bid of listing.bids) { %>
+              <% if (bid.bidAmount > highestBid) { %>
+                <% highestBid = bid.bidAmount; %>
+              <% } %>
+            <% } %>
+            <% if (highestBid > 0) { %>
+              <h6 class="card-text">Winning bid: $<%= highestBid %> </h6>
+            <% } %>
+            <p class="card-text winner">Winner: 
+              <% let winner = ''; %>
+              <% for (let bid of listing.bids) { %>
+                <% if (bid.bidAmount === highestBid) { %>
+                  <% winner = bid.bidderName %>
+                  <% break; %>
+                <% } %>
+              <% } %>
+              <%= winner %>
+            </p>
+          </div>
+        <% } %>
+      <% } %>
+      
+
+      <!-- Delete a listing. This will be moved to the My listings page -->
+        <form action="/listings/<%= listing._id%>?_method=Delete" method="post">
+          <Button class="btn btn-sm btn-danger">Delete</Button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<% if (endTime) { %>
+  <script>
+    const endTime = new Date("<%= endTime %>");
+    const countdown = document.getElementById("countdown");
+
+    function updateCountdown() {
+      const now = new Date();
+      const remainingTime = endTime - now;
+
+      if (remainingTime <= 0) {
+        countdown.innerHTML = "Auction has ended.";
+        return;
+      }
+
+      const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+      countdown.innerHTML = `Auction ends in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateCountdown, 1000);
+  </script>
+<% } %>
+
+
+
+
+ 

@@ -1,0 +1,37 @@
+<% layout("layouts/boilerplate") %>
+
+<div class="d-flex flex-wrap align-items-start container">
+  <% for (let listing of listings) { %>
+    <% let endTime = new Date(listing.endTime); %>
+    <div class="col-12 col-md-4 col-lg-3 p-2">
+      <div class="card mb-3 mt-3 <%= endTime < new Date() ? 'auction-ended' : '' %>">
+        <div class="card-body">
+          <h5 class="card-title"><%= listing.listingName %></h5>
+          <a href="/listings/<%=listing._id%>">
+            <img src="<%=listing.image%>" alt="A picture of <%= listing.listingName %>" class="img-fluid">
+          </a>
+          <h6 class="card-text">Seller: <%= listing.owner %></h6>
+
+          <% let highestBid = 0; %>
+          <% if (listing.bids.length === 0) { %>
+            <h6 class="card-text">No bids yet</h6>
+          <% } else { %>
+            <% for (let bid of listing.bids) { %>
+              <% if (bid.bidAmount > highestBid) { %>
+                <% highestBid = bid.bidAmount; %>
+              <% } %>
+            <% } %>
+            <% if (highestBid > 0) { %>
+              <h6 class="card-text">Highest bid: $<%= highestBid %></h6>
+            <% } %>
+          <% } %>
+          
+          <h6 class="card-text text-muted"><%= listing.location %></h6>
+          <a href="#" class="btn btn-info btn-md card-link d-block <%= endTime < new Date() ? 'disabled' : '' %>">Add To Watchlist</a>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
+</div>
+    

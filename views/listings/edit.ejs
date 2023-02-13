@@ -1,0 +1,45 @@
+<% layout("layouts/boilerplate") %> 
+
+<div class="row">
+    <h1 class="text-center">Edit your listing</h1>
+    <div class="col-6 offset-3">
+        <div class="card mb-3">
+            <div class="card-body">
+                <form action="/listings/<%=listing._id%>?_method=PUT" method="post">
+                    <div class="mb-3">
+                        <label class="form-label" for="name">Product name</label>
+                        <input class="form-control" type="text" name="name" id="name" value="<%= listing.listingName %> " required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="location">location</label>
+                        <input class="form-control" type="text" name="location" id="location" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="description">Description</label>
+                        <textarea class="form-control" name="description" id="description" cols="10" rows="4" required><%= listing.description %> </textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="image">Image URL</label>
+                        <input class="form-control" type="text" name="image" id="image" value="<%= listing.image %> " required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="price">Price</label>
+                        <input class="form-control" type="text" name="price" id="price" value="<%= listing.price %> " required>
+                    </div>
+                
+                    <div class="mb-3">
+                        <label class="form-label" for="condition">Condition</label>
+                        <select class="form-select" name="condition" id="condition">
+                            <option value="New" <%= listing.condition === "New" ? "selected" : "" %>  >New</option>
+                            <option value="Refurbished" <%= listing.condition === "Refurbished" ? "selected" : "" %>>Refurbished</option>
+                            <option value="Old" <%= listing.condition === "Old" ? "selected" : "" %>>Old</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-warning">Update Listing</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+

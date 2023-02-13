@@ -1,0 +1,104 @@
+<% layout("layouts/boilerplate") %>
+<div class="container"> 
+</div>
+<div class="row">
+    <h1 class="text-center">Add a listing</h1>
+    <div class="col-6 offset-3">
+        <div class="card mb-4">
+            <div class="card-body">
+                <form action="/listings" class="needs-validation" method="post" novalidate>
+                    <div class="mb-3">
+                        <input type="hidden" name="startTime" value="<%= startTime %>">
+                    </div>
+                
+                    <div class="mb-3">
+                        <input type="hidden" name="endTime" value="<%= endTime %>">
+                    </div>
+                
+                    <div class="mb-3">
+                        <label class="form-label" for="owner">Owner</label>
+                        <input class="form-control" type="text" name="owner" id="owner" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                          </div>
+                          <div class="invalid-feedback">
+                            Please choose an owner.
+                          </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label" for="listingName">Listing name</label>
+                        <input class="form-control" type="text" name="listingName" id="listingName" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                          </div>
+                          <div class="invalid-feedback">
+                            Please choose a listing name.
+                          </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="location">location</label>
+                        <input class="form-control" type="text" name="location" id="location" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                          </div>
+                          <div class="invalid-feedback">
+                            Please choose a location.
+                          </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="description">Description</label>
+                        <textarea class="form-control" name="description" id="description" cols="10" rows="4" required></textarea>
+                        <div class="valid-feedback">
+                            Looks good!
+                          </div>
+                          <div class="invalid-feedback">
+                            Please choose a description.
+                          </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="image">Image URL</label>
+                        <input class="form-control" type="text" name="image" id="image" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                          </div>
+                          <div class="invalid-feedback">
+                            Please choose an image URL.
+                          </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="price">Price</label>
+                        <input class="form-control" type="text" name="price" id="price" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                          </div>
+                          <div class="invalid-feedback">
+                            Please choose a price.
+                          </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="condition">Condition</label>
+                        <select class="form-select" name="condition" id="condition">
+                            <option disabled selected>Choose...</option>
+                            <option value="New">New</option>
+                            <option value="Refurbished">Refurbished</option>
+                            <option value="Old">Old</option>
+                        </select>
+                        <div class="valid-feedback">
+                            Looks good!
+                          </div>
+                    </div>
+                    <button class="btn btn-success">Add Listing</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
