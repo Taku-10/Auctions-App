@@ -29,6 +29,7 @@ router.post("/", async(req, res) => {
   const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000);
   const listing = new Listing({startTime: startTime, listingName: req.body.listingName, description: req.body.description, image: req.body.image, price: req.body.price, condition: req.body.condition, owner: req.body.owner, endTime: endTime, location: req.body.location });
   await listing.save();
+  req.flash("success", "Successfuly posted your listing!")
   res.redirect("/listings");
 });
 

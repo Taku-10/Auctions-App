@@ -11,9 +11,10 @@
 <!-- ADD CLASS TO THE BODY!! -->
 <!-- class="d-flex flex-column vh-100" -->
 
-<body class="d-flex flex-column vh-100 "> 
-    <main >
-      <%-include("../partials/navbar.ejs") %>  
+<body class="d-flex flex-column vh-100 ">
+  <%-include("../partials/navbar.ejs") %>   
+    <main class="container mt-5">
+      <%= success %>      
         <%- body %> 
     </main>
       <%-include("../partials/footer.ejs") %> 

@@ -6,7 +6,8 @@ const Bid = require("./models/bid");
 const methodOverride = require("method-override");
 const listingRoutes = require("./routes/listingsRoutes");
 const bidRoutes = require("./routes/bidsRoutes");
-
+const session = require("express-session");
+const flash = require("connect-flash");
 // const Campground = require("./models/campground");
 const ejsMate = require("ejs-mate");
 // const catchAsync = require("./Utilities/catchAsync");
@@ -34,6 +35,27 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/listings", listingRoutes);
 app.use("/listings/:id/bids", bidRoutes);
+
+app.use(session({
+  secret: 'thisshouldbeabettersecret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7
+  }
+  
+}))
+
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    next();
+})
+
 app.get("/", (req, res) => {
     res.render("home.ejs");
 });
