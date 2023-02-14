@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router({mergeParams: true});
 const Bid = require("../models/bid");
 const Listing = require("../models/listing");
+const{isSignedIn} = require("../authenticate");
 
-router.post("/", async (req, res) => {
+router.post("/", isSignedIn, async (req, res) => {
     const listing = await Listing.findById(req.params.id);
     const startingPrice = listing.price;
     const currentBids = await Bid.find({ _id: { $in: listing.bids } });

@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const Listing = require("../models/listing");
+const{isSignedIn} = require("../authenticate");
 
 
 // Listings Routes
 
 //Get all listings
-router.get("/", async (req, res) => {
+router.get("/", async(req, res) => {
   const listings = await Listing.find({}).populate("bids");
   // for (let listing of listings) {
   //     listing.bids.sort((a, b) => b.bidAmount - a.bidAmount);
@@ -17,14 +18,14 @@ router.get("/", async (req, res) => {
 
 
 // Create a new listing
-router.get("/new", async(req, res) => {
+router.get("/new", isSignedIn, async(req, res) => {
   const startTime = new Date();
   const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000);
   res.render("listings/new.ejs", {startTime, endTime});
 });
 
 // post the new listing to the database
-router.post("/", async(req, res) => {
+router.post("/", isSignedIn, async(req, res) => {
   const startTime = new Date();
   const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000);
   const listing = new Listing({startTime: startTime, listingName: req.body.listingName, description: req.body.description, image: req.body.image, price: req.body.price, condition: req.body.condition, owner: req.body.owner, endTime: endTime, location: req.body.location });
@@ -58,20 +59,20 @@ router.get("/:id", async(req, res) => {
 });
 
 //Get the update a listing form
-router.get("/:id/edit", async(req, res) => {
+router.get("/:id/edit", isSignedIn, async(req, res) => {
   const{id} = req.params;
   const listing = await Listing.findById(id);
   res.render("listings/edit", {listing});
 });
 
 // Update a listing
-router.put("/:id", async(req, res) => {
+router.put("/:id", isSignedIn, async(req, res) => {
   const {id} = req.params;
   const listing = await Listing.findByIdAndUpdate(id, req.body);
   res.redirect(`/listings/${listing._id}`);
 });
 
-router.delete("/:id", async(req, res) => {
+router.delete("/:id", isSignedIn, async(req, res) => {
   const {id} = req.params;
   const listing = await Listing.findByIdAndDelete(id);
   res.redirect("/listings");

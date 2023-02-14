@@ -12,13 +12,17 @@ const bidRoutes = require("./routes/bidsRoutes");
 const session = require("express-session");
 const flash = require("connect-flash");
 const ejsMate = require("ejs-mate");
+
+const passport = require("passport");
+const localStrategy = require("passport-local");
+
+const User = require("./models/user");
+const userRoutes =require("./routes/userRoutes");
 const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017/Auctions', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false
 })
   .then(() => {
     console.log("Mongo Connection open");
@@ -47,16 +51,29 @@ app.use(session({
     }
   }))
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use(flash());
 
 app.use((req, res, next) => {
-    res.locals.success = req.flash("success");
-    res.locals.error = req.flash("error");
-    next();
+  console.log(req.session);
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  res.locals.currentUser = req.user;
+  next();
+})
+
+app.get("/", (req, res) => {
+  res.send("HOME");
 })
 
 app.use("/listings", listingRoutes);
 app.use("/listings/:id/bids", bidRoutes);
+app.use("/", userRoutes);
 
 app.listen(3000, () => {
     console.log("Takamirira hedu paPort 3000");
