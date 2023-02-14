@@ -10,8 +10,7 @@
           <a href="/listings/<%=listing._id%>">
             <img src="<%=listing.image%>" alt="A picture of <%= listing.listingName %>" class="img-fluid">
           </a>
-          <h6 class="card-text">Seller: <%= listing.owner %></h6>
-
+          <h6 class="card-text">Seller: <%= listing.owner.username %></h6>
           <% let highestBid = 0; %>
           <% if (listing.bids.length === 0) { %>
             <h6 class="card-text">No bids yet</h6>

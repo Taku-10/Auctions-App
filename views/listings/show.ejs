@@ -8,7 +8,7 @@
         <img src="<%= listing.image%> " alt="<%= listing.listingName %>" class="img-fluid card-img-top">
         <p class="card-text"><%= listing.description %></p>
         <div class="card-text h6 text-muted"><%= listing.location%></div>
-        <h6 class="card-text">Seller: <%= listing.owner %> </h6>
+        <h6 class="card-text">Seller: <%= listing.owner.username %> </h6>
         <h6 class="card-text">Starting Bid: <%= listing.price %> </h6>
         <div class="card-text" id="countdown"></div>
 
@@ -72,12 +72,18 @@
           </div>
         <% } %>
       <% } %>
-    
-      <a class="btn btn-info" href="/listings/<%= listing._id%>/edit">Edit</a>
+      
+      <% if (currentUser && listing.owner.equals(currentUser._id)) { %>
+         <div>
+        <a class="btn btn-info" href="/listings/<%= listing._id%>/edit">Edit</a>
       <!-- Delete a listing. This will be moved to the My listings page -->
         <form action="/listings/<%= listing._id%>?_method=Delete" method="post">
           <Button class="btn btn-sm btn-danger">Delete</Button>
       </form>
+      </div>
+      <% } %>
+     
+      
       </div>
     </div>
   </div>

@@ -3,19 +3,21 @@ const router = express.Router();
 const Listing = require("../models/listing");
 const{isSignedIn} = require("../authenticate");
 
-
-// Listings Routes
+const isOwner = async(req, res, next) => {
+  const { id } = req.params;
+  const listing = await Listing.findById(id);
+  if (!listing.owner.equals(req.user._id)) {
+      req.flash("error", "You do not have permission to do that!");
+      res.redirect(`/listings/${listing._id}`);
+  }
+  return next();
+}
 
 //Get all listings
 router.get("/", async(req, res) => {
-  const listings = await Listing.find({}).populate("bids");
-  // for (let listing of listings) {
-  //     listing.bids.sort((a, b) => b.bidAmount - a.bidAmount);
-  //     listing.highestBid = listing.bids.length > 0 ? listing.bids[0].bidAmount : 0;
-  //   }
+  const listings = await Listing.find({}).populate("bids").populate("owner");
   res.render("listings/index.ejs", { listings });
 });
-
 
 // Create a new listing
 router.get("/new", isSignedIn, async(req, res) => {
@@ -28,7 +30,8 @@ router.get("/new", isSignedIn, async(req, res) => {
 router.post("/", isSignedIn, async(req, res) => {
   const startTime = new Date();
   const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000);
-  const listing = new Listing({startTime: startTime, listingName: req.body.listingName, description: req.body.description, image: req.body.image, price: req.body.price, condition: req.body.condition, owner: req.body.owner, endTime: endTime, location: req.body.location });
+  const listing = new Listing({startTime: startTime, listingName: req.body.listingName, description: req.body.description, image: req.body.image, price: req.body.price, condition: req.body.condition, endTime: endTime, location: req.body.location });
+  listing.owner = req.user._id; // Current person logged in
   await listing.save();
   req.flash("success", "Successfuly posted your listing!")
   res.redirect("/listings");
@@ -37,7 +40,7 @@ router.post("/", isSignedIn, async(req, res) => {
 // Show the detailed information about the listing
 router.get("/:id", async(req, res) => {
   const {id} = req.params;
-  const listing = await Listing.findById(id).populate("bids");
+  const listing = await Listing.findById(id).populate("bids").populate("owner");
   const startTime = listing.startTime;
   const endTime = listing.endTime;
 
@@ -59,9 +62,13 @@ router.get("/:id", async(req, res) => {
 });
 
 //Get the update a listing form
-router.get("/:id/edit", isSignedIn, async(req, res) => {
+router.get("/:id/edit", isSignedIn, isOwner, async(req, res) => {
   const{id} = req.params;
   const listing = await Listing.findById(id);
+  if (!listing) {
+    req.flash("error", "Cannot find that listing");
+    return res.redirect("/listings");
+  }
   res.render("listings/edit", {listing});
 });
 

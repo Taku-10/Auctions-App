@@ -2,7 +2,9 @@
 
 const mongoose = require("mongoose");
 const Bid = require("./bid");
+const User = require("./user");
 const {Schema} = mongoose;
+
 
 
 const listingSchema = new Schema({
@@ -36,11 +38,11 @@ const listingSchema = new Schema({
         enum: ["New", "Refurbished", "Old"],
         required: [true, "Condition of the product must be supplied"]
     },
-
-    // This will be replaced by the users 
+    
     owner: {
-        type: String,
-        required: ["True", "Owner must be supplied"]
+        type: Schema.Types.ObjectId,
+        ref: "User"
+
     },
 
     endTime: {
