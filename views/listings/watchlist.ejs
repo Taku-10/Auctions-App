@@ -1,0 +1,19 @@
+<!-- watchlist.ejs -->
+<% layout("layouts/boilerplate") %>
+<h1>My Watchlist</h1>
+
+<% if (watchlist.length > 0) { %>
+  <ul>
+    <% watchlist.forEach(function(item) { %>
+      <li>
+        <img src="<%= item.listing.image %>">
+        <h2><%= item.listing.listingName %></h2>
+        <p><%= item.listing.description %></p>
+        <p><strong>Price:</strong> $<%= item.listing.price %></p>
+        <p><strong>Condition:</strong> <%= item.listing.condition %></p>
+      </li>
+    <% }); %>
+  </ul>
+<% } else { %>
+  <p>You have no items in your watchlist.</p>
+<% } %>

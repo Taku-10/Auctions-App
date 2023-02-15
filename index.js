@@ -6,9 +6,11 @@ const path = require("path");
 const mongoose = require("mongoose");
 const Listing = require("./models/listing");
 const Bid = require("./models/bid");
+const Watchlist = require("./models/watchlist");
 const methodOverride = require("method-override");
 const listingRoutes = require("./routes/listingsRoutes");
 const bidRoutes = require("./routes/bidsRoutes");
+// const watchlistRoutes = require("./routes/watchlistRoutes");
 const session = require("express-session");
 const flash = require("connect-flash");
 const ejsMate = require("ejs-mate");
@@ -84,10 +86,54 @@ app.get("/listings/mylistings", isSignedIn, async(req, res) => {
 
 })
 
+// Watchlist routes
+app.get('/watchlist', async (req, res) => {
+  try {
+    const watchlist = await Watchlist.find({ owner: req.user._id }).populate('listing');
+    res.render('listings/watchlist', { watchlist });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Server Error');
+  }
+});
+
+app.post('/watchlist/add', async (req, res) => {
+  if (!req.user) {
+    // If the user is not authenticated, redirect to the login page
+    return res.redirect('/login');
+  }
+
+  const userId = req.user._id;
+  const listingId = req.body.listingId;
+
+  // Check if the user already has the same listing in their watchlist
+  const watchlist = await Watchlist.findOne({ owner: userId, listing: listingId });
+  if (watchlist) {
+    // If the user already has the same listing in their watchlist, display an appropriate message
+    return res.send('You have already added this listing to your watchlist');
+  }
+
+  // If the user does not have the same listing in their watchlist, create a new watchlist item
+  const newWatchlistItem = new Watchlist({
+    owner: userId,
+    listing: listingId,
+  });
+
+  // Save the new watchlist item to the database
+  try {
+    await newWatchlistItem.save();
+    req.flash("success", "Listing added to your watchlist");
+    res.redirect("/watchlist");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal server error');
+  }
+});
 
 app.use("/listings", listingRoutes);
 app.use("/listings/:id/bids", bidRoutes);
 app.use("/", userRoutes);
+// app.use("/watchlist", watchlistRoutes);
 
 app.listen(3000, () => {
     console.log("Takamirira hedu paPort 3000");

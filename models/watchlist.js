@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
 const watchlistSchema = new Schema({
-  userId: {
+  owner: {
     type: Schema.Types.ObjectId,
     ref: 'User',
     required: true,
   },
 
-  itemId: {
+  listing: {
     type: Schema.Types.ObjectId,
     ref: 'Listing',
     required: true,

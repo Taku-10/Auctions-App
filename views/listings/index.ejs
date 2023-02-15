@@ -26,7 +26,11 @@
           <% } %>
           
           <h6 class="card-text text-muted"><%= listing.location %></h6>
-          <a href="#" class="btn btn-info btn-md card-link d-block <%= endTime < new Date() ? 'disabled' : '' %>">Add To Watchlist</a>
+          <form action="/watchlist/add" method="post">
+            <input type="hidden" name="listingId" value="<%= listing._id %>">
+            <button type="submit" class="btn btn-info btn-md card-link d-block <%= endTime < new Date() ? 'disabled' : '' %>">Add To Watchlist</button>
+          </form>
+          
         </div>
       </div>
     </div>
