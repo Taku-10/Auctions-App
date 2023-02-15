@@ -18,6 +18,7 @@ const localStrategy = require("passport-local");
 
 const User = require("./models/user");
 const userRoutes =require("./routes/userRoutes");
+const { db } = require("./models/user");
 const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017/Auctions', {

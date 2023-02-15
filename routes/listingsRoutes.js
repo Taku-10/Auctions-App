@@ -73,16 +73,18 @@ router.get("/:id/edit", isSignedIn, isOwner, async(req, res) => {
 });
 
 // Update a listing
-router.put("/:id", isSignedIn, async(req, res) => {
+router.put("/:id", isSignedIn, isOwner, async(req, res) => {
   const {id} = req.params;
   const listing = await Listing.findByIdAndUpdate(id, req.body);
   res.redirect(`/listings/${listing._id}`);
 });
 
-router.delete("/:id", isSignedIn, async(req, res) => {
+router.delete("/:id", isSignedIn, isOwner, async(req, res) => {
   const {id} = req.params;
   const listing = await Listing.findByIdAndDelete(id);
   res.redirect("/listings");
 });
+
+
 
 module.exports = router

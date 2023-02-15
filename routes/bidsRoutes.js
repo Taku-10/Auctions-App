@@ -13,9 +13,11 @@ router.post("/", isSignedIn, async (req, res) => {
     if (listing.bids.length === 0) {
         if (req.body.bidAmount >= startingPrice) {
             const bid = new Bid(req.body);
+            bid.owner = req.user._id;
             listing.bids.push(bid);
             await bid.save();
             await listing.save();
+            req.flash("success", "Bid successfully placed")
             res.redirect("/listings");
         } 
         else {
@@ -28,9 +30,11 @@ router.post("/", isSignedIn, async (req, res) => {
           }
           else {
             const bid = new Bid(req.body);
+            bid.owner = req.user._id;
             listing.bids.push(bid);
             await bid.save();
             await listing.save();
+            req.flash("success", "Bid successfully placed")
             res.redirect("/listings");
           }
     }

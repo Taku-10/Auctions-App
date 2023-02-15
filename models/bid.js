@@ -2,12 +2,14 @@
 const mongoose = require("mongoose");
 const {Schema} = mongoose;
 const Listing = require("./listing.js");
+const User = require("./user");
 
 const bidSchema = new Schema({
-    // Later change this to reference the users
-    bidderName: {
-        type: String,
-        required: [true, "Name of the bidder must be supplied"]
+
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        required: true
     },
 
     bidAmount: {
