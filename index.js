@@ -87,7 +87,7 @@ app.get("/listings/mylistings", isSignedIn, async(req, res) => {
 })
 
 // Watchlist routes
-app.get('/watchlist', async (req, res) => {
+app.get('/watchlist', isSignedIn, async (req, res) => {
   try {
     const watchlist = await Watchlist.find({ owner: req.user._id }).populate('listing');
     res.render('listings/watchlist', { watchlist });
@@ -97,7 +97,7 @@ app.get('/watchlist', async (req, res) => {
   }
 });
 
-app.post('/watchlist/add', async (req, res) => {
+app.post('/watchlist/add', isSignedIn, async (req, res) => {
   if (!req.user) {
     // If the user is not authenticated, redirect to the login page
     return res.redirect('/login');
