@@ -19,6 +19,7 @@ const localStrategy = require("passport-local");
 const User = require("./models/user");
 const userRoutes =require("./routes/userRoutes");
 const { db } = require("./models/user");
+const{isSignedIn} = require("./authenticate");
 const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017/Auctions', {
@@ -70,6 +71,19 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.send("HOME");
 })
+
+app.get("/listings/mylistings", isSignedIn, async(req, res) => {
+  try {
+    const currentUserId = req.user._id;
+    const listings = await Listing.find({owner: currentUserId});
+    res.render("listings/mylistings", {listings});
+
+  } catch(error) {
+    res.redirect("/");
+  }
+
+})
+
 
 app.use("/listings", listingRoutes);
 app.use("/listings/:id/bids", bidRoutes);

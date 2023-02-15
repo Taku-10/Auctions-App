@@ -1,0 +1,29 @@
+<% layout("layouts/boilerplate") %>
+
+
+
+<h1>My Listings</h1>
+<% if (listings.length > 0) { %>
+  <ul>
+    <% for (let listing of listings) { %>
+      <li>
+        <h2><%= listing.listingName %></h2>
+        <p><%= listing.description %></p>
+        <p>Current price: <%= listing.price %></p>
+        <a href="/listings/<%= listing._id %>">View Listing</a>
+      </li>
+      <% if (currentUser && listing.owner.equals(currentUser._id)) { %>
+        <div>
+       <a class="btn btn-info" href="/listings/<%= listing._id%>/edit">Edit</a>
+     <!-- Delete a listing. This will be moved to the My listings page -->
+       <form action="/listings/<%= listing._id%>?_method=Delete" method="post">
+         <Button class="btn btn-sm btn-danger">Delete</Button>
+     </form>
+     </div>
+     <% } %>
+    <% } %>
+  </ul>
+   
+<% } else { %>
+  <p>You have no listings.</p>
+<% } %>

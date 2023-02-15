@@ -12,22 +12,23 @@
         <div class="card-text" id="countdown"></div>
 
         <!-- Place bid for a listing -->
-        
-        <form action="/listings/<%=listing._id%>/bids" class="needs-validation" method="post" novalidate id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
+        <% if (!currentUser || !listing.owner.equals(currentUser._id)) {%>
+          <form action="/listings/<%=listing._id%>/bids" class="needs-validation" method="post" novalidate id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
 
-          <div class="mb-3">
-              <label class="form-label" for="listingName" >Bidder Amount</label>
-              <input class="form-control" type="text" name="bidAmount" id="bidAmount" required>
-          </div>
-          <div class="valid-feedback">
-            Looks good!
-          </div>
-          <div class="invalid-feedback">
-            Please choose a valid amount.
-          </div>
-          <Button class="btn btn-success mr-3">Place Bid</Button>
-      </form>
-
+            <div class="mb-3">
+                <label class="form-label" for="listingName" >Bidder Amount</label>
+                <input class="form-control" type="text" name="bidAmount" id="bidAmount" required>
+            </div>
+            <div class="valid-feedback">
+              Looks good!
+            </div>
+            <div class="invalid-feedback">
+              Please choose a valid amount.
+            </div>
+            <Button class="btn btn-success mr-3">Place Bid</Button>
+        </form>
+        <%}%>
+    
       <% if (endTime) { %>
         <% if (new Date() >= new Date(endTime)) { %>
           <div class="summary">
@@ -60,18 +61,7 @@
           </div>
         <% } %>
       <% } %>
-      
-      <% if (currentUser && listing.owner.equals(currentUser._id)) { %>
-         <div>
-        <a class="btn btn-info" href="/listings/<%= listing._id%>/edit">Edit</a>
-      <!-- Delete a listing. This will be moved to the My listings page -->
-        <form action="/listings/<%= listing._id%>?_method=Delete" method="post">
-          <Button class="btn btn-sm btn-danger">Delete</Button>
-      </form>
-      </div>
-      <% } %>
-     
-      
+          
       </div>
     </div>
   </div>
