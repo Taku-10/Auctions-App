@@ -89,7 +89,12 @@ app.get("/listings/mylistings", isSignedIn, async(req, res) => {
 // Watchlist routes
 app.get('/watchlist', isSignedIn, async (req, res) => {
   try {
-    const watchlist = await Watchlist.find({ owner: req.user._id }).populate('listing');
+    const watchlist = await Watchlist.find({ owner: req.user._id })
+      .populate({
+        path: 'listing',
+        populate: { path: 'owner' }
+      })
+      .populate('owner');
     res.render('listings/watchlist', { watchlist });
   } catch (err) {
     console.log(err);
@@ -129,6 +134,21 @@ app.post('/watchlist/add', isSignedIn, async (req, res) => {
     res.status(500).send('Internal server error');
   }
 });
+
+// Route to delete a listing from a user's watchlist
+app.delete('/watchlist/:id', isSignedIn, async (req, res) => {
+  try {
+    const watchlistItem = await Watchlist.findOneAndDelete({ owner: req.user._id, listing: req.params.id });
+    if (!watchlistItem) {
+      return res.status(404).send('Watchlist item not found');
+    }
+    res.redirect('/watchlist');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal server error');
+  }
+});
+
 
 app.use("/listings", listingRoutes);
 app.use("/listings/:id/bids", bidRoutes);
