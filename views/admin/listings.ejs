@@ -1,0 +1,26 @@
+<% layout("layouts/boilerplate") %>
+
+<%for (let listing of listings) {%>
+    <div class="col-12 col-md-4 col-lg-3 p-3">
+        <div class="card mb-3 mt-3">
+            <div class="card-body">
+                <h5 class="card-title"><%= listing.listingName %></h6>
+                <img src="<%= listing.image %>" alt="" class="img-fluid">
+                <h5 class="card-text"><%= listing.location %></h6>
+                <h6 class="card-text"><%= listing.listingName %></h6>
+                <h6 class="card-text"><%= listing.price %></h6>
+                <h6 class="card-text"><%= listing.location %></h6>
+                <h6 class="card-text"><%= listing.owner.username %></h6>
+                <div class="btns d-flex justify-content-evenly mt-3">
+                    <form action="admin/listings/<%= listing._id%>/approve">
+                        <Button class="btn btn-success btn-md">Approve</Button>
+                    </form>
+                    <form action="/admin/listings/<%=listing._id%>/reject">
+                        <Button class="btn btn-danger btn-md">Reject</Button>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <%}%>

@@ -11,6 +11,7 @@ const methodOverride = require("method-override");
 const listingRoutes = require("./routes/listingsRoutes");
 const bidRoutes = require("./routes/bidsRoutes");
 const watchlistRoutes = require("./routes/watchlistRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const session = require("express-session");
 const flash = require("connect-flash");
@@ -90,7 +91,7 @@ app.use("/", userRoutes);
 app.use("/listings", listingRoutes);
 app.use("/watchlist", watchlistRoutes);
 app.use("/listings/:id/bids", bidRoutes);
-
+app.use("/admin", adminRoutes)
 app.listen(3000, () => {
     console.log("Takamirira hedu paPort 3000");
 })
