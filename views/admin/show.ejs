@@ -1,0 +1,25 @@
+<% layout("layouts/boilerplate") %>
+<div class="row">
+  <div class="col-6 offset-3">
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="h1 card-heading"><%= listing.listingName %></div>
+        <img src="<%= listing.image%>" alt="<%= listing.listingName %>" class="img-fluid card-img-top"/>
+        <p class="card-text"><%= listing.description %></p>
+        <div class="card-text h6 text-muted"><%= listing.location%></div>
+        <h6 class="card-text">Seller: <%= listing.owner.username %></h6>
+        <h6 class="card-text">Starting Bid: <%= listing.price %></h6>
+
+        <div class="btns d-flex justify-content-evenly mt-3">
+            <form action="/admin/listings/<%= listing._id %>/approve" method="post">
+                <Button class="btn btn-success btn-md">Approve</Button>
+            </form>
+            <form action="/admin/listings/<%=listing._id%>/reject" method="post">
+                <Button class="btn btn-danger btn-md">Reject</Button>
+            </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

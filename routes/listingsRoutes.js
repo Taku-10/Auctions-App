@@ -15,7 +15,7 @@ const isOwner = async(req, res, next) => {
 
 //Get all listings
 router.get("/", async(req, res) => {
-  const listings = await Listing.find({}).populate("owner").populate({path: "bids", populate: {path: "owner"}});
+  const listings = await Listing.find({status: "Approved"}).populate("owner").populate({path: "bids", populate: {path: "owner"}});
   res.render("listings/index.ejs", { listings });
 });
 

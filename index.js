@@ -87,6 +87,14 @@ app.get("/listings/mylistings", isSignedIn, async(req, res) => {
   }
 
 })
+
+// ADMIN ROUTES
+
+
+
+
+
+
 app.use("/", userRoutes);
 app.use("/listings", listingRoutes);
 app.use("/watchlist", watchlistRoutes);
