@@ -76,31 +76,29 @@ app.get("/", (req, res) => {
   res.send("HOME");
 })
 
+/*This route will be used to retrieve all the listings that a user has posted*/
 app.get("/listings/mylistings", isSignedIn, async(req, res) => {
   try {
     const currentUserId = req.user._id;
+    // Find all the listings that have been posted by the currently logged in user
     const listings = await Listing.find({owner: currentUserId});
     res.render("listings/mylistings", {listings});
 
   } catch(error) {
+
     res.redirect("/");
   }
 
 })
-
-// ADMIN ROUTES
-
-
-
-
 
 
 app.use("/", userRoutes);
 app.use("/listings", listingRoutes);
 app.use("/watchlist", watchlistRoutes);
 app.use("/listings/:id/bids", bidRoutes);
-app.use("/admin", adminRoutes)
+app.use("/admin", adminRoutes);
+
 app.listen(3000, () => {
-    console.log("Takamirira hedu paPort 3000");
-})
+    console.log("Serving on port 3000");
+});
 

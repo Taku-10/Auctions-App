@@ -3,30 +3,40 @@ const router = express.Router({mergeParams:true});
 const Listing = require("../models/listing");
 const{isSignedIn} = require("../authenticate");
 
+
 const isOwner = async(req, res, next) => {
   const { id } = req.params;
+  // Find the listing from the database by it's id
   const listing = await Listing.findById(id);
+  // Check to see if the owner's id of that listing is the same as the currently logged in user's id
   if (!listing.owner.equals(req.user._id)) {
       req.flash("error", "You do not have permission to do that!");
       res.redirect(`/listings/${listing._id}`);
   }
+  // The owner of that listing id matches the id of the currently logged in user
   return next();
-}
+};
 
-//Get all listings
+
+/*This route retrieves all the Listings that have been posted by users and approved by the admins*/
 router.get("/", async(req, res) => {
-  const listings = await Listing.find({status: "Approved"}).populate("owner").populate({path: "bids", populate: {path: "owner"}});
+  // Retrieve all the listings from the database
+  const listings = await Listing.find({}).populate("owner").populate({path: "bids", populate: {path: "owner"}});
   res.render("listings/index.ejs", { listings });
 });
 
-// Create a new listing
+
+/*This route will be used to just a render a form to users to create a new listing and it has the isSignedIn middleware
+that protects it. A user has to be authenticated(signed in) inorder to access it */
 router.get("/new", isSignedIn, async(req, res) => {
   const startTime = new Date();
   const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000);
   res.render("listings/new.ejs", {startTime, endTime});
 });
 
-// post the new listing to the database
+
+/*This route will be used to post the listing created by a user to the database and it has the isSignedIn middleware
+that protects it. A user has to be authenticated(signed in) inorder to access it*/
 router.post("/", isSignedIn, async(req, res) => {
   const startTime = new Date();
   const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000);
@@ -37,34 +47,41 @@ router.post("/", isSignedIn, async(req, res) => {
   res.redirect("/listings");
 });
 
-// Show the detailed information about the listing
+/*This route will be used to display more detailed information about a specific listing*/
 router.get("/:id", async(req, res) => {
   const {id} = req.params;
+  // Find the specidic listing from the databas eby it's id
   const listing = await Listing.findById(id).populate("bids").populate("owner");
   const startTime = listing.startTime;
   const endTime = listing.endTime;
-
-  // Auction Summary
+  // Get the summary information for a listing's bids
   const bids = listing.bids;
   let uniqueBidders = [];
   let numBids = 0;
 
   for (const bid of bids) {
-      if (!uniqueBidders.includes(bid.bidderName)) {
-          uniqueBidders.push(bid.bidderName);
+  // Check to see if the uniqueBidders array constains the bidders id
+    if (!uniqueBidders.includes(bid.owner)) {
+      //If it does not include the add the bidder's id to the array;
+      uniqueBidders.push(bid.owner);
       }
       numBids++;
   }
-
+  // Number of unique bidders
   let numBidders = uniqueBidders.length;
 
   res.render("listings/show.ejs", {listing, startTime, endTime, numBidders, numBids});
 });
 
-//Get the update a listing form
+
+/*The rouyte will be used to just render the form to edit a listing and it has the isSignedIn middleware
+that protects it. A user has to be authenticated(signed in) inorder to access it. It also has the isOwner
+middleware which only authorizes the owner of that listing to upadate it*/
 router.get("/:id/edit", isSignedIn, isOwner, async(req, res) => {
   const{id} = req.params;
+  // Find the listing from the databse by it's specific id
   const listing = await Listing.findById(id);
+  // Check if the listing exists
   if (!listing) {
     req.flash("error", "Cannot find that listing");
     return res.redirect("/listings");
@@ -72,16 +89,27 @@ router.get("/:id/edit", isSignedIn, isOwner, async(req, res) => {
   res.render("listings/edit", {listing});
 });
 
-// Update a listing
+
+/*Thos route will be used to update the listing and post to the database. and it has the isSignedIn middleware
+that protects it. A user has to be authenticated(signed in) inorder to access it. It also has the isOwnwer middleware protecting
+it which ensures that only the owner of that listing is authorized to update the listing*/
 router.put("/:id", isSignedIn, isOwner, async(req, res) => {
   const {id} = req.params;
+  // Find the listing from the database by it's specific id and then update it
   const listing = await Listing.findByIdAndUpdate(id, req.body);
+  req.flash("success", "Successfully update the listing");
   res.redirect(`/listings/${listing._id}`);
 });
 
+
+/*This route will be used to delete a listing from the database and it has the isSignedIn middleware
+that protects it. A user has to be authenticated(signed in) inorder to access it. It also has the isOwner 
+middleware protecting it which ensures that only the owner of that listing is authorized to delete the listing*/
 router.delete("/:id", isSignedIn, isOwner, async(req, res) => {
   const {id} = req.params;
+  // Find the listing to be deleted from the database by it's specific id and then delete it 
   const listing = await Listing.findByIdAndDelete(id);
+  res.flash("success", "Successfully deleted your listing");
   res.redirect("/listings");
 });
 

@@ -44,7 +44,7 @@ const listingSchema = new Schema({
         ref: "User"
 
     },
-
+    
     endTime: {
         type: String,
         required: true
@@ -66,21 +66,10 @@ const listingSchema = new Schema({
         type: String,
         enum: ["Pending", "Approved", "Rejected"],
         default: "Pending",
-    }
-        
+    },
+
 });
 
 const Listing = mongoose.model("Listing", listingSchema);
 
 module.exports = Listing;
-
-
-
-// app.post("/campgrounds/:id/reviews", catchAsync(async(req, res) => {
-//     const campground = await Campground.findById(req.params.id);
-//     const review = new Review(req.body);
-//     campground.reviews.push(review);
-//     await review.save();
-//     await campground.save();
-//     res.redirect(`/campgrounds/${campground._id}`);
-// }));
