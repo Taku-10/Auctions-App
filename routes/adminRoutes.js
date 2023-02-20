@@ -54,7 +54,7 @@ router.post("/listings/:id/approve", async(req, res) => {
       
   });
   
-
+  
   /*This route will be the one used to find a particular listing by it's id from the database and
   delete it ie change it's status to Rejected*/
 router.post("/listings/:id/reject", async(req, res) => {

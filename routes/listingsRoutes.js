@@ -48,6 +48,7 @@ router.post("/", isSignedIn, async(req, res) => {
   res.redirect("/listings");
 });
 
+
 /*This route will be used to display more detailed information about a specific listing*/
 router.get("/:id", async(req, res) => {
   const {id} = req.params;
