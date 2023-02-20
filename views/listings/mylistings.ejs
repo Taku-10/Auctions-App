@@ -14,9 +14,8 @@
           <form action="/listings/<%= listing._id %>/relist" method="post">
             <Button class="btn btn-sm btn-success">Relist</Button>
           </form>
-        <% } else { %>
-          <a href="/listings/<%= listing._id %>">View Listing</a>
         <% } %>
+          <a href="/listings/<%= listing._id %>">View Listing</a>
       </li>
       <!-- Check if there is a user logged in and if the owners id of that listing is eqaul to the id of the currently logged in user -->
       <% if (currentUser && listing.owner.equals(currentUser._id)) { %>
