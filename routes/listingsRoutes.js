@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router({mergeParams:true});
 const Listing = require("../models/listing");
+const User = require("../models/user");
 const{isSignedIn} = require("../authenticate");
 
 
