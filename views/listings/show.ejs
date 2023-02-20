@@ -39,8 +39,10 @@
             <h1>Auction Summary</h1>
             <h6 class="card-text">Opened: <%= listing.startTime %> </h6>
             <h6 class="card-text">Closed: <%= listing.endTime %> </h6>
-            <h6 class="card-text">bidders: <%= numBidders %> </h6>
+            <!-- Unique bidders -->
+            <h6 class="card-text">bidders: <%= numBidders %> </h6> 
             <%if (listing.bids.length >= 1) {%>
+              <!-- Total number of bids -->
               <h6 class="card-text">bids: <%= listing.bids.length %> </h6>
             <%}%>
             <% let highestBid = 0; %>

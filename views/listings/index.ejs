@@ -2,8 +2,10 @@
 
 <div class="d-flex flex-wrap align-items-start container">
   <% for (let listing of listings) { %>
+    <!-- Set the end time to be the listing's end time -->
     <% let endTime = new Date(listing.endTime); %>
     <div class="col-12 col-md-4 col-lg-3 p-2">
+      <!-- Check if the auction has ended, ie the end time < the currentDate -->
       <div class="card mb-3 mt-3 <%= endTime < new Date() ? 'auction-ended' : '' %>">
         <div class="card-body">
           <h5 class="card-title"><%= listing.listingName %></h5>
@@ -11,12 +13,16 @@
             <img src="<%=listing.image%>" alt="A picture of <%= listing.listingName %>" class="img-fluid">
           </a>
           <h6 class="card-text">Seller: <%= listing.owner.username %></h6>
+          <!-- Calculate the current highest bid for each listing -->
           <% let highestBid = 0; %>
+          <!-- Check if there are any bids that have been placed for a listing -->
           <% if (listing.bids.length === 0) { %>
             <h6 class="card-text">No bids yet</h6>
           <% } else { %>
             <% for (let bid of listing.bids) { %>
+              <!-- Check if a bid amount is greater than the highest bid -->
               <% if (bid.bidAmount > highestBid) { %>
+                 <!-- Set the highest bid to be the bid amount -->
                 <% highestBid = bid.bidAmount; %>
               <% } %>
             <% } %>
@@ -28,6 +34,7 @@
           <h6 class="card-text text-muted"><%= listing.location %></h6>
           <form action="/watchlist/add" method="post">
             <input type="hidden" name="listingId" value="<%= listing._id %>">
+            <!-- Disable the add to watchlist button if the auction has ended -->
             <button type="submit" class="btn btn-info btn-md card-link d-block <%= endTime < new Date() ? 'disabled' : '' %>">Add To Watchlist</button>
           </form>
           

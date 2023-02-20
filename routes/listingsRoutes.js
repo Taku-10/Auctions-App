@@ -62,9 +62,9 @@ router.get("/:id", async(req, res) => {
 
   for (const bid of bids) {
   // Check to see if the uniqueBidders array constains the bidders id
-    if (!uniqueBidders.includes(bid.owner)) {
+    if (!uniqueBidders.includes(bid.owner._id)) {
       //If it does not include the add the bidder's id to the array;
-      uniqueBidders.push(bid.owner);
+      uniqueBidders.push(bid.owner._id);
       }
       numBids++;
   }
@@ -75,7 +75,7 @@ router.get("/:id", async(req, res) => {
 });
 
 
-/*The rouyte will be used to just render the form to edit a listing and it has the isSignedIn middleware
+/*The route will be used to just render the form to edit a listing and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it. It also has the isOwner
 middleware which only authorizes the owner of that listing to upadate it*/
 router.get("/:id/edit", isSignedIn, isOwner, async(req, res) => {
@@ -115,21 +115,26 @@ router.delete("/:id", isSignedIn, isOwner, async(req, res) => {
 });
 
 
-// Handle relisting a listing
+/* This route will be used to reList an listing that was previsouly listed but not sold. It will be reListed as 
+it is. The route is also protected by the isSignedIn middleware which ensures that a user has to be authenticated(signed in)
+inorder to access it*/
 router.post("/:id/relist", isSignedIn, async (req, res) => {
+  // Find the listing reList the specific id 
   const listing = await Listing.findById(req.params.id);
+  // Check if the listing exists
   if (!listing) {
-    return res.status(404).send("Listing not found.");
+    req.flash("error","Listing not found.");
   }
+  // Check if the listing has no bids
+  // Should never happen, it's being handled in the ejs template to hide and show the relist btn
   if (listing.bids.length > 0) {
     return res.status(400).send("Cannot relist a listing with bids.");
   }
-  listing.endTime = new Date(Date.now() + 48 * 60 * 60 * 1000); // Relist for 48 hours
+   // Relist for 48 hours
+  listing.endTime = new Date(Date.now() + 48 * 60 * 60 * 1000);
   await listing.save();
   req.flash("success", "Listing successfully relisted!");
   res.redirect("/listings");
 });
-
-
 
 module.exports = router
