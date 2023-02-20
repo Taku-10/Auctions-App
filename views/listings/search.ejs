@@ -1,0 +1,19 @@
+<h1>Search results for "<%= query %>"</h1>
+
+<% if (listings.length === 0) { %>
+  <p>No listings found.</p>
+<% } else { %>
+  <% listings.forEach(listing => { %>
+    <div class="card mb-3">
+      <div class="card-header">
+        <%= listing.title %>
+      </div>
+      <div class="card-body">
+        <p class="card-text"><%= listing.listingName %></p>
+        <p class="card-text"><%= listing.description %></p>
+        <p class="card-text"><strong>Starting Bid:</strong> $<%= listing.price%></p>
+        <a href="/listings/<%= listing._id %>" class="btn btn-primary">View Listing</a>
+      </div>
+    </div>
+  <% }); %>
+<% } %>

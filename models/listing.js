@@ -16,12 +16,14 @@ const listingSchema = new Schema({
 
     listingName: {
         type: String,
-        required: [true, "Product Name must be provided"]
+        required: [true, "Product Name must be provided"],
+        trim: true
     },
 
     description: {
         type: String,
-        required: [true, "The description must be provided"]
+        required: [true, "The description must be provided"],
+        trim: true
     },
 
     image: {
@@ -75,6 +77,8 @@ const listingSchema = new Schema({
     }
 
 });
+
+listingSchema.index({listingName: "text", description: "text"});
 
 const Listing = mongoose.model("Listing", listingSchema);
 

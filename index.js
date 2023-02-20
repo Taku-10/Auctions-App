@@ -91,6 +91,36 @@ app.get("/listings/mylistings", isSignedIn, async(req, res) => {
 
 })
 
+// Escape special characters in a string for use in a regular expression
+function escapeRegex(text) {
+  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+}
+
+/*This route will be used to search for a listing by its title or description */
+app.get("/listings/search", async (req, res) => {
+  try {
+    // Get the query string from the search form
+    const query = req.query.q;
+    
+    if (!query) {
+      return res.render("listings/search", {listings: [], query: ""})
+    }
+    // Create a regular expression object from the query string with the 'i' option for case insensitivity
+    const regex = new RegExp(escapeRegex(query), "i");
+    // Find all the listings where either the title or description matches the regular expression
+    const listings = await Listing.find({
+      $or: [
+        { listingName: regex },
+        { description: regex }
+      ]
+    });
+    // Render the search results page with matchinglistings 
+    res.render("listings/search", { listings, query });
+  } catch (err) {
+    console.error(err);
+    res.redirect("/listings");
+  }
+});
 
 app.use("/", userRoutes);
 app.use("/listings", listingRoutes);
