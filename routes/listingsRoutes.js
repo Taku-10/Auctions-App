@@ -115,5 +115,21 @@ router.delete("/:id", isSignedIn, isOwner, async(req, res) => {
 });
 
 
+// Handle relisting a listing
+router.post("/:id/relist", isSignedIn, async (req, res) => {
+  const listing = await Listing.findById(req.params.id);
+  if (!listing) {
+    return res.status(404).send("Listing not found.");
+  }
+  if (listing.bids.length > 0) {
+    return res.status(400).send("Cannot relist a listing with bids.");
+  }
+  listing.endTime = new Date(Date.now() + 48 * 60 * 60 * 1000); // Relist for 48 hours
+  await listing.save();
+  req.flash("success", "Listing successfully relisted!");
+  res.redirect("/listings");
+});
+
+
 
 module.exports = router
