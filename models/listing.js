@@ -3,6 +3,7 @@
 const mongoose = require("mongoose");
 const Bid = require("./bid");
 const User = require("./user");
+const Admin = require("./admin");
 const {Schema} = mongoose;
 
 
@@ -67,6 +68,11 @@ const listingSchema = new Schema({
         enum: ["Pending", "Approved", "Rejected"],
         default: "Pending",
     },
+
+    handledBy: {
+        type: Schema.Types.ObjectId,
+        ref: "Admin"
+    }
 
 });
 

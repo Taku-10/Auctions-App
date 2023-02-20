@@ -46,6 +46,8 @@ router.post("/listings/:id/approve", async(req, res) => {
   }
   // If the listing is found, then change it's status to approved  and save it to the database again
     listing.status = "Approved";
+    // Whoever the currently logged in admin is 
+    listing.handledBy = req.user._id;
     await listing.save();
     req.flash("success", "Listing approved successfully");
     res.redirect("/admin/listings");
