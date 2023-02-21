@@ -27,9 +27,17 @@
             </div>
             <div class="mb-3">
               <label class="form-check-label" for="agreement">terms and conditions</label>
-              <input class="form-check-input" type="checkbox" name="agreement" id="agreement" >
+              <input class="form-check-input" type="checkbox" name="agreement" id="agreement" form="place-bid">
             </div>
-            <Button class="btn btn-success mr-3">Place Bid</Button>
+            <div class="mb-3">
+              <label class="form-check-label" for="autoBid">enable auto bidding</label>
+              <input class="form-check-input" type="checkbox" name="autoBid" id="autoBid">
+            </div>
+            <div class="mb-3 d-none">
+              <label class="form-label" for="maxAutoBid" >Max Auto Bidding Amount</label>
+              <input class="form-control" type="text" name="autoBidAmt" id="autoBidAmt" required>
+          </div>
+            <Button class="btn btn-success mr-3" id="submitBidBtn" onclick="return validateCheckbox()">Place Bid</Button>
         </form>
         <%}%>
     
@@ -97,6 +105,17 @@
     }
 
     setInterval(updateCountdown, 1000);
+
+    function validateCheckbox() {
+      let checkbox = document.getElementById("agreement");
+      if (checkbox.checked) {
+        document.getElementById("place-bid").submit();
+        return true;
+      } else {
+        alert("Please check the box before submitting");
+        return false;
+      }
+    }
   </script>
 <% } %>
 
