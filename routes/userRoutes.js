@@ -13,7 +13,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 // Function to send Welcome email
 const sendWelcomeEmail = async (toEmail, name) => {
     const msg = {
-        from: "takudzwamaseva020@gmail.com",
+        from: process.env.EMAIL_FROM,
         to: toEmail,
         subject: 'Welcome to Auctions WA',
         html: `<P>Hello ${name}, </p>
