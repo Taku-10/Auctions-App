@@ -54,6 +54,7 @@ router.post("/register", async(req, res, next) => {
         // Register user through passport
         const registeredUser = await User.register(user, password);
         // Log in the newly registered user after registering useing passport
+        // await sendWelcomeEmail(req.body.email, req.body.firstname);
         req.logIn(registeredUser, err => {
             if (err) {
                 console.log(err);
@@ -62,18 +63,8 @@ router.post("/register", async(req, res, next) => {
             else {
                 // Successfully registered
                 // Send welcome email to the newly registered user
-                (async () => {
-                    try {
-                        // Send the personalised welcome email
-                        await sendWelcomeEmail(req.body.email, req.body.firstname);
-                        console.log("Email sent successfully");
-                        req.flash("success", "Welcome")
-                        res.redirect("/listings");
-                    } catch (error) {
-                        console.log("Error sending email:", error);
-                        res.redirect("/listings");
-                    }
-                })();
+                req.flash("success", "Welcome")
+                res.redirect("/listings");  
             }
         });
 
@@ -82,6 +73,11 @@ router.post("/register", async(req, res, next) => {
         res.redirect("/register");
     }
 })
+
+
+
+
+
 
 
 /*This route will be used to render the log in form for the user to log in*/
