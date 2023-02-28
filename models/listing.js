@@ -83,7 +83,7 @@ const listingSchema = new Schema({
 
 });
 
-listingSchema.index({listingName: "text", description: "text"});
+listingSchema.index({title: "text", description: "text"});
 
 const Listing = mongoose.model("Listing", listingSchema);
 

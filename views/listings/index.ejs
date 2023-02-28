@@ -16,7 +16,7 @@
       <!-- Check if the auction has ended, ie the end time < the currentDate -->
       <div class="card mb-3 mt-3 <%= endTime < new Date() ? 'auction-ended' : '' %>">
         <div class="card-body">
-          <h5 class="card-title"><%= listing.title %></h5>
+          <h5 class="card-title text-center"><%= listing.title %></h5>
           <a href="/listings/<%=listing._id%>">
             <img src="<%=listing.image%>" alt="A picture of <%= listing.title %>" class="img-fluid">
           </a>
