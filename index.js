@@ -24,7 +24,12 @@ const User = require("./models/user");
 const userRoutes =require("./routes/userRoutes");
 
 const{isSignedIn} = require("./authenticate");
+
+const checkAndEndAuctions = require("./cron/auctionCron");
+const cron = require("node-cron");
+
 const app = express();
+
 
 mongoose.connect('mongodb://127.0.0.1:27017/Auctions', {
   useNewUrlParser: true,
@@ -122,12 +127,33 @@ app.get("/listings/search", async (req, res) => {
   }
 });
 
+
+const sendSMSNotification = async(toNumber, body) => {
+  try {
+    const message = await twilioClient.messages.create({
+      from: process.env.TWILIO_PHONE_NUMBER,
+      body,
+      to: toNumber
+    });
+    console.log(`SMS notification sent to ${toNumber}: ${message.sid}`)
+
+  } catch (error) {
+    console.log(`Error sending SMS notification to ${toNumber}: ${error}`);
+  }
+}
+
+
+
+
 app.use("/", userRoutes);
 app.use("/listings", listingRoutes);
 app.use("/watchlist", watchlistRoutes);
 app.use("/listings/:id/bids", bidRoutes);
 app.use("/admin", adminRoutes);
 
+cron.schedule("* * * * *", async () => {
+  await checkAndEndAuctions();
+})
 app.listen(3000, () => {
     console.log("Serving on port 3000");
 });
