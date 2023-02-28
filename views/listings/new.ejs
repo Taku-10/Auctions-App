@@ -2,7 +2,7 @@
 <div class="container"> 
 </div>
 <div class="row">
-    <h1 class="text-center">Add a listing</h1>
+    <h1 class="text-center">Create a listing</h1>
     <div class="col-6 offset-3">
         <div class="card mb-4">
             <div class="card-body">
@@ -14,72 +14,85 @@
                     <div class="mb-3">
                         <input type="hidden" name="endTime" value="<%= endTime %>">
                     </div>
-                
+
                     <div class="mb-3">
-                        <label class="form-label" for="listingName">Listing name</label>
-                        <input class="form-control" type="text" name="listingName" id="listingName" required>
+                        <label class="form-label" for="title">Title</label>
+                        <input class="form-control" type="text" name="title" id="title" required>
                         <div class="valid-feedback">
                             Looks good!
                           </div>
                           <div class="invalid-feedback">
-                            Please choose a listing name.
+                            Enter a title to continue.
                           </div>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label" for="location">location</label>
-                        <input class="form-control" type="text" name="location" id="location" required>
-                        <div class="valid-feedback">
-                            Looks good!
-                          </div>
-                          <div class="invalid-feedback">
-                            Please choose a location.
-                          </div>
-                    </div>
+                      <label class="form-label" for="image">Images</label>
+                      <input class="form-control" type="text" name="image" id="image" required>
+                      <div class="valid-feedback">
+                          Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                          Please add a photo to continue
+                        </div>
+                  </div>
 
-                    <div class="mb-3">
-                        <label class="form-label" for="description">Description</label>
-                        <textarea class="form-control" name="description" id="description" cols="10" rows="4" required></textarea>
-                        <div class="valid-feedback">
-                            Looks good!
-                          </div>
-                          <div class="invalid-feedback">
-                            Please choose a description.
-                          </div>
-                    </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="price">Price</label>
+                    <input class="form-control" type="text" name="price" id="price" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                      </div>
+                      <div class="invalid-feedback">
+                        Please enter a price to continue.
+                      </div>
+                </div>
 
-                    <div class="mb-3">
-                        <label class="form-label" for="image">Image URL</label>
-                        <input class="form-control" type="text" name="image" id="image" required>
-                        <div class="valid-feedback">
-                            Looks good!
-                          </div>
-                          <div class="invalid-feedback">
-                            Please choose an image URL.
-                          </div>
+                <div class="mb-3">
+                  <label class="form-label" for="condition" placeholder="Condition">Condition</label>
+                  <select class="form-select" name="condition" id="condition">
+                    <option value="Choose..." disabled selected>Choose...</option>
+                      <option value="New">New</option>
+                      <option value="Used-like new">Used-like new</option>
+                      <option value="Used-good">Used-good</option>
+                      <option value="Used-fair">Used-fair</option>
+                  </select>
+                  <div class="valid-feedback">
+                      Looks good!
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="price">Price</label>
-                        <input class="form-control" type="text" name="price" id="price" required>
-                        <div class="valid-feedback">
-                            Looks good!
-                          </div>
-                          <div class="invalid-feedback">
-                            Please choose a price.
-                          </div>
+                    <div class="invalid-feedback">
+                      Please enter a condition to continue.
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="condition">Condition</label>
-                        <select class="form-select" name="condition" id="condition">
-                            <option disabled selected>Choose...</option>
-                            <option value="New">New</option>
-                            <option value="Refurbished">Refurbished</option>
-                            <option value="Old">Old</option>
-                        </select>
-                        <div class="valid-feedback">
-                            Looks good!
-                          </div>
-                    </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="category" class="form-label" placeholder="Category">Category</label>
+                <select name="category" id="category" class="form-select">
+                  <option value="Choose..." disabled selected>Choose...</option>
+                  <option value="Entertainment">Entertainment</option>
+                  <option value="Home & Garden">Home & Garden</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Sports and outdoors">Sports and outdoors</option>
+                  <option value="Clothing and accessories">Clothing and accessories</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label" for="description">Description</label>
+                <textarea class="form-control" name="description" id="description" cols="10" rows="4"></textarea>
+            </div>
+
+              <div class="mb-3">
+                  <label class="form-label" for="location">location</label>
+                  <input class="form-control" type="text" name="location" id="location" required>
+                  <div class="valid-feedback">
+                      Looks good!
+                  </div>
+                  <div class="invalid-feedback">
+                      Enter a location to continue
+                  </div>
+              </div>
+
                     <button class="btn btn-success">Add Listing</button>
                 </form>
             </div>

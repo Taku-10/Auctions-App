@@ -14,15 +14,14 @@ const listingSchema = new Schema({
         required: true
     },
 
-    listingName: {
+    title: {
         type: String,
-        required: [true, "Product Name must be provided"],
+        required: [true, "Title must be provided"],
         trim: true
     },
 
     description: {
         type: String,
-        required: [true, "The description must be provided"],
         trim: true
     },
 
@@ -38,10 +37,16 @@ const listingSchema = new Schema({
 
     condition: {
         type: String, 
-        enum: ["New", "Refurbished", "Old"],
+        enum: ["New", "Used-like new", "Used-good", "Used-fair"],
         required: [true, "Condition of the product must be supplied"]
     },
     
+    category: {
+        type: String,
+        enum: ["Home & Garden", "Entertainment", "Clothing and accessories", "Electronics", "Sports and outdoors"],
+        required: [true, "Category must be selecetd"]
+    },
+
     owner: {
         type: Schema.Types.ObjectId,
         ref: "User"

@@ -6,17 +6,19 @@
   <ul>
     <% for (let listing of listings) { %>
       <li>
-        <h2><%= listing.listingName %></h2>
-        <p><%= listing.description %></p>
+        <h2><%= listing.title %></h2>
         <p>Current price: <%= listing.price %></p>
+        <p>Condition: <%= listing.condition %></p>
+        <p>Category: <%= listing.category %></p>
+        <p><%= listing.description %></p>
         <!-- Check if a listing has any bids placed for it and if the auction for that listing has ended -->
         <% if (listing.bids.length === 0 && new Date(listing.endTime) < new Date()) { %>
           <form action="/listings/<%= listing._id %>/relist" method="post">
             <Button class="btn btn-sm btn-success">Relist</Button>
           </form>
         <% } %>
-          <a href="/listings/<%= listing._id %>">View Listing</a>
       </li>
+      <a href="/listings/<%= listing._id %>">View Listing</a>
       <!-- Check if there is a user logged in and if the owners id of that listing is eqaul to the id of the currently logged in user -->
       <% if (currentUser && listing.owner.equals(currentUser._id)) { %>
         <div>

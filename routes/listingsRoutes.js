@@ -41,7 +41,7 @@ that protects it. A user has to be authenticated(signed in) inorder to access it
 router.post("/", isSignedIn, async(req, res) => {
   const startTime = new Date();
   const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000);
-  const listing = new Listing({startTime: startTime, listingName: req.body.listingName, description: req.body.description, image: req.body.image, price: req.body.price, condition: req.body.condition, endTime: endTime, location: req.body.location });
+  const listing = new Listing({startTime: startTime, title: req.body.title, category: req.body.category, description: req.body.description, image: req.body.image, price: req.body.price, condition: req.body.condition, endTime: endTime, location: req.body.location });
   listing.owner = req.user._id; // Current person logged in
   await listing.save();
   req.flash("success", "Successfuly posted your listing!")
@@ -111,7 +111,7 @@ router.delete("/:id", isSignedIn, isOwner, async(req, res) => {
   const {id} = req.params;
   // Find the listing to be deleted from the database by it's specific id and then delete it 
   const listing = await Listing.findByIdAndDelete(id);
-  res.flash("success", "Successfully deleted your listing");
+  req.flash("success", "Successfully deleted your listing");
   res.redirect("/listings");
 });
 
