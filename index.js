@@ -115,7 +115,7 @@ app.get("/listings/search", async (req, res) => {
     // Find all the listings where either the title or description matches the regular expression
     const listings = await Listing.find({
       $or: [
-        { listingName: regex },
+        { title: regex },
         { description: regex }
       ]
     });
