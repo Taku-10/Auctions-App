@@ -40,7 +40,10 @@ router.get("/new", isSignedIn, async(req, res) => {
 that protects it. A user has to be authenticated(signed in) inorder to access it*/
 router.post("/", isSignedIn, async(req, res) => {
   const startTime = new Date();
-  const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000);
+  // Set endTime when the auction ends to be 48 hours from the moment its posted
+  // const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000); // 48 Hours
+  const endTime = new Date(startTime.getTime() + 6 * 60 * 1000); // 5 minutes
+  //const endTime = new Date(startTime.getTime() + 7 * 24 * 60 * 60 * 1000); // 1 week
   const listing = new Listing({startTime: startTime, title: req.body.title, category: req.body.category, description: req.body.description, image: req.body.image, price: req.body.price, condition: req.body.condition, endTime: endTime, location: req.body.location });
   listing.owner = req.user._id; // Current person logged in
   await listing.save();

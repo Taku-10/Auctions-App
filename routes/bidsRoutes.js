@@ -22,8 +22,6 @@ const sendSMSNotification = async(toNumber, body) => {
   }
 }
 
-
-
 router.post("/", isSignedIn, async (req, res) => {
   // bFind the listing for which the bid is being placed for by it's id in the database
   const listing = await Listing.findById(req.params.id);
@@ -56,7 +54,7 @@ router.post("/", isSignedIn, async (req, res) => {
   const previousMaxBid = currentBids.length > 0 ? currentBids[0] : null;
   if (previousMaxBid) {
     const previousMaxBidOwner = await User.findById(previousMaxBid.owner);
-    const message = `Hi ${previousMaxBidOwner.firstname}. You have been outbid on the auction of ${listing.listingName}. The new highest bid is $${req.body.bidAmount}.`;
+    const message = `Hi ${previousMaxBidOwner.firstname}. You have been outbid on the auction of ${listing.title}. The new highest bid is $${req.body.bidAmount}.`;
     await sendSMSNotification(previousMaxBidOwner.number, message);
   }
 

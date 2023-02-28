@@ -79,6 +79,12 @@ const listingSchema = new Schema({
     handledBy: {
         type: Schema.Types.ObjectId,
         ref: "Admin"
+    },
+
+    auctionStatus: {
+        type: String,
+        enum: ["Open", "Closed"],
+        default: "Open"
     }
 
 });
