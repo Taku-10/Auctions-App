@@ -23,7 +23,7 @@ const userSchema = new Schema({
         unique: true
     },
     number: {
-        type: Number,
+        type: String,
         required: [true, "Phone number must be supplied"]
     }
 })

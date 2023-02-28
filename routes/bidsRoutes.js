@@ -1,65 +1,66 @@
 const express = require("express");
-const router = express.Router({mergeParams: true});
+const router = express.Router({ mergeParams: true });
 const Bid = require("../models/bid");
 const Listing = require("../models/listing");
-const{isSignedIn} = require("../authenticate");
+const User = require("../models/user");
+const { isSignedIn } = require("../authenticate");
+require("dotenv").config();
+const twilioClient = require("twilio")(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+
+const sendSMSNotification = async(toNumber, body) => {
+  try {
+    const message = await twilioClient.messages.create({
+      from: process.env.TWILIO_PHONE_NUMBER,
+      body,
+      to: toNumber
+    });
+    console.log(`SMS notification sent to ${toNumber}: ${message.sid}`)
+
+  } catch (error) {
+    console.log(`Error sending SMS notification to ${toNumber}: ${error}`);
+  }
+}
+
 
 
 router.post("/", isSignedIn, async (req, res) => {
-  // Find the listing for which the bid isbeing placed for by it's id in the database
+  // bFind the listing for which the bid is being placed for by it's id in the database
   const listing = await Listing.findById(req.params.id);
   //Find the starting price for that listing that has been set by the owner of the listing
   const startingPrice = listing.price;
   // Find the existing bids that have been placed for that listing
   const currentBids = await Bid.find({ _id: { $in: listing.bids } });
   // Find the current highest bid that has been placed for that listing
-  const currentMaxBid = currentBids.reduce((max, bid) => (bid.bidAmount > max ? bid.bidAmount : max), 0);
+  const currentMaxBid = currentBids.reduce((max, bid) => (bid.bidAmount > max ? bid.bidAmount : max), startingPrice
+  );
 
+  // Check if bid being placed is greater than the current Maximum Bid for that listing
+  if (req.body.bidAmount < currentMaxBid) {
+    return res.status(400).send("Bid amount must be higher than current highest bid.");
+  }
 
-   /* Check to see if there are any bids that have been placed already for that listing and if there are no bids yet
-   and it's the first bid then check to see if the amount being placed is greater than or equal to the 
-  the starting price(set by the owner) */
-  if (listing.bids.length === 0) {
-    if (req.body.bidAmount >= startingPrice) {
-      // Create a new bid
-      const bid = new Bid(req.body);
-      // Set the owner of the bid to be the currently logged in user
-      bid.owner = req.user._id;
-      // Push the bid for that listing into the array for that listing's bids
-      listing.bids.push(bid);
-      // Save the bid
-      await bid.save();
-      // Save the listing
-      await listing.save();
-      req.flash("success", "Bid successfully placed");
-      res.redirect("/listings");
-        } // If the bid amount is less than the starting price set by the owner
-        else {
-            req.flash("error", "Bid amount must be greater than or equal to the starting price.");
-        }
-    }
-    // If there are bids placed already on that listing and the amount being placed is less than the current highest bid
-    else {
-        if (req.body.bidAmount <= currentMaxBid) {
-            req.flash("error", "Bid amount must be higher than current highest bid.");
-          } // The bid amount is greater than or equal to the current highest bid
-          else {
-            // Create the bid
-            const bid = new Bid(req.body);
-            // Set the owner of that bid to be equal to the currently logged in user
-            bid.owner = req.user._id;
-            // push the bid to the listing.bids array
-            listing.bids.push(bid);
-            //save the bid
-            await bid.save();
-            // save the listing
-            await listing.save();
-            req.flash("success", "Bid successfully placed")
-            res.redirect("/listings");
-          }
-    }
+  // Create a new bid
+  const bid = new Bid(req.body);
+  // Set the owner of the bid to be the currently logged in user 
+  bid.owner = req.user._id;
+  // Push the new bid to the listings array
+  listing.bids.push(bid);
+  // save the new bid
+  await bid.save();
+  // save the listing
+  await listing.save();
+  req.flash("success", "Bid successfully placed");
 
-  });
+  // Notify previous highest bidder if they exist
+  const previousMaxBid = currentBids.length > 0 ? currentBids[0] : null;
+  if (previousMaxBid) {
+    const previousMaxBidOwner = await User.findById(previousMaxBid.owner);
+    const message = `Hi ${previousMaxBidOwner.firstname}. You have been outbid on the auction of ${listing.listingName}. The new highest bid is $${req.body.bidAmount}.`;
+    await sendSMSNotification(previousMaxBidOwner.number, message);
+  }
+
+  res.redirect("/listings");
+});
 
 module.exports = router;
-
