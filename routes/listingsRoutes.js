@@ -30,6 +30,8 @@ router.get("/", async(req, res) => {
 /*This route will be used to just a render a form to users to create a new listing and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it */
 router.get("/new", isSignedIn, async(req, res) => {
+  const startTime = new Date();
+  const endTime = new Date(startTime.getTime() + 5 * 60 * 1000);
   res.render("listings/new.ejs", {startTime, endTime});
 });
 

@@ -20,6 +20,12 @@ const bidSchema = new Schema({
     date: {
         type: String,
         default: Date.now
+    },
+
+    listing: {
+        type: Schema.Types.ObjectId,
+        ref: "Listing",
+        required: true
     }
 
     
@@ -29,8 +35,3 @@ const Bid = mongoose.model("Bid", bidSchema);
 
 module.exports = Bid;
 
-// listing: {
-//     type: Schema.Types.ObjectId,
-//     ref: 'Listing',
-//     required: true
-//   },

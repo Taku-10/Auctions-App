@@ -42,6 +42,8 @@ router.post("/", isSignedIn, async (req, res) => {
   const bid = new Bid(req.body);
   // Set the owner of the bid to be the currently logged in user 
   bid.owner = req.user._id;
+  // Set the listing for which the bid is for
+  bid.listing = listing._id;
   // Push the new bid to the listings array
   listing.bids.push(bid);
   // save the new bid
