@@ -1,7 +1,9 @@
 const express = require("express");
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 const nodemailer = require('nodemailer');
 const User = require("../models/user");
+const Bid = require("../models/bid");
+const Listing = require("../models/listing");
 const passport= require("passport");
 const{isSignedIn} = require("../authenticate");
 require("dotenv").config();
@@ -76,10 +78,6 @@ router.post("/register", async(req, res, next) => {
 
 
 
-
-
-
-
 /*This route will be used to render the log in form for the user to log in*/
 router.get("/login", (req, res) => {
     res.render("users/login");
@@ -107,5 +105,62 @@ router.get("/logout", (req, res, next) => {
     
 });
 
+// User profile management routes
+
+
+// This will render the form with the user's personal details
+
+router.get("/profile", isSignedIn, async(req, res) => {
+    const user = await User.findById(req.user._id);
+    res.render("users/profile", {user});
+});
+
+// This route will postbthe users updates to the form
+router.put("/profile/:id", isSignedIn, async(req, res) => {
+    const userId = req.params.id;
+    const updatedUser = await User.findByIdAndUpdate(userId, req.body, {new:true, runValidators: true});
+    req.login(updatedUser, (err) => {
+        if (err) {
+            console.log(err);
+            return next(err);
+        }
+        req.flash("success", "Successfully updated your profile");
+        res.redirect("/profile");
+    })
+});
+
+// Route to retrieve the currently logged in user's bids on different listings
+
+router.get("/bids", isSignedIn, async (req, res) => {
+    try {
+      const bids = await Bid.find({ owner: req.user._id })
+        .populate("owner")
+        .exec();
+      const bidObjects = [];
+      for (let i = 0; i < bids.length; i++) {
+        const bid = bids[i];
+        const listing = await Listing.findById(bid.listing).exec();
+        bidObjects.push({
+          bid,
+          listing,
+        });
+      }
+      res.render("users/bids", { bids: bidObjects }) ;
+    } catch (error) {
+      console.log(error);
+      res.redirect("/");
+    }
+  });
+
 module.exports = router;
 
+/*
+
+router.get("/listings", isSignedIn, async(req, res) => {
+    const currentUserId = req.user._id;
+    // Find all the listings that have been posted by the currently logged in user
+    const listings = await Listing.find({owner: currentUserId});
+    res.render("users/listings", {listings});
+    
+})
+*/

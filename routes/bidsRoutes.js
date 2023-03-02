@@ -33,6 +33,7 @@ router.post("/", isSignedIn, async (req, res) => {
   const currentMaxBid = currentBids.reduce((max, bid) => (bid.bidAmount > max ? bid.bidAmount : max), startingPrice
   );
 
+  console.log(currentMaxBid);
   // Check if bid being placed is greater than the current Maximum Bid for that listing
   if (req.body.bidAmount < currentMaxBid) {
     return res.status(400).send("Bid amount must be higher than current highest bid.");
