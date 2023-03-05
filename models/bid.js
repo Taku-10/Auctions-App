@@ -19,9 +19,15 @@ const bidSchema = new Schema({
 
     date: {
         type: String,
-        default: Date.now
-    }
+        required: true
+    },
 
+    listing: {
+        type: Schema.Types.ObjectId,
+        ref: "Listing",
+        required: true
+    }
+    
     
 });
 

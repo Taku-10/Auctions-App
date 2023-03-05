@@ -57,7 +57,6 @@ router.get("/:id", async(req, res) => {
   const {id} = req.params;
   // Find the specidic listing from the databas eby it's id
   const listing = await Listing.findById(id).populate("bids").populate({path: "owner", model: "User"}).populate({path: "bids",populate: { path: "owner",model: "User" }});
-
   const startTime = listing.startTime;
   const endTime = listing.endTime;
   // Get the summary information for a listing's bids

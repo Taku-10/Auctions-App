@@ -40,7 +40,7 @@ const checkAndEndAuctions = async () => {
 
       if (bids.length > 0) {
         const winner = await User.findById(bids[0].owner);
-        const message = `Congratulations! You have won the auction for ${listing.title} with a bid of $${bids[0].bidAmount}. Please contact the seller to arrange payment and delivery.`
+        const message = `Hi ${winner.firstname}. Congratulations! You have won the auction for ${listing.title} with a bid of $${bids[0].bidAmount}. Please contact the seller to arrange payment and delivery.`
         await sendSMSNotification(winner.number, message);
       }
     }

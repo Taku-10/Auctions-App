@@ -1,41 +1,47 @@
 <% layout("layouts/boilerplate") %>
 
-<!-- <div class="container mt-5">
-  <h1 class="text-center mb-4">My Bids</h1>
-  <% if (bids.length === 0) { %>
-    <p>You haven't placed any bids yet.</p>
-  <% } else { %>
-    <% bids.forEach((bid) => { %>
-      <div class="card mb-3">
-        <div class="card-header">
-          <h5 class="mb-0"><%= bid.listing.title %></h5>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-6">
-              <p><strong>My Bid:</strong> <%= bid.amount %></p>
-              <% if (bid.listing.endTime < Date.now()) { %>
-                <% if (bid.listing.highestBid.owner.toString() === currentUser._id.toString()) { %>
-                  <p><strong>Outcome:</strong> You won this auction!</p>
-                <% } else { %>
-                  <p><strong>Outcome:</strong> You lost this auction.</p>
-                <% } %>
-              <% } else { %>
-                <% if (bid.amount === bid.listing.highestBid.amount) { %>
-                  <p><strong>Status:</strong> You are currently the highest bidder.</p>
-                <% } else { %>
-                  <p><strong>Status:</strong> You are losing this auction.</p>
-                <% } %>
-              <% } %>
-            </div>
-            <div class="col-md-6">
-              <p><strong>Date Placed:</strong> <%= bid.createdAt.toLocaleString() %></p>
-              <p><strong>End Time:</strong> <%= bid.listing.endTime.toLocaleString() %></p>
-              <a href="/listings/<%= bid.listing._id %>" class="btn btn-primary">View Listing</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% }) %>
-  <% } %>
-</div> -->
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Bid Id</th>
+      <th scope="col">Date</th>
+      <th scope="col">Bid Amount</th>
+      <th scope="col">Listing</th>
+      <th scope="col">Outcome</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (bids.length > 0) { %>
+      <% bids.forEach(function(bid) { %>
+        <tr>
+          <td><%= bid._id %></td>
+          <td><%= bid.date %></td>
+          <td><%= bid.bidAmount %></td>
+          <td>
+            <img src="<%= bid.image %>" alt="Listing Image" width="60" height="60">
+            <%= bid.listing.title %>
+          </td>
+            
+          <%if (bid.wonAuction === "Won") {%>
+            <td class="text-success"> <%= bid.wonAuction %></td>
+            <%} else if (bid.wonAuction === "Auction still running and you are Winning") {%>
+            <td class="text-success"> <%= bid.wonAuction %> </td>
+            <%} else if (bid.wonAuction === "Auction still running and you are Losing") {%>
+            <td class="text-danger"> <%= bid.wonAuction %> </td>
+            <%} else {%>
+            <td class="text-danger"> <%= bid.wonAuction %> </td>
+            <%}%>
+            
+        </tr>
+      <% }); %>
+    <% } else { %>
+      <tr>
+        <td colspan="4" class="text-center">You have no bids yet.</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+
+
