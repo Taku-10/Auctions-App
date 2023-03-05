@@ -4,6 +4,7 @@ const Bid = require("../models/bid");
 const Listing = require("../models/listing");
 const User = require("../models/user");
 const { isSignedIn } = require("../authenticate");
+
 require("dotenv").config();
 const twilioClient = require("twilio")(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
@@ -33,6 +34,7 @@ router.post("/", isSignedIn, async (req, res) => {
   const currentMaxBid = currentBids.reduce((max, bid) => (bid.bidAmount > max ? bid.bidAmount : max), startingPrice
   );
 
+  console.log(currentMaxBid);
   // Check if bid being placed is greater than the current Maximum Bid for that listing
   if (req.body.bidAmount < currentMaxBid) {
     return res.status(400).send("Bid amount must be higher than current highest bid.");
@@ -40,6 +42,7 @@ router.post("/", isSignedIn, async (req, res) => {
 
   // Create a new bid
   const bid = new Bid(req.body);
+  bid.date = new Date();
   // Set the owner of the bid to be the currently logged in user 
   bid.owner = req.user._id;
   // Set the listing for which the bid is for
@@ -57,7 +60,7 @@ router.post("/", isSignedIn, async (req, res) => {
   if (previousMaxBid) {
     const previousMaxBidOwner = await User.findById(previousMaxBid.owner);
     const message = `Hi ${previousMaxBidOwner.firstname}. You have been outbid on the auction of ${listing.title}. The new highest bid is $${req.body.bidAmount}.`;
-    await sendSMSNotification(previousMaxBidOwner.number, message);
+    // await sendSMSNotification(previousMaxBidOwner.number, message);
   }
 
   res.redirect("/listings");

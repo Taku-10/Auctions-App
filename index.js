@@ -12,7 +12,7 @@ const listingRoutes = require("./routes/listingsRoutes");
 const bidRoutes = require("./routes/bidsRoutes");
 const watchlistRoutes = require("./routes/watchlistRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-
+const moment = require("moment");
 const session = require("express-session");
 const flash = require("connect-flash");
 const ejsMate = require("ejs-mate");

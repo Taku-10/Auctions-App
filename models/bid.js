@@ -19,6 +19,7 @@ const bidSchema = new Schema({
 
     date: {
         type: String,
+<<<<<<< HEAD
         default: Date.now
     },
 
@@ -27,7 +28,17 @@ const bidSchema = new Schema({
         ref: "Listing",
         required: true
     }
+=======
+        required: true
+    },
+>>>>>>> User's-profile-management
 
+    listing: {
+        type: Schema.Types.ObjectId,
+        ref: "Listing",
+        required: true
+    }
+    
     
 });
 

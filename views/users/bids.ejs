@@ -1,0 +1,47 @@
+<% layout("layouts/boilerplate") %>
+
+
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Bid Id</th>
+      <th scope="col">Date</th>
+      <th scope="col">Bid Amount</th>
+      <th scope="col">Listing</th>
+      <th scope="col">Outcome</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (bids.length > 0) { %>
+      <% bids.forEach(function(bid) { %>
+        <tr>
+          <td><%= bid._id %></td>
+          <td><%= bid.date %></td>
+          <td><%= bid.bidAmount %></td>
+          <td>
+            <img src="<%= bid.image %>" alt="Listing Image" width="60" height="60">
+            <%= bid.listing.title %>
+          </td>
+            
+          <%if (bid.wonAuction === "Won") {%>
+            <td class="text-success"> <%= bid.wonAuction %></td>
+            <%} else if (bid.wonAuction === "Auction still running and you are Winning") {%>
+            <td class="text-success"> <%= bid.wonAuction %> </td>
+            <%} else if (bid.wonAuction === "Auction still running and you are Losing") {%>
+            <td class="text-danger"> <%= bid.wonAuction %> </td>
+            <%} else {%>
+            <td class="text-danger"> <%= bid.wonAuction %> </td>
+            <%}%>
+            
+        </tr>
+      <% }); %>
+    <% } else { %>
+      <tr>
+        <td colspan="4" class="text-center">You have no bids yet.</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>
+
+
+

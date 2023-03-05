@@ -31,7 +31,11 @@ router.get("/", async(req, res) => {
 that protects it. A user has to be authenticated(signed in) inorder to access it */
 router.get("/new", isSignedIn, async(req, res) => {
   const startTime = new Date();
+<<<<<<< HEAD
   const endTime = new Date(startTime.getTime() + 5 * 60 * 1000);
+=======
+  const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000);
+>>>>>>> User's-profile-management
   res.render("listings/new.ejs", {startTime, endTime});
 });
 
@@ -57,7 +61,6 @@ router.get("/:id", async(req, res) => {
   const {id} = req.params;
   // Find the specidic listing from the databas eby it's id
   const listing = await Listing.findById(id).populate("bids").populate({path: "owner", model: "User"}).populate({path: "bids",populate: { path: "owner",model: "User" }});
-
   const startTime = listing.startTime;
   const endTime = listing.endTime;
   // Get the summary information for a listing's bids
