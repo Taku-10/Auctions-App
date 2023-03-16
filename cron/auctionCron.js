@@ -26,15 +26,15 @@ const checkAndEndAuctions = async () => {
   const now = new Date();
   const listings = await Listing.find({auctionStatus: "Open", endTime: {$lte: now}});
 
-  console.log(`Found ${listings.length} listings to update`);
+  // console.log(`Found ${listings.length} listings to update`);
   
     // For each open listing whose auctions has ended, set the auction status to closed
     for (const listing of listings) {
-      console.log(`Updating listing ${listing._id}......`)
+      // console.log(`Updating listing ${listing._id}......`)
       listing.auctionStatus = "Closed";
       await listing.save();
 
-      console.log(`Listing ${listing._id} updated to Closed status......`);
+      // console.log(`Listing ${listing._id} updated to Closed status......`);
       // Find the winner of the auction
       const bids = await Bid.find({_id: {$in: listing.bids}}).sort("-bidAmount");
 

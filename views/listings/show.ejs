@@ -1,54 +1,51 @@
 <% layout("layouts/boilerplate") %>
-<div class="row">
-  <div class="col-6 offset-3">
-    <div class="card mb-3">
-      <div class="card-body">
-        <div class="h1 card-heading text-center"><%= listing.title %></div>
-        <img src="<%= listing.image%> " alt="<%= listing.title %>" class="img-fluid card-img-top">
-        <h6 class="card-text">Seller: <%= listing.owner.username %> </h6>
-        <h6 class="card-text">Starting Price: <%= listing.price %> </h6>
-        <h6 class="card-text">Condition: <%= listing.condition %></h6>
-        <h6 class="card-text">Category: <%= listing.category %></h6>
-        <p class="card-text"><%= listing.description %></p>
-        <div class="card-text h6 text-muted"><%= listing.location%></div>
-        
-        <div class="card-text" id="countdown"></div>
+<div class="row justify-content-center">
+  <div class="col-lg-8 col-md-10 col-sm-12">
+    <div class="card mb-5 mt-5 mx-auto">
+      <div class="h1 card-heading text-center"><%= listing.title %></div>
+      <div class="card-body"> 
+        <div class="row">
+          <div class="col-lg-7 col-md-12">
+            <img src="<%= listing.image%> " alt="<%= listing.title %>" class="img-fluid card-img-top">
+          </div>
+          <div class="col-lg-5 col-md-12 mt-3">
+            <h6 class="card-text">Seller: <%= listing.owner.username %> </h6>
+            <h6 class="card-text">Starting Price: <%= listing.price %> </h6>
+            <h6 class="card-text">Condition: <%= listing.condition %></h6>
+            <h6 class="card-text">Category: <%= listing.category %></h6>
+            <p class="card-text"><%= listing.description %></p>
+            <div class="card-text h6 text-muted"><%= listing.location%></div>
+            <div class="card-text" id="countdown"></div>
 
-        <!-- Place bid for a listing -->
-        <% if (!currentUser || !listing.owner.equals(currentUser._id)) {%>
-          <form action="/listings/<%=listing._id%>/bids" class="needs-validation" method="post" novalidate id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
+            <!-- Place bid for a listing -->
+            <% if (!currentUser || !listing.owner.equals(currentUser._id)) {%>
+            <form action="/listings/<%=listing._id%>/bids" class="needs-validation" method="post" novalidate id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
 
-            <div class="mb-3">
+              <div class="mb-3">
                 <label class="form-label" for="bidAmount" >Bid Amount</label>
-                <input class="form-control" type="text" name="bidAmount" id="bidAmount" required>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input class="form-control" type="text" name="bidAmount" id="bidAmount" required>
+                </div>
                 <div class="valid-feedback">
                   Looks good!
                 </div>
                 <div class="invalid-feedback">
                   Please enter a valid amount.
                 </div>
-            </div>
-      
+              </div>
 
-            <div class="mb-3">
-              <label class="form-check-label" for="agreement">terms and conditions</label>
-              <input class="form-check-input" type="checkbox" name="agreement" id="agreement" form="place-bid">
-            </div>
+              <div class="mb-3 form-check">
+                <input class="form-check-input" type="checkbox" name="agreement" id="agreement" required>
+                <label class="form-check-label" for="agreement">I agree to the terms and conditions</label>
+              </div>
 
-            <div class="mb-3">
-              <label class="form-check-label" for="autoBid">enable auto bidding</label>
-              <input class="form-check-input" type="checkbox" name="autoBid" id="autoBid">
-            </div>
-
-            <div class="mb-3 d-none">
-              <label class="form-label" for="maxAutoBid" >Max Auto Bidding Amount</label>
-              <input class="form-control" type="text" name="autoBidAmt" id="autoBidAmt" required>
+              <button class="btn btn-success" id="submitBidBtn" onclick="return validateCheckbox()">Place Bid</button>
+            </form>
+            <%}%>
           </div>
+        </div>
 
-            <Button class="btn btn-success mr-3" id="submitBidBtn" onclick="return validateCheckbox()">Place Bid</Button>
-        </form>
-        <%}%>
-    
       <% if (endTime) { %>
         <% if (new Date() >= new Date(endTime)) { %>
           <div class="summary">

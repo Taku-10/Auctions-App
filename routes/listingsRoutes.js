@@ -31,11 +31,7 @@ router.get("/", async(req, res) => {
 that protects it. A user has to be authenticated(signed in) inorder to access it */
 router.get("/new", isSignedIn, async(req, res) => {
   const startTime = new Date();
-<<<<<<< HEAD
-  const endTime = new Date(startTime.getTime() + 5 * 60 * 1000);
-=======
-  const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000);
->>>>>>> User's-profile-management
+  const endTime = new Date(startTime.getTime() + 5 * 60 * 1000); // 5 minutes
   res.render("listings/new.ejs", {startTime, endTime});
 });
 
@@ -139,7 +135,7 @@ router.post("/:id/relist", isSignedIn, async (req, res) => {
     return res.status(400).send("Cannot relist a listing with bids.");
   }
    // Relist for 48 hours
-  listing.endTime = new Date(Date.now() + 48 * 60 * 60 * 1000);
+  listing.endTime = new Date(Date.now() + 5 * 60 * 60 * 1000);
   await listing.save();
   req.flash("success", "Listing successfully relisted!");
   res.redirect("/listings");

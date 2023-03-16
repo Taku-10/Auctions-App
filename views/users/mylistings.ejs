@@ -1,37 +1,42 @@
 <% layout("layouts/boilerplate") %>
-
-<h1>My Listings</h1>
-
-<!-- Check if there are any listings for that user -->
-<% if (listings.length > 0) { %>
-  <ul>
-    <% for (let listing of listings) { %>
-      <li>
-        <h2><%= listing.title %></h2>
-        <p>Current price: <%= listing.price %></p>
-        <p>Condition: <%= listing.condition %></p>
-        <p>Category: <%= listing.category %></p>
-        <p><%= listing.description %></p>
-        <!-- Check if a listing has any bids placed for it and if the auction for that listing has ended -->
-        <% if (listing.bids.length === 0 && new Date(listing.endTime) < new Date()) { %>
-          <form action="/listings/<%= listing._id %>/relist" method="post">
-            <Button class="btn btn-sm btn-success">Relist</Button>
-          </form>
-        <% } %>
-      </li>
-      <a href="/listings/<%= listing._id %>">View Listing</a>
-      <!-- Check if there is a user logged in and if the owners id of that listing is eqaul to the id of the currently logged in user -->
-      <% if (currentUser && listing.owner.equals(currentUser._id)) { %>
-        <div>
-          <a class="btn btn-info" href="/listings/<%= listing._id%>/edit">Edit</a>
-          <form action="/listings/<%= listing._id%>?_method=Delete" method="post">
-            <Button class="btn btn-sm btn-danger">Delete</Button>
-          </form>
+<div class="container py-5">
+  <!-- <h1 class="mb-4">My Listings</h1> -->
+  <% if (listings.length > 0) { %>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+      <% for (let listing of listings) { %>
+        <div class="col">
+          <div class="card h-100">
+            <h5 class="card-title text-center"><%= listing.title %></h5>
+            <div class="card-body">
+              <p class="card-text">Current price: <%= listing.price %></p>
+              <p class="card-text">Condition: <%= listing.condition %></p>
+              <p class="card-text">Category: <%= listing.category %></p>
+              <p class="card-text"><%= listing.description %></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="/listings/<%= listing._id %>" class="btn btn-sm btn-outline-secondary">View</a>
+                  <% if (currentUser && listing.owner.equals(currentUser._id)) { %>
+                    <a href="/listings/<%= listing._id %>/edit" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    <form action="/listings/<%= listing._id %>?_method=delete" method="post" onsubmit="return confirm('Are you sure you want to delete this listing?')">
+                      <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                  <% } %>
+                </div>
+                <% if (listing.bids.length === 0 && new Date(listing.endTime) < new Date()) { %>
+                  <form action="/listings/<%= listing._id %>/relist" method="post">
+                    <button type="submit" class="btn btn-sm btn-success">Relist</button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+          </div>
         </div>
       <% } %>
-    <% } %>
-  </ul>
-   
-<% } else { %>
-  <p>You have no listings.</p>
-<% } %>
+    </div>
+  <% } else { %>
+    <div class="alert alert-info" role="alert">
+      You have no items in your watchlist yet.
+    </div>
+  <% } %>
+</div>
+>

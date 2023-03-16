@@ -1,18 +1,25 @@
 <% layout("layouts/boilerplate") %>
-
-<h1>Personal Details</h1>
-<form action="/profile/<%= user._id%>?_method=PUT" method="post">
-    <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" name="username" class="form-control" value="<%=user.username %>">
+<div class="container my-5">
+  <h1 class="text-center mb-4">Personal Details</h1>
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <form action="/profile/<%= user._id %>?_method=PUT" method="post">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" name="username" class="form-control" value="<%= user.username %>" required>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" name="email" class="form-control" value="<%= user.email %>" required>
+        </div>
+        <div class="mb-3">
+          <label for="number" class="form-label">Mobile number</label>
+          <input type="tel" name="number" class="form-control" value="<%= user.number %>" required>
+        </div>
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-primary mt-4">Save Changes</button>
+        </div>
+      </form>
     </div>
-    <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="text" class="form-control" name="email" value="<%=user.email %>">
-    </div>
-    <div class="mb-3">
-        <label for="number" class="form-label">Mobile number</label>
-        <input type="text" class="form-control" name="number" value="<%=user.number %>">
-    </div>
-    <button type="submit" class="btn btn-primary d-block">Save Changes</button>
-</form>
+  </div>
+</div>

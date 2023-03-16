@@ -61,8 +61,6 @@ router.post("/register", async (req, res, next) => {
         console.log(err);
         res.redirect("/login");
       } else {
-        // Successfully registered
-        // Send welcome email to the newly registered user
         req.flash("success", "Welcome");
         res.redirect("/listings");
       }

@@ -1,101 +1,108 @@
 <% layout("layouts/boilerplate") %>
 <div class="container"> 
-</div>
-<div class="row">
-    <h1 class="text-center">Create a listing</h1>
-    <div class="col-6 offset-3">
-        <div class="card mb-4">
-            <div class="card-body">
-                <form action="/listings" class="needs-validation" method="post" novalidate>
-                    <div class="mb-3">
-                        <input type="hidden" name="startTime" value="<%= startTime %>">
-                    </div>
-                
-                    <div class="mb-3">
-                        <input type="hidden" name="endTime" value="<%= endTime %>">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="title">Title</label>
-                        <input class="form-control" type="text" name="title" id="title" required>
-                        <div class="valid-feedback">
-                            Looks good!
-                          </div>
-                          <div class="invalid-feedback">
-                            Enter a title to continue.
-                          </div>
-                    </div>
-
-                    <div class="mb-3">
-                      <label class="form-label" for="image">Images</label>
-                      <input class="form-control" type="text" name="image" id="image" required>
-                      <div class="valid-feedback">
-                          Looks good!
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+            <h1 class="text-center mb-4">Create a Listing</h1>
+            <div class="card mb-5 mt-5">
+                <div class="card-body">
+                    <form action="/listings" method="POST" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <input type="hidden" name="startTime" value="<%= startTime %>">
                         </div>
-                        <div class="invalid-feedback">
-                          Please add a photo to continue
+                    
+                        <div class="mb-3">
+                            <input type="hidden" name="endTime" value="<%= endTime %>">
                         </div>
-                  </div>
 
-                  <div class="mb-3">
-                    <label class="form-label" for="price">Price</label>
-                    <input class="form-control" type="text" name="price" id="price" required>
-                    <div class="valid-feedback">
-                        Looks good!
-                      </div>
-                      <div class="invalid-feedback">
-                        Please enter a price to continue.
-                      </div>
+                        <div class="form-group mb-3">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                              </div>
+                              <div class="invalid-feedback">
+                                Enter a title to continue.
+                              </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="image">Images</label>
+                            <input type="text" class="form-control" id="image" name="image" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                              </div>
+                            <div class="invalid-feedback">
+                                Please provide at least one image.
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="price">Price</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">$</div>
+                                </div>
+                                <input type="number" class="form-control" id="price" name="price" required>
+                                <div class="valid-feedback">
+                                    Looks good!
+                                  </div>
+                                  <div class="invalid-feedback">
+                                    Enter a price to continue.
+                                  </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="condition">Condition:</label>
+                            <select class="form-select" id="condition" name="condition" required>
+                                <option value="">Choose...</option>
+                                <option value="New">New</option>
+                                <option value="Used-like new">Used-like new</option>
+                                <option value="Used-good">Used-good</option>
+                                <option value="Used-fair">Used-fair</option>
+                            </select>
+                            <div class="valid-feedback">
+                                Looks good!
+                              </div>
+                            <div class="invalid-feedback">
+                                Please select the condition of the item.
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="category">Category</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Choose...</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Home & Garden">Home & Garden</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Sports and outdoors">Sports and outdoors</option>
+                                <option value="Clothing and accessories">Clothing and accessories</option>
+                            </select>
+                            <div class="valid-feedback">
+                                Looks good!
+                              </div>
+                            <div class="invalid-feedback">
+                                Please select a category.
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="location">Location:</label>
+                            <input type="text" class="form-control" id="location" name="location" required>
+                            <div class="valid-feedback">
+                                Looks good!
+                              </div>
+                              <div class="invalid-feedback">
+                                Enter a location to continue.
+                              </div>
+                        </div>
+                        <div class="text-center mb-3">
+                            <button type="submit" class="btn btn-success">Add Listing</button>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="mb-3">
-                  <label class="form-label" for="condition" placeholder="Condition">Condition</label>
-                  <select class="form-select" name="condition" id="condition">
-                    <option value="Choose..." disabled selected>Choose...</option>
-                      <option value="New">New</option>
-                      <option value="Used-like new">Used-like new</option>
-                      <option value="Used-good">Used-good</option>
-                      <option value="Used-fair">Used-fair</option>
-                  </select>
-                  <div class="valid-feedback">
-                      Looks good!
-                    </div>
-                    <div class="invalid-feedback">
-                      Please enter a condition to continue.
-                    </div>
-              </div>
-
-              <div class="mb-3">
-                <label for="category" class="form-label" placeholder="Category">Category</label>
-                <select name="category" id="category" class="form-select">
-                  <option value="Choose..." disabled selected>Choose...</option>
-                  <option value="Entertainment">Entertainment</option>
-                  <option value="Home & Garden">Home & Garden</option>
-                  <option value="Electronics">Electronics</option>
-                  <option value="Sports and outdoors">Sports and outdoors</option>
-                  <option value="Clothing and accessories">Clothing and accessories</option>
-                </select>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label" for="description">Description</label>
-                <textarea class="form-control" name="description" id="description" cols="10" rows="4"></textarea>
-            </div>
-
-              <div class="mb-3">
-                  <label class="form-label" for="location">location</label>
-                  <input class="form-control" type="text" name="location" id="location" required>
-                  <div class="valid-feedback">
-                      Looks good!
-                  </div>
-                  <div class="invalid-feedback">
-                      Enter a location to continue
-                  </div>
-              </div>
-
-                    <button class="btn btn-success">Add Listing</button>
-                </form>
             </div>
         </div>
     </div>
 </div>
+

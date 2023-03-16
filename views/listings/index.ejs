@@ -1,54 +1,43 @@
 <% layout("layouts/boilerplate") %>
-
-<div class="mt-5 mb-3 container">
-  <form class="d-flex align-items-center" action="/listings/search" method="GET">
-    <div class="form-group w-100 me-2">
-      <input type="text" name="q" class="form-control w-100" placeholder='Search listing by name or description eg "Samsung" ' required>
-    </div>
-    <button type="submit" class="btn btn-default-outline btn-sm">Search</button>
+<div class="container mt-5 mb-3">
+  <form class="input-group input-group-md" action="/listings/search" method="GET">
+    <input type="text" name="q" class="form-control" placeholder='Search listings by name or description, e.g. "Samsung"' required>
+    <button type="submit" class="btn btn-primary">Search</button>
   </form> 
 </div>
-<div class="d-flex flex-wrap align-items-start container">
-  <% for (let listing of listings) { %>
-    <!-- Set the end time to be the listing's end time -->
-    <% let endTime = new Date(listing.endTime); %>
-    <div class="col-12 col-md-4 col-lg-3 p-2">
-      <!-- Check if the auction has ended, ie the end time < the currentDate -->
-      <div class="card mb-3 mt-3 <%= endTime < new Date() ? 'auction-ended' : '' %>">
-        <div class="card-body">
-          <h5 class="card-title text-center"><%= listing.title %></h5>
+<div class="container">
+  <div class="row">
+    <% for (let listing of listings) { %>
+      <% let endTime = new Date(listing.endTime); %>
+      <div class="col-12 col-sm-6 col-md-4 mb-4">
+        <div class="card <%= endTime < new Date() ? 'auction-ended' : '' %>">
           <a href="/listings/<%=listing._id%>">
-            <img src="<%=listing.image%>" alt="A picture of <%= listing.title %>" class="img-fluid">
+            <img src="<%=listing.image%>" alt="A picture of <%= listing.title %>" class="card-img-top">
           </a>
-          <h6 class="card-text">Seller: <%= listing.owner.username %></h6>
-          <!-- Calculate the current highest bid for each listing -->
-          <% let highestBid = 0; %>
-          <!-- Check if there are any bids that have been placed for a listing -->
-          <% if (listing.bids.length === 0) { %>
-            <h6 class="card-text">No bids yet</h6>
-          <% } else { %>
-            <% for (let bid of listing.bids) { %>
-              <!-- Check if a bid amount is greater than the highest bid -->
-              <% if (bid.bidAmount > highestBid) { %>
-                 <!-- Set the highest bid to be the bid amount -->
-                <% highestBid = bid.bidAmount; %>
+          <div class="card-body">
+            <h5 class="card-title"><%= listing.title %></h5>
+            <h6 class="card-text">Seller: <%= listing.owner.username %></h6>
+            <% let highestBid = 0; %>
+            <% if (listing.bids.length === 0) { %>
+              <h6 class="card-text">No bids yet</h6>
+            <% } else { %>
+              <% for (let bid of listing.bids) { %>
+                <% if (bid.bidAmount > highestBid) { %>
+                  <% highestBid = bid.bidAmount; %>
+                <% } %>
+              <% } %>
+              <% if (highestBid > 0) { %>
+                <h6 class="card-text">Highest bid: $<%= highestBid %></h6>
               <% } %>
             <% } %>
-            <% if (highestBid > 0) { %>
-              <h6 class="card-text">Highest bid: $<%= highestBid %></h6>
-            <% } %>
-          <% } %>
-          
-          <h6 class="card-text text-muted"><%= listing.location %></h6>
-          <form action="/watchlist/add" method="post">
-            <input type="hidden" name="listingId" value="<%= listing._id %>">
-            <!-- Disable the add to watchlist button if the auction has ended -->
-            <button type="submit" class="btn btn-info btn-md card-link d-block <%= endTime < new Date() ? 'disabled' : '' %>">Add To Watchlist</button>
-          </form>
-          
+            <h6 class="card-text text-muted"><%= listing.location %></h6>
+            <form action="/watchlist/add" method="post">
+              <input type="hidden" name="listingId" value="<%= listing._id %>">
+              <button type="submit" class="btn btn-info w-100 <%= endTime < new Date() ? 'disabled' : '' %>">Add To Watchlist</button>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
     <% } %>
-
+  </div>
 </div>

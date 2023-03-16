@@ -45,6 +45,7 @@ const listingSchema = new Schema({
         type: String,
         enum: ["Home & Garden", "Entertainment", "Clothing and accessories", "Electronics", "Sports and outdoors"],
         required: [true, "Category must be selecetd"]
+        
     },
 
     owner: {

@@ -28,39 +28,48 @@ router.get("/", isSignedIn, async (req, res) => {
 
   /*This route will be used to post a listing to a user's Watchlist and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it*/
-  router.post("/add", isSignedIn, async (req, res) => {
-    if (!req.user) {
-      // If the user is not authenticated, redirect to the login page
-      return res.redirect('/login');
-    }
+router.post("/add", isSignedIn, async (req, res) => {
+  if (!req.user) {
+    // If the user is not authenticated, redirect to the login page
+    return res.redirect('/login');
+  }
 
-    const userId = req.user._id;
-    const listingId = req.body.listingId;
-  
-    // Check if the user already has the same listing in their watchlist
-    const watchlist = await Watchlist.findOne({ owner: userId, listing: listingId });
-    if (watchlist) {
-      // If the user already has the same listing in their watchlist, display an appropriate message
-      req.flash('error', 'You have already added this listing to your watchlist');
-    }
+  const userId = req.user._id;
+  const listingId = req.body.listingId;
 
-    // If the user does not have the same listing in their watchlist, create a new watchlist item
-    const newWatchlistItem = new Watchlist({
-      owner: userId,
-      listing: listingId,
-    });
-  
-    // Save the new watchlist item to the database
-    try {
-      await newWatchlistItem.save();
-      req.flash("success", "Listing added to your watchlist");
-      res.redirect("/watchlist");
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal server error');
-    }
+  // Check if the user is the owner of the listing
+  const listing = await Listing.findById(listingId);
+  if (listing.owner === userId) {
+    // If the user is the owner of the listing, display an appropriate message
+    req.flash('error', 'You cannot add your own listing to your watchlist');
+    return res.redirect('/listings');
+  }
+
+  // Check if the user already has the same listing in their watchlist
+  const watchlist = await Watchlist.findOne({ owner: userId, listing: listingId });
+  if (watchlist) {
+    // If the user already has the same listing in their watchlist, display an appropriate message
+    req.flash('error', 'You have already added this listing to your watchlist');
+    return res.redirect('/watchlist');
+  }
+
+  // If the user does not have the same listing in their watchlist and is not the owner of the listing, create a new watchlist item
+  const newWatchlistItem = new Watchlist({
+    owner: userId,
+    listing: listingId,
   });
-  
+
+  // Save the new watchlist item to the database
+  try {
+    await newWatchlistItem.save();
+    req.flash("success", "Listing added to your watchlist");
+    res.redirect("/watchlist");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal server error');
+  }
+});
+
 
   /*This route will be used to delete a listing from a user's watchlist and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it*/

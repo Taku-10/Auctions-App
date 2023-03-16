@@ -78,7 +78,7 @@ app.use((req, res, next) => {
 })
 
 app.get("/", (req, res) => {
-  res.send("HOME");
+  res.render("home");
 })
 
 /*This route will be used to retrieve all the listings that a user has posted*/

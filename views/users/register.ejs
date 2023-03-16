@@ -1,77 +1,86 @@
 <% layout("layouts/boilerplate") %>
 <div class="container">
-    <div class="row">
-        <h1>Sign Up</h1>
-        <div class="col-6 offset-3">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <form action="/register" class="needs-validation" method="post" novalidate>
-                        <div class="mb-3">
-                            <label class="form-label" for="owner">First name</label>
-                            <input class="form-control" type="text" name="firstname" id="firstname" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                              </div>
-                              <div class="invalid-feedback">
-                                Please choose a first name.
-                              </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="owner">Last name</label>
-                            <input class="form-control" type="text" name="lastname" id="lastname" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                              </div>
-                              <div class="invalid-feedback">
-                                Please choose a last name.
-                              </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label" for="owner">Email address</label>
-                            <input class="form-control" type="email" name="email" id="email" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                              </div>
-                              <div class="invalid-feedback">
-                                Please choose a valid email.
-                              </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label" for="owner">Username</label>
-                            <input class="form-control" type="text" name="username" id="username" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                              </div>
-                              <div class="invalid-feedback">
-                                Please choose a username.
-                              </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="owner">Password</label>
-                            <input class="form-control" type="password" name="password" id="password" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                              </div>
-                              <div class="invalid-feedback">
-                                Please choose a valid password.
-                              </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="owner">Mobile number</label>
-                            <input class="form-control" type="text" name="number" id="number" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                              </div>
-                              <div class="invalid-feedback">
-                                Please choose a number.
-                              </div>
-                        </div>
-                        <button class="btn btn-info d-block">Register</button>
-                    </form>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1">
+      <div class="card mt-5 mb-5">
+        <div class="card-header">
+          <h1 class="text-center">Sign Up</h1>
         </div>
+        <div class="card-body">
+          <form action="/register" class="needs-validation" method="post" novalidate>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label" for="firstname">First name</label>
+                <input class="form-control" type="text" name="firstname" id="firstname" required>
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback">
+                  Enter a first name to continue.
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="lastname">Last name</label>
+                <input class="form-control" type="text" name="lastname" id="lastname" required>
+                <div class="valid-feedback">
+                  Looks good!
+                </div>
+                <div class="invalid-feedback">
+                  Enter a last name to continue.
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="email">Email address</label>
+              <input class="form-control" type="email" name="email" id="email" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Enter an email to continue.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="username">Username</label>
+              <input class="form-control" type="text" name="username" id="username" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Enter a username to continue.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="password">Password</label>
+              <input class="form-control" type="password" name="password" id="password" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Enter a password to continue.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="number">Mobile number</label>
+              <input class="form-control" type="text" name="number" id="number" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Enter a mobile number to continue.
+              </div>
+            </div>
+
+            <div class="d-grid">
+              <button class="btn btn-primary btn-block" type="submit">Register</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
