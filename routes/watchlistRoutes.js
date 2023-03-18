@@ -79,9 +79,10 @@ that protects it. A user has to be authenticated(signed in) inorder to access it
       const watchlistItem = await Watchlist.findOneAndDelete({ owner: req.user._id, listing: req.params.id });
       // Check if the listing is there
       if (!watchlistItem) {
-        req.flash('erro', 'Watchlist item not found');
+        req.flash('error', 'Watchlist item not found');
+        res.redirect("/listings");
       }
-      req.flash('error', 'Deleted listing from your watchlist');
+      req.flash('success', 'Deleted listing from your watchlist');
       res.redirect('/watchlist');
     } 
     catch (err) {

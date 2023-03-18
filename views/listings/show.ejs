@@ -19,10 +19,10 @@
 
             <!-- Place bid for a listing -->
             <% if (!currentUser || !listing.owner.equals(currentUser._id)) {%>
-            <form action="/listings/<%=listing._id%>/bids" class="needs-validation" method="post" novalidate id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
+            <form novalidate action="/listings/<%=listing._id%>/bids" class="needs-validation" method="post" id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
 
               <div class="mb-3">
-                <label class="form-label" for="bidAmount" >Bid Amount</label>
+                <label class="form-label" for="bidAmount">Bid Amount</label>
                 <div class="input-group">
                   <span class="input-group-text">$</span>
                   <input class="form-control" type="text" name="bidAmount" id="bidAmount" required>
@@ -34,14 +34,31 @@
                   Please enter a valid amount.
                 </div>
               </div>
-
+              
               <div class="mb-3 form-check">
                 <input class="form-check-input" type="checkbox" name="agreement" id="agreement" required>
                 <label class="form-check-label" for="agreement">I agree to the terms and conditions</label>
               </div>
-
-              <button class="btn btn-success" id="submitBidBtn" onclick="return validateCheckbox()">Place Bid</button>
+              <button class="btn btn-success" id="placeBidBtn" onclick="showModal()">Place Bid</button>
             </form>
+            <div class="modal fade" tabindex="-1" role="dialog" id="bidConfirmationModal" aria-labelledby="confirmModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 id="confirmModalLabel" class="modal-title">Confirm Bid</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to place this bid?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmBidBtn">Yes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             <%}%>
           </div>
         </div>
@@ -89,6 +106,38 @@
 
 <% if (endTime) { %>
   <script>
+
+// Get a reference to the "Place Bid" form
+const placeBidForm = document.getElementById('place-bid');
+
+// Get a reference to the "Place Bid" button
+const placeBidBtn = document.getElementById('placeBidBtn');
+
+// Get a reference to the "Confirm Bid" button
+const confirmBidBtn = document.getElementById('confirmBidBtn');
+
+// Get a reference to the checkbox
+const agreementCheckbox = document.getElementById('agreement');
+
+// Add an event listener to the "Place Bid" button
+placeBidBtn.addEventListener('click', (event) => {
+  event.preventDefault(); // Prevent the form from being submitted automatically
+  if (agreementCheckbox.checked) {
+    $('#bidConfirmationModal').modal('show'); // Show the confirmation modal
+  } else {
+    alert('Please accept the terms and conditions to place a bid.');
+  }
+});
+
+// Add an event listener to the "Confirm Bid" button
+confirmBidBtn.addEventListener('click', (event) => {
+  event.preventDefault(); // Prevent the form from being submitted automatically
+  placeBidForm.submit(); // Submit the form
+  $('#bidConfirmationModal').modal('hide'); // Hide the confirmation modal
+});
+
+  
+  
     const endTime = new Date("<%= endTime %>");
     const countdown = document.getElementById("countdown");
 
@@ -121,9 +170,16 @@
         return false;
       }
     }
+
+
+
   </script>
 <% } %>
 
+
+
+
+ 
 
 
 
