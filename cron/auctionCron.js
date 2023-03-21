@@ -21,7 +21,7 @@ const sendSMSNotification = async(toNumber, body) => {
   
   
 const checkAndEndAuctions = async () => {
-  console.log("Running check And End Auctions function...........")
+  // console.log("Running check And End Auctions function...........")
   // Get all listings with an auctionStatus of Open and whose end date is less than or equal to the current date
   const now = new Date();
   const listings = await Listing.find({auctionStatus: "Open", endTime: {$lte: now}});
