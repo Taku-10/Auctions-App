@@ -6,50 +6,14 @@ const Bid = require("../models/bid");
 const Listing = require("../models/listing");
 const passport = require("passport");
 const moment = require("moment");
-const { isSignedIn } = require("../authenticate");
+const {isSignedIn, isOwnwer, resetPasswordLimiter} = require("../middleware/authenticate");
 require("dotenv").config();
 const sgMail = require("@sendgrid/mail");
 const crypto = require("crypto");
 const rateLimit = require("express-rate-limit");
-
+const sendEmail = require("../utilities/sendEmail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-const resetPasswordLimiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 5, // limit each IP address to 5 requests per windowMs
-  message: "Too many password reset attempts please try again later"
-});
-
-
-// Function to send Welcome email
-const sendWelcomeEmail = async (toEmail, name) => {
-  const msg = {
-    from: process.env.EMAIL_FROM,
-    to: toEmail,
-    subject: "Welcome to Auctions WA",
-    html: `<P>Hello ${name}, </p>
-        <p>Thank you for joining Auctions WA! We are excited to have you on board.</p>
-        <p>You can start browsing listings by visising <a href="http://localhost:3000/listings">Go to listings page</a>.</p>
-        <p>Best regards, <br/> The Auctions WA Team</p>`,
-  };
-
-  let retryCount = 0;
-  while (retryCount < 3) {
-    try {
-      await sgMail.send(msg);
-      console.log("Email sent successfully!");
-      return;
-    } catch (error) {
-      console.log(
-        `Error sending email ${retryCount + 1} retries left: ${error}`
-      );
-      retryCount++;
-      await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for  seconds before retrying to send email again
-    }
-  }
-
-  console.error("Maximum email sending attempts reached.");
-};
+const { getBids, formatDate } = require("../utilities/BidOutcome");
 
 /*This route will be used to render the register form for a user to register*/
 router.get("/register", (req, res) => {
@@ -63,8 +27,13 @@ router.post("/register", async (req, res, next) => {
     const user = new User({ firstname, lastname, email, username, number });
     // Register user through passport
     const registeredUser = await User.register(user, password);
-    // Log in the newly registered user after registering useing passport
-    // await sendWelcomeEmail(req.body.email, req.body.firstname);
+    const subject = "Welcome to Auctions WA";
+    const message = `Hello ${req.body.firstname}, </p>
+        <p>Thank you for joining Auctions WA! We are excited to have you on board.</p>
+        <p>You can start browsing listings by visising <a href="http://localhost:3000/listings">Go to listings page</a>.</p>
+        <p>Best regards, <br/> The Auctions WA Team</p>,`;
+    // Send Welcome Email and then Log in the newly registered user after registering using passport
+    await sendEmail(req.body.email, subject, message);
     req.logIn(registeredUser, (err) => {
       if (err) {
         console.log(err);
@@ -87,12 +56,19 @@ router.get("/login", (req, res) => {
 
 /*This route will be used to log in the user by checking the provided details on the log in form correspond to the
  ones in the database*/
-router.post("/login", passport.authenticate("local", {failureFlash: true, failureRedirect: "/login",}),(req, res) => {
+router.post(
+  "/login",
+  passport.authenticate("local", {
+    failureFlash: true,
+    failureRedirect: "/login",
+  }),
+  (req, res) => {
     req.flash("success", "Welcome back");
     const redirectUrl = req.session.returnTo || "/listings";
     delete req.session.returnTo;
     res.redirect(redirectUrl);
-  });
+  }
+);
 
 /*This route will be used to log out the user*/
 router.get("/logout", (req, res, next) => {
@@ -103,7 +79,7 @@ router.get("/logout", (req, res, next) => {
   });
 });
 
-// User profile management routes
+/*User profile management routes*/
 
 // This will render the form with the user's personal details
 
@@ -129,45 +105,6 @@ router.put("/profile/:id", isSignedIn, async (req, res) => {
   });
 });
 
-// Function to format date using moment.js library
-function formatDate(date) {
-  return moment(date).format("YYYY-MM-DD HH:mm:ss");
-}
-
-async function getBids(ownerId) {
-  const bids = await Bid.find({ owner: ownerId }).populate("listing");
-  const result = [];
-  for (const bid of bids) {
-    const listing = bid.listing;
-    const highestBid = await Bid.find({ listing: listing })
-      .sort({ bidAmount: -1 })
-      .limit(1)
-      .populate("owner");
-    const now = new Date();
-    const endTime = new Date(listing.endTime);
-    let wonAuction;
-    if (now > endTime) {
-      wonAuction = highestBid[0].owner._id.toString() === ownerId.toString()
-      ? "Won"
-      : "Lost"
-    } else {
-      wonAuction = highestBid[0].owner._id.toString() === ownerId.toString()
-        ? 'Auction still running and you are Winning'
-        : 'Auction still running and you are Losing';
-    }
-    result.push({
-      _id: bid._id,
-      bidAmount: bid.bidAmount,
-      date: formatDate(bid.date),
-      listing: listing,
-      image: listing.image,
-      wonAuction: wonAuction,
-    });
-  }
-  return result;
-}
-
-
 router.get("/bids", isSignedIn, async (req, res) => {
   try {
     const bids = await getBids(req.user._id);
@@ -178,24 +115,23 @@ router.get("/bids", isSignedIn, async (req, res) => {
   }
 });
 
-router.get("/mylistings", isSignedIn, async(req, res) => {
+router.get("/mylistings", isSignedIn, async (req, res) => {
   const currentUserId = req.user._id;
   // Find all the listings that have been posted by the currently logged in user
-  const listings = await Listing.find({owner: currentUserId});
-  res.render("users/mylistings", {listings});
-  
-})
+  const listings = await Listing.find({ owner: currentUserId });
+  res.render("users/mylistings", { listings });
+});
 
 // Route to render the password change form
-router.get('/password', isSignedIn, (req, res) => {
+router.get("/password", isSignedIn, (req, res) => {
   // Get the form data from the session
   const formData = req.flash("form")[0];
 
-  res.render('users/changePassword', { formData });
+  res.render("users/changePassword", { formData });
 });
 
 // Route to handle the password change request
-router.post('/change-password', isSignedIn, async (req, res) => {
+router.post("/change-password", isSignedIn, async (req, res) => {
   const { oldPassword, newPassword, confirmNewPassword } = req.body;
   const user = req.user;
 
@@ -207,7 +143,7 @@ router.post('/change-password', isSignedIn, async (req, res) => {
     // Store the form data in the session to prepopulate the form
     req.flash("form", { oldPassword, newPassword, confirmNewPassword });
 
-    return res.redirect('/password');
+    return res.redirect("/password");
   }
 
   try {
@@ -216,7 +152,7 @@ router.post('/change-password', isSignedIn, async (req, res) => {
 
     // Redirect to success page
     req.flash("success", "Password changed successfully");
-    return res.redirect('/profile');
+    return res.redirect("/profile");
   } catch (err) {
     // Handle password change error
     req.flash("error", "Incorrect password");
@@ -224,92 +160,87 @@ router.post('/change-password', isSignedIn, async (req, res) => {
     // Store the form data in the session to prepopulate the form
     req.flash("form", { oldPassword, newPassword, confirmNewPassword });
 
-    return res.redirect('/password');
+    return res.redirect("/password");
   }
 });
-
-
 
 // Forgot password page
-router.get('/forgot', (req, res) => {
-  res.render('users/forgot');
+router.get("/forgot", (req, res) => {
+  res.render("users/forgot");
 });
 
-
 // Process forgot password form
-router.post('/forgot', async (req, res) => {
+router.post("/forgot", async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    req.flash('error', 'Incorrect or invalid email address');
-    return res.redirect('/forgot');
+    req.flash("error", "Incorrect or invalid email address");
+    return res.redirect("/forgot");
   }
-  
+
   // Generate reset token
   user.generateResetToken();
   await user.save();
-  
+
   // Send reset email
   const resetUrl = `http://${req.headers.host}/reset/${user.resetPasswordToken}`;
-  const message = {
-    to: user.email,
-    from: process.env.EMAIL_FROM,
-    subject: 'Password Reset Request',
-    text: `Please click on the following link to reset your password: ${resetUrl}`,
-    html: `<p>Please click on the following link to reset your password: <a href="${resetUrl}">${resetUrl}</a>. It will expire after an hour</p>`
-  };
-  
-  await sgMail.send(message);
-  req.flash('success', 'An email has been sent to your email address with further instructions.');
-  res.redirect('/forgot');
-});
+  const subject = "Password Reset";
+  const message = `
+  <p>Hello ${user.firstname} ${user.lastname}</p>
+  <p>You requested to reset your password. Please click the link below to set a new password.</p>
+  <p>If you did not request a password reset, you can ignore this email</p>
+  <a href="${resetUrl}">Reset password</a>
+  <p>Best regards, <br/> The Auctions WA Team</p>, `;
 
+  await sendEmail(user.email, subject, message);
+  req.flash(
+    "success",
+    "An email has been sent to your email address with further instructions."
+  );
+  res.redirect("/forgot");
+});
 
 // Reset password page
-router.get('/reset/:token', resetPasswordLimiter, async (req, res) => {
+router.get("/reset/:token", resetPasswordLimiter, async (req, res) => {
   const user = await User.findOne({
     resetPasswordToken: req.params.token,
-    resetPasswordExpires: { $gt: Date.now() }
+    resetPasswordExpires: { $gt: Date.now() },
   });
   if (!user) {
-    req.flash('error', 'Password reset token is invalid or has expired.');
-    return res.redirect('/forgot');
+    req.flash("error", "Password reset token is invalid or has expired.");
+    return res.redirect("/forgot");
   }
-  
-  res.render('users/reset', { token: req.params.token });
+
+  res.render("users/reset", { token: req.params.token });
 });
 
-
 // Process reset password form
-router.post('/reset/:token', resetPasswordLimiter, async (req, res) => {
+router.post("/reset/:token", resetPasswordLimiter, async (req, res) => {
   const user = await User.findOne({
     resetPasswordToken: req.params.token,
-    resetPasswordExpires: { $gt: Date.now() }
+    resetPasswordExpires: { $gt: Date.now() },
   });
   if (!user) {
-    req.flash('error', 'Password reset token is invalid or has expired.');
-    return res.redirect('/forgot');
+    req.flash("error", "Password reset token is invalid or has expired.");
+    return res.redirect("/forgot");
   }
-  
+
   // Update password
   await user.setPassword(req.body.password);
   user.resetPasswordToken = undefined;
   user.resetPasswordExpires = undefined;
   await user.save();
-  
+
+  const subject = "Password Reset Confirmation";
+  const message = `<p>Hello ${user.firstname} ${user.lastname}</p>
+  <p>Your password has been successfully reset</p>
+  <p>If you did this, you can safely disregard this email</p>
+  <p>If you didn't dot his, please go to the log in page and click "Forgot password" to reset your password</p>
+  <p>Best regards, <br/> The Auctions WA Team</p>, 
+  `;
   // Send confirmation email
-  const message = {
-    to: user.email,
-    from: process.env.EMAIL_FROM,
-    subject: 'Password Reset Confirmation',
-    html: '<p>Your password has been successfully reset.</p>'
-  };
-  
-  await sgMail.send(message);
-  req.flash('success', 'Your password has been successfully reset.');
-  res.redirect('/login');
+  await sendEmail(user.email, subject, message);
+  req.flash("success", "Your password has been successfully reset.");
+  res.redirect("/login");
 });
 
-
-
 module.exports = router;
-
