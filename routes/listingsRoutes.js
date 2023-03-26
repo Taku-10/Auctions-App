@@ -2,20 +2,11 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 const Listing = require("../models/listing");
 const User = require("../models/user");
-const {isSignedIn, isOwnwer, resetPasswordLimiter} = require("../middleware/authenticate");
-
-const isOwner = async (req, res, next) => {
-  const { id } = req.params;
-  // Find the listing from the database by it's id
-  const listing = await Listing.findById(id);
-  // Check to see if the owner's id of that listing is the same as the currently logged in user's id
-  if (!listing.owner.equals(req.user._id)) {
-    req.flash("error", "You do not have permission to do that!");
-    res.redirect(`/listings/${listing._id}`);
-  }
-  // The owner of that listing id matches the id of the currently logged in user
-  return next();
-};
+const {isSignedIn, isOwner, resetPasswordLimiter} = require("../middleware/authenticate");
+require("dotenv").config();
+const mbxGeocoding = require ("@mapbox/mapbox-sdk/services/geocoding");
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geoCoder = mbxGeocoding({accessToken: mapBoxToken});
 
 /*This route retrieves all the Listings that have been posted by users and approved by the admins*/
 router.get("/", async (req, res) => {
@@ -37,27 +28,41 @@ router.get("/new", isSignedIn, async (req, res) => {
 /*This route will be used to post the listing created by a user to the database and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it*/
 router.post("/", isSignedIn, async (req, res) => {
-  const startTime = new Date();
-  // Set endTime when the auction ends to be 48 hours from the moment its posted
-  // const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000); // 48 Hours
-  const endTime = new Date(startTime.getTime() + 5 * 60 * 1000); // 5 minutes
-  //const endTime = new Date(startTime.getTime() + 7 * 24 * 60 * 60 * 1000); // 1 week
-  const listing = new Listing({
-    startTime: startTime,
-    title: req.body.title,
-    category: req.body.category,
-    description: req.body.description,
-    image: req.body.image,
-    price: req.body.price,
-    condition: req.body.condition,
-    endTime: endTime,
-    location: req.body.location,
-  });
-  listing.owner = req.user._id; // Current person logged in
-  await listing.save();
-  req.flash("success", "Successfuly posted your listing!");
-  res.redirect("/listings");
+  try {
+    const geoData = await geoCoder.forwardGeocode({
+      query: req.body.location,
+      limit: 1
+    }).send()
+
+    const startTime = new Date();
+    // Set endTime when the auction ends to be 48 hours from the moment its posted
+    // const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000); // 48 Hours
+    const endTime = new Date(startTime.getTime() + 5 * 60 * 1000); // 5 minutes
+    //const endTime = new Date(startTime.getTime() + 7 * 24 * 60 * 60 * 1000); // 1 week
+    const listing = new Listing({
+      startTime: startTime,
+      title: req.body.title,
+      category: req.body.category,
+      description: req.body.description,
+      image: req.body.image,
+      price: req.body.price,
+      condition: req.body.condition,
+      endTime: endTime,
+      location: req.body.location,
+    });
+    listing.geometry = geoData.body.features[0].geometry;
+    listing.owner = req.user._id; // Current person logged in
+    await listing.save();
+    console.log(listing);
+    req.flash("success", "Successfuly posted your listing!");
+    res.redirect("/listings");
+  } catch (error) {
+    console.log(error); // Log the error to the console for debugging purposes
+    req.flash("error", "Failed to geocode location. Please enter a valid location.");
+    res.redirect("/listings/new"); // Redirect the user to the new listing page to try again
+  }
 });
+
 
 /*This route will be used to display more detailed information about a specific listing*/
 router.get("/:id", async (req, res) => {

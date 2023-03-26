@@ -1,67 +1,71 @@
 <% layout("layouts/boilerplate") %>
-<div class="row justify-content-center">
-  <div class="col-lg-8 col-md-10 col-sm-12">
-    <div class="card mb-5 mt-5 mx-auto">
-      <div class="h1 card-heading text-center"><%= listing.title %></div>
-      <div class="card-body"> 
-        <div class="row">
-          <div class="col-lg-7 col-md-12">
-            <img src="<%= listing.image%> " alt="<%= listing.title %>" class="img-fluid card-img-top">
-          </div>
-          <div class="col-lg-5 col-md-12 mt-3">
-            <h6 class="card-text">Seller: <%= listing.owner.username %> </h6>
-            <h6 class="card-text">Starting Price: <%= listing.price %> </h6>
-            <h6 class="card-text">Condition: <%= listing.condition %></h6>
-            <h6 class="card-text">Category: <%= listing.category %></h6>
-            <p class="card-text"><%= listing.description %></p>
-            <div class="card-text h6 text-muted"><%= listing.location%></div>
-            <div class="card-text" id="countdown"></div>
-
-            <!-- Place bid for a listing -->
-            <% if (!currentUser || !listing.owner.equals(currentUser._id)) {%>
-            <form novalidate action="/listings/<%=listing._id%>/bids" class="needs-validation" method="post" id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
-
-              <div class="mb-3">
-                <label class="form-label" for="bidAmount">Bid Amount</label>
-                <div class="input-group">
-                  <span class="input-group-text">$</span>
-                  <input class="form-control" type="text" name="bidAmount" id="bidAmount" required>
-                </div>
-                <div class="valid-feedback">
-                  Looks good!
-                </div>
-                <div class="invalid-feedback">
-                  Please enter a valid amount.
-                </div>
-              </div>
-              
-              <div class="mb-3 form-check">
-                <input class="form-check-input" type="checkbox" name="agreement" id="agreement" required>
-                <label class="form-check-label" for="agreement">I agree to the terms and conditions</label>
-              </div>
-              <button class="btn btn-success" id="placeBidBtn" onclick="showModal()">Place Bid</button>
-            </form>
-            <div class="modal fade" tabindex="-1" role="dialog" id="bidConfirmationModal" aria-labelledby="confirmModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 id="confirmModalLabel" class="modal-title">Confirm Bid</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <p>Are you sure you want to place this bid?</p>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" id="confirmBidBtn">Yes</button>
-                  </div>
-                </div>
-              </div>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10 col-sm-12">
+      <div class="card mb-5 mt-5">
+        <div class="card-header">
+          <h1 class="card-title text-center"><%= listing.title %></h1>
+        </div>
+        <div class="card-body"> 
+          <div class="row">
+            <div class="col-lg-7 col-md-12">
+              <img src="<%= listing.image%> " alt="<%= listing.title %>" class="img-fluid rounded">
             </div>
-            
-            <%}%>
+            <div class="col-lg-5 col-md-12 mt-3">
+              <h6 class="card-text">Seller: <%= listing.owner.username %> </h6>
+              <p class="card-text"><%= listing.description %></p>
+              <div class="card-text text-muted"><%= listing.location%></div>
+              <div class="card-text mb-3" id="countdown"></div>
+              
+              <!-- Place bid for a listing -->
+              <% if (!currentUser || !listing.owner.equals(currentUser._id)) {%>
+              <form novalidate action="/listings/<%=listing._id%>/bids" class="needs-validation" method="post" id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
+                <div class="mb-3">
+                  <label class="form-label" for="bidAmount">Bid Amount</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input class="form-control" type="text" name="bidAmount" id="bidAmount" required>
+                  </div>
+                </div>
+
+                <div class="mb-3 form-check">
+                  <input class="form-check-input" type="checkbox" name="agreement" id="agreement" required>
+                  <label class="form-check-label" for="agreement">I agree to the terms and conditions</label>
+                </div>
+
+                <button class="btn btn-primary" id="placeBidBtn" onclick="showModal()">Place Bid</button>
+              </form>
+              
+
+              <div class="modal fade" tabindex="-1" role="dialog" id="bidConfirmationModal" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 id="confirmModalLabel" class="modal-title">Confirm Bid</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Are you sure you want to place this bid?</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="button" class="btn btn-danger" id="confirmBidBtn">Yes</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <%}%>
+             
+            </div>
+            <div style='width: 100%; height: 25vh;' id='map' class="mb-3 mt-3"></div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
       <% if (endTime) { %>
         <% if (new Date() >= new Date(endTime)) { %>
@@ -172,8 +176,20 @@ confirmBidBtn.addEventListener('click', (event) => {
   </script>
 <% } %>
 
+<script>
+  const mapToken = '<%-process.env.MAPBOX_TOKEN%>'
+  const listing = <%- JSON.stringify(listing)%>
+</script>
+<script src="/scripts/Maps.js"></script>
 
 
+
+
+ 
+
+
+
+ 
 
  
 
