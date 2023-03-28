@@ -5,7 +5,7 @@
             <h1 class="text-center mb-4">Create a Listing</h1>
             <div class="card mb-5 mt-5">
                 <div class="card-body">
-                  <form action="/listings/<%=listing._id%>?_method=PUT" method="post" class="needs-validation" novalidate>
+                  <form action="/listings/<%=listing._id%>?_method=PUT" method="post" class="needs-validation" enctype="multipart/form-data" novalidate>
                         <div class="form-group mb-3">
                             <label for="title">Title</label>
                             <input class="form-control" type="text" name="title" id="title" value="<%= listing.title %> " required>
@@ -15,16 +15,6 @@
                               <div class="invalid-feedback">
                                 Enter a title to continue.
                               </div>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="image">Images</label>
-                            <input class="form-control" type="text" name="image" id="image" value="<%= listing.image %> " required>
-                            <div class="valid-feedback">
-                                Looks good!
-                              </div>
-                            <div class="invalid-feedback">
-                                Please provide at least one image.
-                            </div>
                         </div>
                         <div class="form-group mb-3">
                             <label for="price">Price</label>
@@ -84,6 +74,12 @@
                               </div>
                             <div class="invalid-feedback">
                                Enter a location to continue.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Images:</label>
+                            <div class="input-group mb-3">
+                                <input multiple type="file" class="form-control" id="image" name="image" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                             </div>
                         </div>
                         <div class="text-center mb-3">

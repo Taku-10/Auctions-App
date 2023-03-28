@@ -1,7 +1,10 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const Listing = require("../models/listing");
 const Bid = require("../models/bid");
 const User = require("../models/user");
-require("dotenv").config();
 const twilioClient = require("twilio")(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const sendTextMessage = require("../utilities/sendTextMessage");
   

@@ -5,7 +5,7 @@
             <h1 class="text-center mb-4">Create a Listing</h1>
             <div class="card mb-5 mt-5">
                 <div class="card-body">
-                    <form action="/listings" method="POST" class="needs-validation" novalidate>
+                    <form action="/listings" method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
                         <div class="mb-3">
                             <input type="hidden" name="startTime" value="<%= startTime %>">
                         </div>
@@ -15,27 +15,18 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="title">Title</label>
+                            <label class="form-label" for="title">Title</label>
                             <input type="text" class="form-control" id="title" name="title" required>
                             <div class="valid-feedback">
                                 Looks good!
                               </div>
-                              <div class="invalid-feedback">
+                              <div class="invalid-feedback"> class="form-label"
                                 Enter a title to continue.
                               </div>
                         </div>
+
                         <div class="form-group mb-3">
-                            <label for="image">Images</label>
-                            <input type="text" class="form-control" id="image" name="image" required>
-                            <div class="valid-feedback">
-                                Looks good!
-                              </div>
-                            <div class="invalid-feedback">
-                                Please provide at least one image.
-                            </div>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="price">Price</label>
+                            <label class="form-label" for="price">Price</label>
                             <div class="input-group">
                                 <div class="input-group-prepend">
                                     <div class="input-group-text">$</div>
@@ -50,7 +41,7 @@
                             </div>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="condition">Condition:</label>
+                            <label class="form-label" for="condition">Condition:</label>
                             <select class="form-select" id="condition" name="condition" required>
                                 <option value="">Choose...</option>
                                 <option value="New">New</option>
@@ -66,7 +57,7 @@
                             </div>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="category">Category</label>
+                            <label class="form-label" for="category">Category</label>
                             <select class="form-select" id="category" name="category" required>
                                 <option value="">Choose...</option>
                                 <option value="Entertainment">Entertainment</option>
@@ -83,11 +74,11 @@
                             </div>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="description">Description</label>
+                            <label class="form-label" for="description">Description</label>
                             <textarea class="form-control" id="description" name="description" rows="4"></textarea>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="location">Location:</label>
+                            <label class="form-label" for="location">Location:</label>
                             <input type="text" class="form-control" id="location" name="location" required>
                             <div class="valid-feedback">
                                 Looks good!
@@ -95,6 +86,13 @@
                               <div class="invalid-feedback">
                                 Enter a location to continue.
                               </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Images:</label>
+                            <div class="input-group mb-3">
+                                <input multiple type="file" class="form-control" id="image" name="image" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                            </div>
                         </div>
                         <div class="text-center mb-3">
                             <button type="submit" class="btn btn-success">Add Listing</button>

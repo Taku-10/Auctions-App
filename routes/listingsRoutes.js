@@ -1,15 +1,28 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const Listing = require("../models/listing");
 const User = require("../models/user");
 const {isSignedIn, isOwner, resetPasswordLimiter} = require("../middleware/authenticate");
-require("dotenv").config();
 const mbxGeocoding = require ("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geoCoder = mbxGeocoding({accessToken: mapBoxToken});
+const multer = require("multer");
+const {storage} = require("../cloudinary/index");
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5, //limit file size to 5mb
+    files: 5 // limit number of files to 5
+  }
+})
+
 
 /*This route retrieves all the Listings that have been posted by users and approved by the admins*/
-router.get("/", async (req, res) => {
+router.get("/", isSignedIn, async (req, res) => {
   // Retrieve all the listings from the database
   const listings = await Listing.find({})
     .populate("owner")
@@ -27,7 +40,7 @@ router.get("/new", isSignedIn, async (req, res) => {
 
 /*This route will be used to post the listing created by a user to the database and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it*/
-router.post("/", isSignedIn, async (req, res) => {
+router.post("/", isSignedIn, upload.array("image"), async (req, res) => {
   try {
     const geoData = await geoCoder.forwardGeocode({
       query: req.body.location,
@@ -44,16 +57,15 @@ router.post("/", isSignedIn, async (req, res) => {
       title: req.body.title,
       category: req.body.category,
       description: req.body.description,
-      image: req.body.image,
       price: req.body.price,
       condition: req.body.condition,
       endTime: endTime,
       location: req.body.location,
     });
+    listing.images = req.files.map(f =>({url: f.path, filename: f.filename}));
     listing.geometry = geoData.body.features[0].geometry;
     listing.owner = req.user._id; // Current person logged in
     await listing.save();
-    console.log(listing);
     req.flash("success", "Successfuly posted your listing!");
     res.redirect("/listings");
   } catch (error) {
@@ -117,10 +129,13 @@ router.get("/:id/edit", isSignedIn, isOwner, async (req, res) => {
 /*Thos route will be used to update the listing and post to the database. and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it. It also has the isOwnwer middleware protecting
 it which ensures that only the owner of that listing is authorized to update the listing*/
-router.put("/:id", isSignedIn, isOwner, async (req, res) => {
+router.put("/:id", isSignedIn, isOwner, upload.array("image"), async (req, res) => {
   const { id } = req.params;
   // Find the listing from the database by it's specific id and then update it
   const listing = await Listing.findByIdAndUpdate(id, req.body);
+  const images = req.files.map(f =>({url: f.path, filename: f.filename}));
+  listing.images.push(...images);
+  await listing.save();
   req.flash("success", "Successfully update the listing");
   res.redirect(`/listings/${listing._id}`);
 });

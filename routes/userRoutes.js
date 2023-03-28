@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const nodemailer = require("nodemailer");
@@ -7,7 +11,6 @@ const Listing = require("../models/listing");
 const passport = require("passport");
 const moment = require("moment");
 const {isSignedIn, isOwnwer, resetPasswordLimiter} = require("../middleware/authenticate");
-require("dotenv").config();
 const sgMail = require("@sendgrid/mail");
 const crypto = require("crypto");
 const rateLimit = require("express-rate-limit");

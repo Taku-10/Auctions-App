@@ -1,11 +1,13 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const Bid = require("../models/bid");
 const Listing = require("../models/listing");
 const User = require("../models/user");
 const { isSignedIn } = require("../middleware/authenticate");
-
-require("dotenv").config();
 const twilioClient = require("twilio")(
   process.env.TWILIO_ACCOUNT_SID,
   process.env.TWILIO_AUTH_TOKEN

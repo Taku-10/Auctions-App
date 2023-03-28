@@ -25,10 +25,12 @@ const listingSchema = new Schema({
         trim: true
     },
 
-    image: {
-        type: String,
-        required: [true, "Image of the product must be supplied"]
-    },
+    images: [
+        {
+            url: String,
+            filename: String
+        }
+    ],
 
     price: {
         type: String,
