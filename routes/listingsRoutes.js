@@ -16,13 +16,13 @@ const upload = multer({
   storage,
   limits: {
     fileSize: 1024 * 1024 * 5, //limit file size to 5mb
-    files: 5 // limit number of files to 5
+    files: 4 // limit number of files to 5
   }
 })
 
 
 /*This route retrieves all the Listings that have been posted by users and approved by the admins*/
-router.get("/", isSignedIn, async (req, res) => {
+router.get("/", async (req, res) => {
   // Retrieve all the listings from the database
   const listings = await Listing.find({})
     .populate("owner")
