@@ -177,7 +177,7 @@ router.post("/forgot", async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
     req.flash("error", "Incorrect or invalid email address");
-    return res.redirect("/forgot");
+    return res.redirect("/login");
   }
 
   // Generate reset token
@@ -199,7 +199,7 @@ router.post("/forgot", async (req, res) => {
     "success",
     "An email has been sent to your email address with further instructions."
   );
-  res.redirect("/forgot");
+  res.redirect("/login");
 });
 
 // Reset password page
@@ -210,7 +210,7 @@ router.get("/reset/:token", resetPasswordLimiter, async (req, res) => {
   });
   if (!user) {
     req.flash("error", "Password reset token is invalid or has expired.");
-    return res.redirect("/forgot");
+    return res.redirect("/login");
   }
 
   res.render("users/reset", { token: req.params.token });

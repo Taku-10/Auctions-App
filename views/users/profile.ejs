@@ -1,26 +1,55 @@
 <% layout("layouts/boilerplate") %>
-<div class="container my-5">
-  <h1 class="text-center mb-4">Personal Details</h1>
-  <div class="row justify-content-center">
-    <div class="col-lg-6">
-      <a class="btn btn-warning" href="/password">Change password</a>
-      <form action="/profile/<%= user._id %>?_method=PUT" method="post">
-        <div class="mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input type="text" name="username" class="form-control" value="<%= user.username %>" required>
+<div class="container mt-5 my-5">
+  <div class="row justify-content-center mt-5">
+    <div class="col-lg-6 mt-5">
+      <div class="card shadow">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <h4>Account Information</h4>
+            </div>
+            <div class="col-md-6 text-md-end mb-2 mb-md-0">
+              <a class="btn btn-sm btn-warning" href="/password">Change Password</a>
+            </div>
+          </div>
+          <form action="/profile/<%= user._id %>?_method=PUT" method="post" class="needs-validation" novalidate>
+            <div class="mb-3 mt-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" name="username" class="form-control" value="<%= user.username %>" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Enter a username to continue
+              </div>
+            </div>
+           
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" name="email" class="form-control" value="<%= user.email %>" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Enter an email to continue
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="number" class="form-label">Mobile Number</label>
+              <input type="tel" name="number" class="form-control" value="<%= user.number %>" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+              <div class="invalid-feedback">
+                Enter a mobile number to continue
+              </div>
+            </div>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary mt-4">Save Changes</button>
+            </div>
+          </form>
         </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" name="email" class="form-control" value="<%= user.email %>" required>
-        </div>
-        <div class="mb-3">
-          <label for="number" class="form-label">Mobile number</label>
-          <input type="tel" name="number" class="form-control" value="<%= user.number %>" required>
-        </div>
-        <div class="d-grid gap-2">
-          <button type="submit" class="btn btn-primary mt-4">Save Changes</button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
 </div>
