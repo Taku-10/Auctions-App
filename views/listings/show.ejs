@@ -1,17 +1,16 @@
 <% layout("layouts/boilerplate") %>
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-lg-8 col-md-10 col-sm-12">
-
-      <div id="carouselExample" class="carousel slide">
-        <div class="carousel-inner">
+<div class="container mt-5 mb-5">
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <!-- Carousel to display all the listings images -->
+      <div id="carouselExample" class="carousel slide rounded overflow-hidden h-100">
+        <div class="carousel-inner h-100">
           <%listing.images.forEach((img, i) => {%>
-            <div class="carousel-item <%= i===0 ? 'active' : '' %>">
-              <img src="<%= img.url %>" class="d-block w-100" alt="...">
+            <div class="carousel-item <%= i===0 ? 'active' : '' %> h-100">
+              <img src="<%= img.url %>" class="d-block w-100 h-100" alt="..." style="object-fit: contain;">
             </div>
             <%})%>
         </div>
-
         <%if (listing.images.length > 1) {%>
           <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -22,64 +21,97 @@
             <span class="visually-hidden">Next</span>
           </button>
           <%}%>
-       
       </div>
-
-      <div class="card mb-5 mt-5">
-        <div class="card-header">
-          <h1 class="card-title text-center"><%= listing.title %></h1>
+    </div>
+    <div class="col-md-12">
+      <div class="p-3 bg-white mt-4 rounded mb-3 shadow h-100">
+        <h1 class="card-title text-center"><%= listing.title %></h1>
+        <hr>
+        <div class="row mb-3 mt-2">
+          <div class="col-md-6">
+            <h5 class="card-text ">Price</h5>
+            <h6 class="card-text mb-3"><span>$</span><%=listing.price %></h6>
+          </div>
+          <div class="col-md-6 mb-3 mt-2">
+            <h6 class="card-text ">Condition</h6>
+            <h5 class="card-text"><%= listing.condition %></h5>
+          </div>
         </div>
-        <div class="card-body"> 
-          <div class="row">
-            <div class="col-lg-7 col-md-12">
-            </div>
-            <div class="col-lg-5 col-md-12 mt-3">
-              <h6 class="card-text">Seller: <%= listing.owner.username %> </h6>
-              <p class="card-text"><%= listing.description %></p>
-              <div class="card-text text-muted"><%= listing.location%></div>
-              <div class="card-text mb-3" id="countdown"></div>
-              
-              <!-- Place bid for a listing -->
-              <% if (!currentUser || !listing.owner.equals(currentUser._id)) {%>
-              <form novalidate action="/listings/<%=listing._id%>/bids" class="needs-validation" method="post" id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
-                <div class="mb-3">
-                  <label class="form-label" for="bidAmount">Bid Amount</label>
-                  <div class="input-group">
-                    <span class="input-group-text">$</span>
-                    <input class="form-control" type="text" name="bidAmount" id="bidAmount" required>
+        
+        <div class="row mb-3 mt-2">
+          <div class="col-12">
+            <h6 class="card-text">Description</h6>
+            <p class="card-text"><%= listing.description %></p>
+          </div>
+        </div>
+        <hr>
+        <div class="row mb-3 mt-4">
+          <div class="col-12">
+            <h6 class="card-text mb-3">Auction Information</h6>
+            <% let highestBid = 0; %>
+            <% if (listing.bids.length === 0) { %>
+              <h6 class="card-text">No bids placed</h6>
+            <% } else { %>
+              <% for (let bid of listing.bids) { %>
+                <% if (bid.bidAmount > highestBid) { %>
+                  <% highestBid = bid.bidAmount; %>
+                <% } %>
+              <% } %>
+              <% if (highestBid > 0) { %>
+                <p class="card-text">Current Highest bid: $<%= highestBid %></p>
+              <% } %>
+            <% } %>
+            <div class="card-text mb-3" id="countdown"></div>
+            <!-- Place bid for a listing -->
+            <% if (!currentUser || !listing.owner.equals(currentUser._id)) {%>
+            <form novalidate action="/listings/<%=listing._id%>/bids" class="needs-validation" method="post" id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
+              <div class="mb-3">
+                <label class="form-label" for="bidAmount">Bid Amount</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input class="form-control" type="text" name="bidAmount" id="bidAmount" required>
+                  <div class="valid-feedback">
+                    Looks good!
+                  </div>
+                  <div class="invalid-feedback">
+                    Enter a valid amount to continue
                   </div>
                 </div>
-
-                <div class="mb-3 form-check">
+                <div class="mb-3 mt-4 form-check">
                   <input class="form-check-input" type="checkbox" name="agreement" id="agreement" required>
                   <label class="form-check-label" for="agreement">I agree to the terms and conditions</label>
                 </div>
-
-                <button class="btn btn-primary" id="placeBidBtn" onclick="showModal()">Place Bid</button>
-              </form>
-              
-
-              <div class="modal fade" tabindex="-1" role="dialog" id="bidConfirmationModal" aria-labelledby="confirmModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 id="confirmModalLabel" class="modal-title">Confirm Bid</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <p>Are you sure you want to place this bid?</p>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                      <button type="button" class="btn btn-danger" id="confirmBidBtn">Yes</button>
-                    </div>
+              </div>
+              <button class="btn mt-3 btn-primary" id="placeBidBtn" onclick="showModal()">Place Bid</button>
+            </form>
+            <div class="modal fade" tabindex="-1" role="dialog" id="bidConfirmationModal" aria-labelledby="confirmModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 id="confirmModalLabel" class="modal-title">Confirm Bid</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Are you sure you want to place this bid?</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmBidBtn">Yes</button>
                   </div>
                 </div>
               </div>
-              <%}%>
-             
             </div>
-            <div style='width: 100%; height: 25vh;' id='map' class="mb-3 mt-3"></div>
+            <% } %>
+            <hr>
+          </div>
+        
+        </div>
+        <div class="row mb-3 mt-4">
+          <div class="col-12">
+            <h6 class="card-text mb-3">Seller Information</h6>
+            <p class="card-text">Name: <%= listing.owner.username %></p>
+            <div style='width: 100%; height: 10vh; border: 1px solid #ccc;' id='map' class="mb-3 mt-3"></div>
+            <div class="card-text text-muted"><%= listing.location %></div>
           </div>
         </div>
       </div>
@@ -88,48 +120,7 @@
 </div>
 
 
-
-      <% if (endTime) { %>
-        <% if (new Date() >= new Date(endTime)) { %>
-          <div class="summary">
-            <h1>Auction Summary</h1>
-            <h6 class="card-text">Opened: <%= listing.startTime %> </h6>
-            <h6 class="card-text">Closed: <%= listing.endTime %> </h6>
-            <!-- Unique bidders -->
-            <h6 class="card-text">bidders: <%= numBidders %> </h6> 
-            <%if (listing.bids.length >= 1) {%>
-              <!-- Total number of bids -->
-              <h6 class="card-text">bids: <%= listing.bids.length %> </h6>
-            <%}%>
-            <% let highestBid = 0; %>
-            <% for (let bid of listing.bids) { %>
-              <% if (bid.bidAmount > highestBid) { %>
-                <% highestBid = bid.bidAmount; %>
-              <% } %>
-            <% } %>
-            <% if (highestBid > 0) { %>
-              <h6 class="card-text">Winning bid: $<%= highestBid %> </h6>
-            <% } %>
-            <p class="card-text winner">Winner: 
-              <% let winner = ''; %>
-              <% for (let bid of listing.bids) { %>
-                <% if (bid.bidAmount === highestBid) { %>
-                  <% winner = bid.owner.username %>
-                  <% break; %>
-                <% } %>
-              <% } %>
-              <%= winner %>
-            </p>
-          </div>
-        <% } %>
-      <% } %>
-          
-      </div>
-    </div>
-  </div>
-</div>
-
-
+    
 <% if (endTime) { %>
   <script>
 
@@ -179,7 +170,7 @@ confirmBidBtn.addEventListener('click', (event) => {
       const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
 
-      countdown.innerHTML = `Auction ends in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+      countdown.innerHTML = `Time remaining: ${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
 
     setInterval(updateCountdown, 1000);
@@ -204,17 +195,3 @@ confirmBidBtn.addEventListener('click', (event) => {
 </script>
 <script src="/scripts/Maps.js"></script>
 
-
-
-
- 
-
-
-
- 
-
- 
-
-
-
- 
