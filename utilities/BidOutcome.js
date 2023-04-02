@@ -35,7 +35,7 @@ async function getBids(ownerId) {
         bidAmount: bid.bidAmount,
         date: formatDate(bid.date),
         listing: listing,
-        image: listing.image,
+        image: listing.images[0].url,
         wonAuction: wonAuction,
       });
     }

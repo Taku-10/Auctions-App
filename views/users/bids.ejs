@@ -1,54 +1,54 @@
-
 <% layout("layouts/boilerplate") %>
+<div class="container mt-5 mb-5">
+  <h2 class="mb-4">Your Bids</h2>
 
-<div class="container mt-4">
-  <div class="row justify-content-center">
-    <div class="col-md-8 col-lg-12">
-      <h2 class="mb-4">Your Bids</h2>
+  <% if (bids.length > 0) { %>
+    <div class="row">
+      <% 
+      // Create a map to group bids by listing ID and store the highest bid for each listing
+      let groupedBids = new Map(); // Initializes a new map
+      bids.forEach(function(bid) { // Loops through each bid in the "bids" array
+        if (!groupedBids.has(bid.listing._id)) { // If the bid's listing ID is not in the map
+          groupedBids.set(bid.listing._id, { bid: bid, count: 1 }); // Adds the listing ID as a key and the bid object and count as the value
+        } else { // If the bid's listing ID is already in the map
+          let currGroup = groupedBids.get(bid.listing._id); // Gets the current bid object and count from the map
+          if (bid.bidAmount > currGroup.bid.bidAmount) { // If the current bid has a higher bid amount than the existing bid in the map
+            currGroup.bid = bid; // Updates the bid object in the map to the current bid
+          }
+          currGroup.count++; // Increases the count for the bid in the map
+        }
+      });
 
-      <div class="table-responsive">
-        <table class="table table-striped table-hover">
-          <thead class="thead-dark">
-            <tr>
-              <th scope="col">Bid ID</th>
-              <th scope="col">Date</th>
-              <th scope="col">Bid Amount</th>
-              <th scope="col">Listing</th>
-              <th scope="col">Outcome</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if (bids.length > 0) { %>
-              <% bids.forEach(function(bid) { %>
-                <tr>
-                  <td><%= bid._id %></td>
-                  <td><%= bid.date %></td>
-                  <td>$<%= bid.bidAmount %></td>
-                  <td>
-                    <div class="d-flex align-items-center">
-                      <img src="<%= bid.image %>" alt="Listing Image" width="60" height="60" class="mr-2">
-                      <div><%= bid.listing.title %></div>
-                    </div>
-                  </td>
-                  <% if (bid.wonAuction === "Won") { %>
-                    <td class="text-success"><%= bid.wonAuction %></td>
-                  <% } else if (bid.wonAuction === "Auction still running and you are Winning") { %>
-                    <td class="text-success"><%= bid.wonAuction %></td>
-                  <% } else if (bid.wonAuction === "Auction still running and you are Losing") { %>
-                    <td class="text-danger"><%= bid.wonAuction %></td>
-                  <% } else { %>
-                    <td class="text-danger"> <%= bid.wonAuction %> </td>
-                  <% } %>
-                </tr>
-              <% }); %>
-            <% } else { %>
-              <tr>
-                <td colspan="5" class="text-center">You have no bids yet.</td>
-              </tr>
-            <% } %>
-          </tbody>
-        </table>
-      </div>
+      // Loop through the highest bid for each listing and display it
+      groupedBids.forEach(function(group) {  // Loops through each group in the map
+        let bid = group.bid; // Gets the highest bid object from the group
+        let count = group.count; // Gets the number of bids for the listing from the group
+      %>
+      <div class="col-12 col-sm-6 col-md-4 mb-4">
+            <div class="card product-card">
+              <div class="image-container">
+              <img src="<%=bid.image%>" alt="A picture of <%= bid.listing.title %>" class="card-img-top">
+            </div>
+              <div class="card-body">
+               
+                <h5 class="card-title"><%= bid.listing.title %></h5>
+                <!--  <-- <p class="card-text">Bid ID: <%= bid._id %></p> -->
+                <p class="card-text">Bids Placed: <%= count %></p>
+                <p class="card-text">Bid Amount: <span class="fw-bold">$</span><%= bid.bidAmount %></p>
+                <p class="card-text text-muted">Date: <%= bid.date %></p>
+                <% if (bid.wonAuction === "Won" || bid.wonAuction === "Auction still running and you are Winning") { %>
+                  <p class="card-text text-success"><%= bid.wonAuction %></p>
+                <% } else { %>
+                  <p class="card-text text-danger"><%= bid.wonAuction %></p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }); %>
     </div>
-  </div>
+  <% } else { %>
+    <div class="text-center">
+      <p>You have no bids yet.</p>
+    </div>
+  <% } %>
 </div>

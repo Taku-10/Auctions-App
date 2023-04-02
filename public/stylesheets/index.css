@@ -12,5 +12,13 @@
     object-fit: cover;
   }
 
+  .description-ellipsis {
+    margin-left: 4px;
+    margin-right: 4px;
+  }
 
-  
+  .description-toggle {
+    color: #007bff;
+    cursor: pointer;
+  }
+
