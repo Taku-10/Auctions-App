@@ -16,21 +16,21 @@
                                 Enter a title to continue.
                               </div>
                         </div>
-                        <div class="form-group mb-3">
-                            <label for="price">Price</label>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="bidAmount">Price</label>
                             <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">$</div>
-                                </div>
-                                <input class="form-control" type="text" name="price" id="price" value="<%= listing.price %> " required>
-                                <div class="valid-feedback">
-                                    Looks good!
-                                  </div>
-                                  <div class="invalid-feedback">
-                                    Enter a price to continue.
-                                  </div>
+                              <span class="input-group-text">$</span>
+                              <input type="text" name="price" id="price" class="form-control" value="<%= listing.price %> " required>
+                              <div class="valid-feedback">
+                                Looks good!
+                              </div>
+                              <div class="invalid-feedback">
+                                Enter a price to continue
+                              </div>               
                             </div>
                         </div>
+
                         <div class="form-group mb-3">
                           <label class="form-label" for="condition">Condition</label>
                           <select class="form-select" name="condition" id="condition">
@@ -46,6 +46,7 @@
                             Please select the condition of the item.
                         </div>
                         </div>
+
                         <div class="form-group mb-3">
                           <label for="category" class="form-label">Category</label>
                           <select name="category" id="category" class="form-select">
@@ -62,10 +63,12 @@
                             Please select a category.
                         </div>
                         </div>
+
                         <div class="form-group mb-3">
                             <label for="description">Description</label>
                             <textarea class="form-control" name="description" id="description" cols="10" rows="4"><%= listing.description %> </textarea>
                         </div>
+
                         <div class="form-group mb-3">
                             <label for="location">Location</label>
                             <input class="form-control" type="text" name="location" id="location" value="<%= listing.location %>" required>
@@ -76,12 +79,14 @@
                                Enter a location to continue.
                             </div>
                         </div>
+
                         <div class="mb-3">
                             <label for="image" class="form-label">Images:</label>
                             <div class="input-group mb-3">
                                 <input multiple type="file" class="form-control" id="image" name="image" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                             </div>
                         </div>
+
                         <div class="text-center mb-3">
                             <button type="submit" class="btn btn-success">Update Listing</button>
                         </div>

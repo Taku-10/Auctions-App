@@ -1,13 +1,13 @@
 <% layout("layouts/boilerplate") %>
 <div class="container mt-5 mb-5">
-  <div class="row mt-4">
-    <div class="col-md-12">
+  <div class="row mt-4 justify-content-center">
+    <div class="col-md-8">
       <!-- Carousel to display all the listings images -->
-      <div id="carouselExample" class="carousel slide rounded overflow-hidden h-100">
-        <div class="carousel-inner h-100">
+      <div id="carouselExample" class="carousel slide rounded overflow-hidden">
+        <div class="carousel-inner">
           <%listing.images.forEach((img, i) => {%>
-            <div class="carousel-item <%= i===0 ? 'active' : '' %> h-100">
-              <img src="<%= img.url %>" class="d-block w-100 h-100" alt="..." style="object-fit: contain;">
+            <div class="carousel-item <%= i===0 ? 'active' : '' %>">
+              <img src="<%= img.url %>" class="d-block w-100" alt="..." style="object-fit: contain;">
             </div>
             <%})%>
         </div>
@@ -22,35 +22,34 @@
           </button>
           <%}%>
       </div>
-    </div>
-    <div class="col-md-12">
-      <div class="p-3 bg-white mt-4 rounded mb-3 shadow h-100">
-        <h1 class="card-title text-center"><%= listing.title %></h1>
-        <hr>
+      <div class="p-3 bg-white mt-4 mb-4 rounded shadow">
+        <h1 class="card-title text-truncate pt-2 border-bottom pb-3"><%= listing.title %></h1>
         <div class="row mb-3 mt-2">
           <div class="col-md-6">
             <h5 class="card-text ">Price</h5>
-            <h6 class="card-text mb-3"><span>$</span><%=listing.price %></h6>
+            <p class="card-text mb-3"><span>$</span><%=listing.price %></p>
           </div>
           <div class="col-md-6 mb-3 mt-2">
-            <h6 class="card-text ">Condition</h6>
-            <h5 class="card-text"><%= listing.condition %></h5>
+            <h5 class="card-text ">Condition</h5>
+            <p class="card-text"><%= listing.condition %></p>
           </div>
         </div>
         
         <div class="row mb-3 mt-2">
           <div class="col-12">
-            <h6 class="card-text">Description</h6>
+            <h5 class="card-text">Description</h5>
             <p class="card-text"><%= listing.description %></p>
           </div>
         </div>
-        <hr>
-        <div class="row mb-3 mt-4">
-          <div class="col-12">
-            <h6 class="card-text mb-3">Auction Information</h6>
+      </div>
+
+      <div class="p-3 bg-white mt-4 mb-4 rounded shadow">
+        <h4 class="card-subtitle card-text mb-4">Auction Information</h4>
+        <div class="row">
+          <div class="col-12 mb-3">
             <% let highestBid = 0; %>
             <% if (listing.bids.length === 0) { %>
-              <h6 class="card-text">No bids placed</h6>
+              <h6 class="card-text">No bids yet</h6>
             <% } else { %>
               <% for (let bid of listing.bids) { %>
                 <% if (bid.bidAmount > highestBid) { %>
@@ -58,24 +57,27 @@
                 <% } %>
               <% } %>
               <% if (highestBid > 0) { %>
-                <p class="card-text">Current Highest bid: $<%= highestBid %></p>
+                <h6 class="card-text">Current Highest Bid: $<%= highestBid %></h6>
               <% } %>
             <% } %>
             <div class="card-text mb-3" id="countdown"></div>
-            <!-- Place bid for a listing -->
-            <% if (!currentUser || !listing.owner.equals(currentUser._id)) {%>
-            <form novalidate action="/listings/<%=listing._id%>/bids" class="needs-validation" method="post" id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
+          </div>
+          <!-- Place bid for a listing -->
+          <% if (!currentUser || !listing.owner.equals(currentUser._id)) {%>
+          <div class="col-12">
+            <form action="/listings/<%=listing._id%>/bids" class="needs-validation" novalidate method="post" id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
+              
               <div class="mb-3">
                 <label class="form-label" for="bidAmount">Bid Amount</label>
                 <div class="input-group">
                   <span class="input-group-text">$</span>
-                  <input class="form-control" type="text" name="bidAmount" id="bidAmount" required>
+                  <input type="text" name="bidAmount" id="bidAmount" class="form-control" required>
                   <div class="valid-feedback">
                     Looks good!
                   </div>
                   <div class="invalid-feedback">
                     Enter a valid amount to continue
-                  </div>
+                  </div>               
                 </div>
                 <div class="mb-3 mt-4 form-check">
                   <input class="form-check-input" type="checkbox" name="agreement" id="agreement" required>
@@ -101,14 +103,15 @@
                 </div>
               </div>
             </div>
-            <% } %>
-            <hr>
           </div>
-        
+          <% } %>
         </div>
-        <div class="row mb-3 mt-4">
-          <div class="col-12">
-            <h6 class="card-text mb-3">Seller Information</h6>
+      </div>
+
+      <div class="p-3 bg-white mt-4 mb-4 rounded shadow">
+        <h4 class="card-subtitle card-text mb-4">Seller Information</h4>
+        <div class="row">
+          <div class="col-12 mb-3">
             <p class="card-text">Name: <%= listing.owner.username %></p>
             <div style='width: 100%; height: 10vh; border: 1px solid #ccc;' id='map' class="mb-3 mt-3"></div>
             <div class="card-text text-muted"><%= listing.location %></div>
@@ -117,7 +120,22 @@
       </div>
     </div>
   </div>
-</div>
+
+
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     

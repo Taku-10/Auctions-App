@@ -10,9 +10,11 @@
     <% for (let listing of listings) { %>
       <% let endTime = new Date(listing.endTime); %>
       <div class="col-12 col-sm-6 col-md-4 mb-4">
-        <div class="card <%= endTime < new Date() ? 'auction-ended' : '' %>">
+        <div class="card product-card <%= endTime < new Date() ? 'auction-ended' : '' %>">
           <a href="/listings/<%=listing._id%>">
-            <img src="<%=listing.images[0].url%>" alt="A picture of <%= listing.title %>" class="card-img-top">
+            <div class="image-container">
+              <img src="<%=listing.images[0].url%>" alt="A picture of <%= listing.title %>" class="card-img-top">
+            </div>
           </a>
           <div class="card-body">
             <h5 class="card-title"><%= listing.title %></h5>
