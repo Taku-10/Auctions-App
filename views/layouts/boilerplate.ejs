@@ -21,8 +21,8 @@
 <body class="d-flex flex-column vh-100 ">
   <%-include("../partials/navbar.ejs") %>  
     <main >
-      <%= success %>
-      <%= error %>
+    
+      <%- include('../partials/flash.ejs')%>
       
       <%- body %> 
     </main>
