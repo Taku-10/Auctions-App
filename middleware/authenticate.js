@@ -5,7 +5,10 @@ const rateLimit = require("express-rate-limit");
 const resetPasswordLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 hour
     max: 5, // limit each IP address to 5 requests per windowMs
-    message: "Too many password reset attempts please try again later"
+    onLimitReached: function (req, res, options) {
+      req.flash("error", "Too many password reset attempts. Please try again later.");
+    },
+    // message: "Too many password reset attempts please try again later"
   });
   
 
