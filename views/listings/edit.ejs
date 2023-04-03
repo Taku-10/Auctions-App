@@ -18,18 +18,18 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label" for="bidAmount">Price</label>
-                            <div class="input-group">
-                              <span class="input-group-text">$</span>
-                              <input type="text" name="price" id="price" class="form-control" value="<%= listing.price %> " required>
-                              <div class="valid-feedback">
-                                Looks good!
-                              </div>
-                              <div class="invalid-feedback">
-                                Enter a price to continue
-                              </div>               
+                          <label class="form-label" for="bidAmount">Price</label>
+                          <div class="input-group">
+                            <span class="input-group-text">$</span>
+                            <input type="number" name="price" id="price" class="form-control" required>
+                            <div class="valid-feedback">
+                              Looks good!
                             </div>
-                        </div>
+                            <div class="invalid-feedback">
+                              Enter a price to continue
+                            </div>               
+                          </div>
+                      </div>
 
                         <div class="form-group mb-3">
                           <label class="form-label" for="condition">Condition</label>

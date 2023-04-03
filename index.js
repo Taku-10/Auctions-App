@@ -1,7 +1,5 @@
 const express = require("express");
 const path = require("path");
-// const catchAsync = require("./utilities/catchAsync");
-// const AppError = require("./utilities/AppError");
 // const Joi = require("joi")
 const mongoose = require("mongoose");
 const Listing = require("./models/listing");
@@ -23,6 +21,8 @@ const userRoutes =require("./routes/userRoutes");
 const { isSignedIn} = require("./middleware/authenticate");
 const checkAndEndAuctions = require("./cron/auctionCron");
 const cron = require("node-cron");
+const ExpressError = require("./utilities/ExpressError");
+
 const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017/Auctions', {
@@ -136,6 +136,17 @@ cron.schedule("* * * * *", async () => {
   await checkAndEndAuctions();
 })
 
+
+app.all("*", (req, res, next) => {
+  next(new ExpressError("Page Not found", 404));
+})
+
+app.use((err, req, res, next) => {
+  const {statusCode=500} = err;
+  if (!err.message) err.message = "Oh No, Something Went Wrong!"
+  res.status(statusCode).render("error", {err});
+  res.send("Something went wrong");
+});
 
 app.listen(3000, () => {
     console.log("Serving on port 3000");
