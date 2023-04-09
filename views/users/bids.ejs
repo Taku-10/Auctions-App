@@ -1,7 +1,6 @@
 <% layout("layouts/boilerplate") %>
 <div class="container mt-5 mb-5">
   <h2 class="mb-4">Your Bids</h2>
-
   <% if (bids.length > 0) { %>
     <div class="row">
       <% 
@@ -24,11 +23,13 @@
         let bid = group.bid; // Gets the highest bid object from the group
         let count = group.count; // Gets the number of bids for the listing from the group
       %>
-      <div class="col-12 col-sm-6 col-md-4 mb-4">
+      <div class="col-12 col-md-4 col-lg-3 mb-4">
             <div class="card product-card">
-              <div class="image-container">
-              <img src="<%=bid.image%>" alt="A picture of <%= bid.listing.title %>" class="card-img-top">
-            </div>
+
+
+              <div class="image-container d-flex justify-content-center align-items-center">
+                <img src="<%=bid.image%>" alt="A picture of <%= bid.listing.title %>" class="thumbnail" >
+              </div>
               <div class="card-body">
                
                 <h5 class="card-title"><%= bid.listing.title %></h5>

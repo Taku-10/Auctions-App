@@ -11,7 +11,7 @@ const mbxGeocoding = require ("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geoCoder = mbxGeocoding({accessToken: mapBoxToken});
 const multer = require("multer");
-const {storage} = require("../cloudinary/index");
+const {storage, cloudinary} = require("../cloudinary/index");
 const upload = multer({
   storage,
   limits: {
@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
   const listings = await Listing.find({})
     .populate("owner")
     .populate({ path: "bids", populate: { path: "owner" } });
-  res.render("listings/index.ejs", { listings });
+  res.render("listings/index.ejs", { listings, cloudinary});
 });
 
 /*This route will be used to just a render a form to users to create a new listing and it has the isSignedIn middleware

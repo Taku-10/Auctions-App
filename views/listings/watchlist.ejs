@@ -1,34 +1,54 @@
 <% layout("layouts/boilerplate") %>
 <div class="container py-4">
-  <%if (watchlist.length > 0) {%>
-    <div class="row">
+  <% if (watchlist.length > 0) { %>
+    <div class="row ">
       <% watchlist.forEach(function(item) { %>
-        <div class="col-md-6 col-lg-4">
-          <div class="card mb-4">
-            <div class="position-relative">
-              <img src="<%= item.listing.image %>" class="card-img-top rounded-0" alt="Listing Image">
-              <span class="badge bg-danger position-absolute top-0 start-0 m-3">New</span>
-            </div>
+        <div class="col-12 col-md-4 col-lg-3 mb-4">
+          <div class="card h-100">
+            <a href="/listings/<%=item.listing._id%>">
+              <div class="image-container d-flex justify-content-center align-items-center">
+                <img src="<%=item.listing.images[0].url%>" alt="A picture of <%= item.listing.title %>" class="thumbnail" >
+              </div>
+            </a>
             <div class="card-body">
-              <h5 class="card-title mb-3"><%= item.listing.title %></h5>
-              <p class="card-text mb-2"><%= item.listing.description %></p>
+              <h5 class="card-title mb-3"><%= item.listing.title %></h5>                
               <p class="card-text text-muted mb-2">Seller: <%= item.listing.owner.username %></p>
-              <p class="card-text text-muted"><%= item.listing.location %></p>
+              <p class="card-text text-muted mb-2"><%= item.listing.location %></p>
               <hr>
-              <form action="/watchlist/<%= item.listing._id %>?_method=DELETE" method="POST">
-                <button type="submit" class="btn btn-danger">Remove from Watchlist</button>
-              </form>
+                <form action="/watchlist/<%= item.listing._id %>?_method=DELETE" method="POST">
+                  <button type="submit" class="btn btn-danger w-100">Remove from Watchlist</button>
+                </form>
             </div>
           </div>
         </div>
       <% }) %>
     </div>
-  </div>
-  
-  
-  <%} else {%>
+  <% } else { %>
     <div class="alert alert-info" role="alert">
       Your watchlist is empty
     </div>
-    <%}%>
+  <% } %>
+</div>
+
+
+<script>
+  const toggles = document.querySelectorAll('.description-toggle');
+  toggles.forEach((toggle) => {
+    toggle.addEventListener('click', (event) => {
+      event.preventDefault();
+      const card = toggle.closest('.product-card');
+      const shortDesc = card.querySelector('.description-short');
+      const fullDesc = card.querySelector('.description-full');
+      const ellipsis = card.querySelector('.description-ellipsis');
+      shortDesc.classList.toggle('d-none');
+      fullDesc.classList.toggle('d-none');
+      ellipsis.classList.toggle('d-none');
+      if (shortDesc.classList.contains('d-none')) {
+        toggle.textContent = 'See less';
+      } else {
+        toggle.textContent = 'See more';
+      }
+    });
+  });
   
+  </script>

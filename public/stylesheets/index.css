@@ -1,18 +1,28 @@
-.product-card {
-    height: 450px;
-  }
-  .product-card .image-container {
-    height: 250px;
-    overflow: hidden;
-  }
-  
-  .product-card .image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+.image-container {
+  height: 200px;
+  overflow: hidden;
+}
 
-  .description-ellipsis {
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-card {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.description-ellipsis {
     margin-left: 4px;
     margin-right: 4px;
   }

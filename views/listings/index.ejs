@@ -9,15 +9,15 @@
   <div class="row">
     <% for (let listing of listings) { %>
       <% let endTime = new Date(listing.endTime); %>
-      <div class="col-12 col-sm-6 col-md-4 mb-4">
-        <div class="card product-card <%= endTime < new Date() ? 'auction-ended' : '' %>">
+      <div class="col-12 col-md-4 col-lg-3 mb-4">
+        <div class="card product-card<%= endTime < new Date() ? 'auction-ended' : '' %>">
           <a href="/listings/<%=listing._id%>">
-            <div class="image-container">
-              <img src="<%=listing.images[0].url%>" alt="A picture of <%= listing.title %>" class="card-img-top">
+            <div class="image-container d-flex justify-content-center align-items-center">
+              <img src="<%=listing.images[0].url%>" alt="A picture of <%= listing.title %>" class="thumbnail" >
             </div>
           </a>
           <div class="card-body">
-            <h5 class="card-title"><%= listing.title %></h5>
+            <h5 class="card-title text-truncate"><%= listing.title %></h5>
             <h6 class="card-text">Seller: <%= listing.owner.username %></h6>
             <% let highestBid = 0; %>
             <% if (listing.bids.length === 0) { %>

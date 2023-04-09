@@ -122,7 +122,7 @@ router.get("/mylistings", isSignedIn, async (req, res) => {
   const currentUserId = req.user._id;
   // Find all the listings that have been posted by the currently logged in user
   const listings = await Listing.find({ owner: currentUserId });
-  res.render("users/mylistings", { listings });
+  res.render("users/mylistings", { listings, formatDate});
 });
 
 // Route to render the password change form
