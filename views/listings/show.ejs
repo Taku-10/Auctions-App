@@ -54,7 +54,29 @@
         <h4 class="card-subtitle card-text mb-4">Auction Information</h4>
         <div class="row">
           <div class="col-12 mb-3">
-            <% let highestBid = 0; %>
+
+            <% if (new Date() >= new Date(endTime)) { %>
+              <% let highestBid = 0; %>
+            <% for (let bid of listing.bids) { %>
+              <% if (bid.bidAmount > highestBid) { %>
+                <% highestBid = bid.bidAmount; %>
+              <% } %>
+            <% } %>
+            <% if (highestBid > 0) { %>
+              <h6 class="card-text">Winning bid: $<%= highestBid %> </h6>
+            <% } %>
+            <p class="card-text winner">Winner: 
+              <% let winner = ''; %>
+              <% for (let bid of listing.bids) { %>
+                <% if (bid.bidAmount === highestBid) { %>
+                  <% winner = bid.owner.username %>
+                  <% break; %>
+                <% } %>
+              <% } %>
+              <%= winner %>
+            </p>
+            <%}else {%>
+                 <% let highestBid = 0; %>
             <% if (listing.bids.length === 0) { %>
               <h6 class="card-text"><i class="fas fa-comment-alt"></i> No bids yet</h6>
             <% } else { %>
@@ -67,8 +89,8 @@
                 <h6 class="card-text"><i class="fas fa-money-bill-wave"></i> Highest bid: $<%= highestBid %></h6>
               <% } %>
             <% } %>
+            <% }%>
             <div class="card-text mb-3" id="countdown">
-              
             </div>
           </div>
           <!-- Place bid for a listing -->
