@@ -63,9 +63,10 @@
               <% } %>
             <% } %>
             <% if (highestBid > 0) { %>
-              <h6 class="card-text">Winning bid: $<%= highestBid %> </h6>
+              <h6 class="card-text"><i class="fas fa-money-bill-wave"></i> Winning bid: $<%= highestBid %> </h6>
             <% } %>
-            <p class="card-text winner">Winner: 
+            <p class="card-text winner"><i class="fas fa-trophy"></i>
+              Winner: 
               <% let winner = ''; %>
               <% for (let bid of listing.bids) { %>
                 <% if (bid.bidAmount === highestBid) { %>
@@ -196,7 +197,7 @@ confirmBidBtn.addEventListener('click', (event) => {
       const remainingTime = endTime - now;
 
       if (remainingTime <= 0) {
-        countdown.innerHTML = "Auction has ended.";
+        countdown.innerHTML = `<i class="fas fa-check-circle"></i> Auction ended`;
         return;
       }
 
