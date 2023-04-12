@@ -1,9 +1,9 @@
 // Model for a listing to post that is up for auction and open to bids
-
 const mongoose = require("mongoose");
 const Bid = require("./bid");
 const User = require("./user");
 const Admin = require("./admin");
+const { Number } = require("core-js");
 const {Schema} = mongoose;
 
 
@@ -33,7 +33,7 @@ const listingSchema = new Schema({
     ],
 
     price: {
-        type: String,
+        type: Number,
         required: [true, "Price must be provided"]
     },
 

@@ -13,6 +13,9 @@ const geoCoder = mbxGeocoding({accessToken: mapBoxToken});
 const multer = require("multer");
 const {storage, cloudinary} = require("../cloudinary/index");
 const catchAsync = require("../utilities/catchAsync");
+const ExpressError = require("../utilities/ExpressError");
+const Joi = require("joi");
+const validateListing = require("../middleware/validate");
 const upload = multer({
   storage,
   limits: {
@@ -34,7 +37,7 @@ router.get("/", catchAsync(async (req, res) => {
 
 /*This route will be used to just a render a form to users to create a new listing and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it */
-router.get("/new", isSignedIn, catchAsync(async (req, res) => {
+router.get("/new",isSignedIn, catchAsync(async (req, res) => {
   const startTime = new Date();
   const endTime = new Date(startTime.getTime() + 5 * 60 * 1000); // 5 minutes
   res.render("listings/new.ejs", { startTime, endTime });
@@ -42,7 +45,7 @@ router.get("/new", isSignedIn, catchAsync(async (req, res) => {
 
 /*This route will be used to post the listing created by a user to the database and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it*/
-router.post("/", isSignedIn, upload.array("image"), catchAsync(async (req, res) => {
+router.post("/", isSignedIn, validateListing, upload.array("image"), catchAsync(async (req, res) => {
   const geoData = await geoCoder.forwardGeocode({
     query: req.body.location,
     limit: 1
@@ -110,7 +113,7 @@ router.get("/:id", catchAsync(async (req, res) => {
 /*The route will be used to just render the form to edit a listing and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it. It also has the isOwner
 middleware which only authorizes the owner of that listing to upadate it*/
-router.get("/:id/edit", isSignedIn, isOwner, catchAsync(async (req, res) => {
+router.get("/:id/edit", isSignedIn, validateListing, isOwner, catchAsync(async (req, res) => {
   const { id } = req.params;
   // Find the listing from the databse by it's specific id
   const listing = await Listing.findById(id);
