@@ -4,11 +4,12 @@ const Listing = require("../models/listing");
 const Watchlist = require("../models/watchlist");
 const User = require("../models/user");
 const { isSignedIn } = require("../middleware/authenticate");
+const catchAsync = require("../utilities/catchAsync");
+
 
 /*This route will be used to get all the listings that a user added to their watchlist and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it*/
-router.get("/", isSignedIn, async (req, res) => {
-  try {
+router.get("/", isSignedIn, catchAsync(async (req, res) => {
     // Find from all the listings that are in the currently logged in user's Watchlist.
     const watchlist = await Watchlist.find({ owner: req.user._id })
       .populate({
@@ -17,15 +18,11 @@ router.get("/", isSignedIn, async (req, res) => {
       })
       .populate("owner");
     res.render("listings/watchlist", { watchlist });
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Server Error");
-  }
-});
+}));
 
 /*This route will be used to post a listing to a user's Watchlist and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it*/
-router.post("/add", isSignedIn, async (req, res) => {
+router.post("/add", isSignedIn, catchAsync(async (req, res) => {
   if (!req.user) {
     // If the user is not authenticated, redirect to the login page
     return res.redirect("/login");
@@ -60,36 +57,30 @@ router.post("/add", isSignedIn, async (req, res) => {
   });
 
   // Save the new watchlist item to the database
-  try {
-    await newWatchlistItem.save();
-    req.flash("success", "Listing added to your watchlist");
-    res.redirect("/watchlist");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal server error");
-  }
-});
+  await newWatchlistItem.save();
+  req.flash("success", "Listing added to your watchlist");
+  res.redirect("/watchlist");
+}));
+
+
+
 
 /*This route will be used to delete a listing from a user's watchlist and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it*/
-router.delete("/:id", isSignedIn, async (req, res) => {
-  try {
-    // Find the listing from a user's Watchlist by it's specific id and with the currently logged in user's id
-    const watchlistItem = await Watchlist.findOneAndDelete({
-      owner: req.user._id,
-      listing: req.params.id,
-    });
-    // Check if the listing is there
-    if (!watchlistItem) {
-      req.flash("error", "Watchlist item not found");
-      res.redirect("/listings");
-    }
-    req.flash("success", "Deleted listing from your watchlist");
-    res.redirect("/watchlist");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal server error");
+router.delete("/:id", isSignedIn, catchAsync(async (req, res) => {
+  // Find the listing from a user's Watchlist by it's specific id and with the currently logged in user's id
+  const watchlistItem = await Watchlist.findOneAndDelete({
+    owner: req.user._id,
+    listing: req.params.id,
+  });
+  // Check if the listing is there
+  if (!watchlistItem) {
+    req.flash("error", "Watchlist item not found");
+    res.redirect("/listings");
   }
-});
+  req.flash("success", "Deleted listing from your watchlist");
+  res.redirect("/watchlist");
+}));
+
 
 module.exports = router;

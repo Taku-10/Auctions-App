@@ -17,6 +17,7 @@ const rateLimit = require("express-rate-limit");
 const sendEmail = require("../utilities/sendEmail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const { getBids, formatDate } = require("../utilities/BidOutcome");
+const catchAsync = require("../utilities/catchAsync");
 
 /*This route will be used to render the register form for a user to register*/
 router.get("/register", (req, res) => {
@@ -24,33 +25,27 @@ router.get("/register", (req, res) => {
 });
 
 /*This route will be used to register a user thus submitting the user's details to the database*/
-router.post("/register", async (req, res, next) => {
-  try {
-    const { firstname, lastname, email, username, number, password } = req.body;
-    const user = new User({ firstname, lastname, email, username, number });
-    // Register user through passport
-    const registeredUser = await User.register(user, password);
-    const subject = "Welcome to Auctions WA";
-    const message = `Hello ${req.body.firstname}, </p>
-        <p>Thank you for joining Auctions WA! We are excited to have you on board.</p>
-        <p>You can start browsing listings by visising <a href="http://localhost:3000/listings">Go to listings page</a>.</p>
-        <p>Best regards, <br/> The Auctions WA Team</p>,`;
-    // Send Welcome Email and then Log in the newly registered user after registering using passport
-    await sendEmail(req.body.email, subject, message);
-    req.logIn(registeredUser, (err) => {
-      if (err) {
-        console.log(err);
-        res.redirect("/login");
-      } else {
-        req.flash("success", "Welcome");
-        res.redirect("/listings");
-      }
-    });
-  } catch (error) {
-    req.flash("error", error.message);
-    res.redirect("/register");
-  }
-});
+router.post("/register", catchAsync(async (req, res, next) => {
+  const { firstname, lastname, email, username, number, password } = req.body;
+  const user = new User({ firstname, lastname, email, username, number });
+  const registeredUser = await User.register(user, password);
+  const subject = "Welcome to Auctions WA";
+  const message = `Hello ${req.body.firstname}, </p>
+      <p>Thank you for joining Auctions WA! We are excited to have you on board.</p>
+      <p>You can start browsing listings by visising <a href="http://localhost:3000/listings">Go to listings page</a>.</p>
+      <p>Best regards, <br/> The Auctions WA Team</p>,`;
+  await sendEmail(req.body.email, subject, message);
+  req.logIn(registeredUser, (err) => {
+    if (err) {
+      console.log(err);
+      res.redirect("/login");
+    } else {
+      req.flash("success", "Welcome");
+      res.redirect("/listings");
+    }
+  });
+}));
+
 
 /*This route will be used to render the log in form for the user to log in*/
 router.get("/login", (req, res) => {
@@ -86,13 +81,14 @@ router.get("/logout", (req, res, next) => {
 
 // This will render the form with the user's personal details
 
-router.get("/profile", isSignedIn, async (req, res) => {
+router.get("/profile", isSignedIn, catchAsync(async (req, res) => {
   const user = await User.findById(req.user._id);
   res.render("users/profile", { user });
-});
+}));
+
 
 // This route will post the users updates to the form
-router.put("/profile/:id", isSignedIn, async (req, res) => {
+router.put("/profile/:id", isSignedIn, catchAsync(async (req, res, next) => {
   const userId = req.params.id;
   const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
     new: true,
@@ -106,30 +102,29 @@ router.put("/profile/:id", isSignedIn, async (req, res) => {
     req.flash("success", "Successfully updated your profile");
     res.redirect("/profile");
   });
-});
+}));
 
-router.get("/bids", isSignedIn, async (req, res) => {
-  try {
-    const bids = await getBids(req.user._id);
-    console.log(`This user has ${bids.length} bids`);
-    res.render("users/bids", { bids });
-  } catch (error) {
-    console.log(error);
-  }
-});
 
-router.get("/mylistings", isSignedIn, async (req, res) => {
+router.get("/bids", isSignedIn, catchAsync(async (req, res) => {
+  const bids = await getBids(req.user._id);
+  console.log(`This user has ${bids.length} bids`);
+  res.render("users/bids", { bids });
+}));
+
+
+router.get("/mylistings", isSignedIn, catchAsync(async (req, res) => {
   const currentUserId = req.user._id;
   // Find all the listings that have been posted by the currently logged in user
   const listings = await Listing.find({ owner: currentUserId });
   res.render("users/mylistings", { listings, formatDate});
-});
+}));
+
+
 
 // Route to render the password change form
 router.get("/password", isSignedIn, (req, res) => {
   // Get the form data from the session
   const formData = req.flash("form")[0];
-
   res.render("users/changePassword", { formData });
 });
 
@@ -158,7 +153,7 @@ router.post("/change-password", isSignedIn, async (req, res) => {
     return res.redirect("/profile");
   } catch (err) {
     // Handle password change error
-    req.flash("error", "Incorrect password");
+    req.flash("error", "Incorrect username and or password");
 
     // Store the form data in the session to prepopulate the form
     req.flash("form", { oldPassword, newPassword, confirmNewPassword });
@@ -173,7 +168,7 @@ router.get("/forgot", (req, res) => {
 });
 
 // Process forgot password form
-router.post("/forgot", async (req, res) => {
+router.post("/forgot", catchAsync(async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
     req.flash("error", "Incorrect or invalid email address");
@@ -195,15 +190,13 @@ router.post("/forgot", async (req, res) => {
   <p>Best regards, <br/> The Auctions WA Team</p>, `;
 
   await sendEmail(user.email, subject, message);
-  req.flash(
-    "success",
-    "An email has been sent to your email address with further instructions."
-  );
+  req.flash("success", "An email has been sent to your email address with further instructions.");
   res.redirect("/login");
-});
+}));
+
 
 // Reset password page
-router.get("/reset/:token", resetPasswordLimiter, async (req, res) => {
+router.get("/reset/:token", resetPasswordLimiter, catchAsync(async (req, res) => {
   const user = await User.findOne({
     resetPasswordToken: req.params.token,
     resetPasswordExpires: { $gt: Date.now() },
@@ -214,10 +207,10 @@ router.get("/reset/:token", resetPasswordLimiter, async (req, res) => {
   }
 
   res.render("users/reset", { token: req.params.token });
-});
+}));
 
 // Process reset password form
-router.post("/reset/:token", resetPasswordLimiter, async (req, res) => {
+router.post("/reset/:token", resetPasswordLimiter, catchAsync(async (req, res) => {
   const user = await User.findOne({
     resetPasswordToken: req.params.token,
     resetPasswordExpires: { $gt: Date.now() },
@@ -244,6 +237,6 @@ router.post("/reset/:token", resetPasswordLimiter, async (req, res) => {
   await sendEmail(user.email, subject, message);
   req.flash("success", "Your password has been successfully reset.");
   res.redirect("/login");
-});
+}));
 
 module.exports = router;

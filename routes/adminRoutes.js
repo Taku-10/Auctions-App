@@ -5,10 +5,11 @@ const Listing = require("../models/listing");
 const passport = require("passport");
 const Admin = require("../models/admin");
 const { isSignedIn } = require("../middleware/authenticate");
+const catchAsync = require("../utilities/catchAsync");
 
 /*Retrieve all the listings from the database that have been posted by users. They all have
 a default ststus of pending which will need to be approved or rejected by an admin*/
-router.get("/listings", async (req, res) => {
+router.get("/listings", catchAsync(async (req, res) => {
   // Find and retrieve all listings from the database with a status of Pending
   const listings = await Listing.find({ status: "Pending" }).populate("owner");
   if (!listings) {
@@ -18,19 +19,19 @@ router.get("/listings", async (req, res) => {
     // render the listings with pending ststus and pass them as an object to the ejs template
     res.render("admin/listings", { listings });
   }
-});
+}));
 
 /*This route displayes more information about a specific listing*/
-router.get("/listings/:id", async (req, res) => {
+router.get("/listings/:id", catchAsync(async (req, res) => {
   const { id } = req.params;
   // Find the particular listing from the database with that id in the req params
   const listing = await Listing.findById(id).populate("owner").populate("bids");
   res.render("admin/show", { listing });
-});
+}));
 
 /*Thir route will be the one used to find a particular listing by it's id from the database and
   approve it ie change it's status to Approved*/
-router.post("/listings/:id/approve", async (req, res) => {
+router.post("/listings/:id/approve", catchAsync(async (req, res) => {
   const { id } = req.params;
   // Find the particular listing by it's id in the database
   const listing = await Listing.findById(id);
@@ -46,11 +47,11 @@ router.post("/listings/:id/approve", async (req, res) => {
   await listing.save();
   req.flash("success", "Listing approved successfully");
   res.redirect("/admin/listings");
-});
+}));
 
 /*This route will be the one used to find a particular listing by it's id from the database and
   delete it ie change it's status to Rejected*/
-router.post("/listings/:id/reject", async (req, res) => {
+router.post("/listings/:id/reject", catchAsync(async (req, res) => {
   const { id } = req.params;
   // Find the particular listing from the database by its id
   const listing = await Listing.findById(id);
@@ -64,6 +65,6 @@ router.post("/listings/:id/reject", async (req, res) => {
   await listing.save();
   req.flash("success", "Listing rejected");
   res.redirect("/admin/listings");
-});
+}));
 
 module.exports = router;
