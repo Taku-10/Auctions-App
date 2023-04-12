@@ -1,4 +1,7 @@
 <% layout("layouts/boilerplate") %>
+<head>
+  <link rel="stylesheet" href="/stylesheets/styles.css">
+</head>
 <div class="container mt-5 mb-5">
   <div class="row mt-4 justify-content-center">
     <div class="col-md-8">
@@ -22,7 +25,9 @@
           </button>
           <%}%>
       </div>
-      <div class="p-3 bg-white mt-4 mb-4 rounded shadow">
+
+     <section class="mb-3">
+      <div class="p-3 bg-white mt-4 mb-4 rounded ">
         <h1 class="card-title text-truncate pt-2 border-bottom pb-3"><%= listing.title %></h1>
         <div class="row mb-3 mt-2">
           <div class="col-md-6">
@@ -42,14 +47,16 @@
           </div>
         </div>
       </div>
-
-      <div class="p-3 bg-white mt-4 mb-4 rounded shadow">
+    </section>
+  
+    <section class="mb-3">
+      <div class="p-3 bg-white mt-4 mb-4 rounded ">
         <h4 class="card-subtitle card-text mb-4">Auction Information</h4>
         <div class="row">
           <div class="col-12 mb-3">
             <% let highestBid = 0; %>
             <% if (listing.bids.length === 0) { %>
-              <h6 class="card-text">No bids yet</h6>
+              <h6 class="card-text"><i class="fas fa-comment-alt"></i> No bids yet</h6>
             <% } else { %>
               <% for (let bid of listing.bids) { %>
                 <% if (bid.bidAmount > highestBid) { %>
@@ -57,16 +64,17 @@
                 <% } %>
               <% } %>
               <% if (highestBid > 0) { %>
-                <h6 class="card-text">Current Highest Bid: $<%= highestBid %></h6>
+                <h6 class="card-text"><i class="fas fa-money-bill-wave"></i> Highest bid: $<%= highestBid %></h6>
               <% } %>
             <% } %>
-            <div class="card-text mb-3" id="countdown"></div>
+            <div class="card-text mb-3" id="countdown">
+              
+            </div>
           </div>
           <!-- Place bid for a listing -->
           <% if (!currentUser || !listing.owner.equals(currentUser._id)) {%>
           <div class="col-12">
             <form action="/listings/<%=listing._id%>/bids" class="needs-validation" novalidate method="post" id="place-bid" <% if (endTime) { %> <% if (new Date() >= new Date(endTime)) { %> style="display: none" <% } %> <% } %>>
-              
               <div class="mb-3">
                 <label class="form-label" for="bidAmount">Bid Amount</label>
                 <div class="input-group">
@@ -84,7 +92,8 @@
                   <label class="form-check-label" for="agreement">I agree to the terms and conditions</label>
                 </div>
               </div>
-              <button class="btn mt-3 btn-primary" id="placeBidBtn" onclick="showModal()">Place Bid</button>
+              <button class="btn mt-3 btn-primary" id="placeBidBtn" onclick="showModal()">
+                <i class="fas fa-gavel"></i> Place Bid</button>
             </form>
             <div class="modal fade" tabindex="-1" role="dialog" id="bidConfirmationModal" aria-labelledby="confirmModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
@@ -107,8 +116,10 @@
           <% } %>
         </div>
       </div>
+    </section>
 
-      <div class="p-3 bg-white mt-4 mb-4 rounded shadow">
+    <section class="mb-3">
+      <div class="p-3 bg-white mt-4 mb-5 rounded ">
         <h4 class="card-subtitle card-text mb-4">Seller Information</h4>
         <div class="row">
           <div class="col-12 mb-3">
@@ -118,25 +129,9 @@
           </div>
         </div>
       </div>
+    </section>
     </div>
   </div>
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     
 <% if (endTime) { %>
@@ -188,7 +183,7 @@ confirmBidBtn.addEventListener('click', (event) => {
       const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
 
-      countdown.innerHTML = `Time remaining: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+      countdown.innerHTML = `<i class="fa-regular fa-clock fa-lg"></i> ${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
 
     setInterval(updateCountdown, 1000);

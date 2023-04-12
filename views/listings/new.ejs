@@ -5,11 +5,11 @@
             <h1 class="text-center mb-4">Create a Listing</h1>
             <div class="card mb-5 mt-5">
                 <div class="card-body">
+                    <h1 class="text-center mb-4"><i class="fas fa-gavel"></i> BidMart</h1>
                     <form action="/listings" method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
                         <div class="mb-3">
                             <input type="hidden" name="startTime" value="<%= startTime %>">
                         </div>
-                    
                         <div class="mb-3">
                             <input type="hidden" name="endTime" value="<%= endTime %>">
                         </div>
@@ -93,9 +93,11 @@
                             <div class="input-group mb-3">
                                 <input multiple type="file" class="form-control" id="image" name="image" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                             </div>
+                            <div id="image-counter" class="form-text text-center">0/4 images uploaded</div>
                         </div>
-                        <div class="text-center mb-3">
-                            <button type="submit" class="btn btn-success">Add Listing</button>
+                        
+                        <div class="text-center mb-3 mt-3">
+                            <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i> Add Listing</button>
                         </div>
                     </form>
                 </div>
@@ -104,3 +106,32 @@
     </div>
 </div>
 
+<script>
+    const form = document.querySelector('form');
+    const fileInput = document.querySelector('#image');
+    const maxFiles = 4;
+
+    fileInput.addEventListener('change', function() {
+        const numFiles = fileInput.files.length;
+        const counter = document.querySelector('#image-counter');
+
+        if (numFiles > maxFiles) {
+            alert('You can only upload a maximum of 4 images.');
+            fileInput.value = '';
+            counter.textContent = '0/4';
+        } else {
+            counter.textContent = `${numFiles}/${maxFiles}`;
+        }
+    });
+
+    form.addEventListener('submit', function(event) {
+        const numFiles = fileInput.files.length;
+
+        if (numFiles > maxFiles) {
+            alert('You can only upload a maximum of 4 images.');
+            event.preventDefault();
+        }
+    });
+</script>
+
+    

@@ -1,41 +1,36 @@
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-danger">
-  <div class="container-fluid">
-      <a class="navbar-brand" href="#">BidMart</a>
+    <div class="container-fluid">
+      <a class="navbar-brand fs-3" href="#"><i class="fas fa-gavel"></i> BidMart</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-              <a class="nav-link" href="/">Home</a>
-              <a class="nav-link" href="/listings">Listings</a>
-              <a class="nav-link" href="/listings/new">New Listing</a>
-              <a class="nav-link" href="/watchlist">Watchlist</a>
-              <% if (currentUser) { %>
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Profile
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/profile">Personal Details </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/bids">My bids</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/mylistings">My Listings</a></li>
-                    </ul>
-                </div>
-                <% } %>
-         
+        <div class="navbar-nav ">
+          <a class="nav-link" href="/">Home</a>
+          <a class="nav-link" href="/listings">Listings</a>
+          <a class="nav-link" href="/listings/new">New Listing</a>
+          <a class="nav-link" href="/watchlist">Watchlist</a>
+        </div>
+        <div class="navbar-nav ms-auto order-sm-last">
+          <% if (!currentUser) { %>
+          <a class="nav-link" href="/login">Login</a>
+          <a class="nav-link" href="/register">Register</a>
+          <% } else { %>
+          <div class="dropdown">
+            <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user"></i> Hi, <%= currentUser.username %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/profile">Personal Details </a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/bids">My bids</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/mylistings">My Listings</a></li>
+            </ul>
           </div>
-          <div class="navbar-nav ms-auto">
-              <% if (!currentUser) { %>
-                  <a class="nav-link" href="/login">Login</a>
-                  <a class="nav-link" href="/register">Register</a>
-              <% } else { %>
-                  <span class="navbar-text mx-5">Hi, <%= currentUser.username %></span>
-                  <a class="nav-link" href="/logout">Logout</a>
-              <% } %>
-          </div>
+          <a href="/logout" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+          <% } %>
+        </div>
       </div>
-  </div>
-</nav>
-
+    </div>
+  </nav>

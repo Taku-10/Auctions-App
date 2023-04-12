@@ -1,0 +1,16 @@
+body {
+    background-color: #f1f1f1;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  .carousel-inner {
+    height: 500px; /* adjust the height to your desired value */
+    border-radius: 20px; /* set the desired border-radius */
+    overflow: hidden;
+  }
+  
+  .carousel-inner img {
+    object-fit: cover;
+  }
+
+  

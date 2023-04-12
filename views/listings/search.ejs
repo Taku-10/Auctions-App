@@ -1,21 +1,27 @@
 <% layout("layouts/boilerplate") %>
+<head>
+  <link rel="stylesheet" href="/stylesheets/index.css">
+</head>
 <div class="container py-4">
-  <h1>Search results for "<%= query %>"</h1>
+  <h1 class="text-center mb-4">Search Results for "<%= query %>"</h1>
   <% if (listings.length === 0) { %>
     <div class="alert alert-info" role="alert">
       No listings found.
     </div>
   <% } else { %>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <div class="row">
       <% listings.forEach(listing => { %>
-        <div class="col">
-          <div class="card h-100">
-            <img src="<%= listing.image %>" class="card-img-top" alt="<%= listing.title %>">
+        <div class="col-12 col-md-4 col-lg-3 mb-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <a href="/listings/<%=listing._id%>">
+              <div class="image-container d-flex justify-content-center align-items-center">
+                <img src="<%=listing.images[0].url%>" alt="A picture of <%= listing.title %>" class="thumbnail" >
+              </div>
+            </a>
             <div class="card-body">
-              <h5 class="card-title"><%= listing.title %></h5>
-              <p class="card-text"><%= listing.description %></p>
-              <p class="card-text"><strong>Starting Bid:</strong> $<%= listing.price%></p>
-              <a href="/listings/<%= listing._id %>" class="btn btn-primary">View Listing</a>
+              <h5 class="card-title mb-2"><%= listing.title %></h5>
+              <p class="card-text mb-0"><strong>Starting Bid:</strong> $<%= listing.price%></p>
+              <a href="/listings/<%= listing._id %>" class="btn btn-primary mt-3">View Listing</a>
             </div>
           </div>
         </div>
