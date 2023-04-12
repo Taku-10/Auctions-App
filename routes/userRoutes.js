@@ -120,7 +120,6 @@ router.get("/mylistings", isSignedIn, catchAsync(async (req, res) => {
 }));
 
 
-
 // Route to render the password change form
 router.get("/password", isSignedIn, (req, res) => {
   // Get the form data from the session
