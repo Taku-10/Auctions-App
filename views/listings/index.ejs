@@ -8,7 +8,21 @@
     <button type="submit" class="btn btn-primary">
       <i class="fas fa-search"></i>
     </button>
-  </form> 
+  </form>
+  <br>
+  <div class="btn-group dropend">
+    <button type="button" class="btn btn-outline-secondary dropdown-toggle text-uppercase fw-bold" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="fas fa-bars me-2"></i> Shop by category
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="/listings?category=Electronics">Electronics</a></li>
+      <li><a class="dropdown-item" href="/listings?category=Home%20%26%20garden">Home & garden</a></li>
+      <li><a class="dropdown-item" href="/listings?category=Entertainment">Entertainment</a></li>
+      <li><a class="dropdown-item" href="/listings?category=Clothing%20and%20accessories">Clothing and accessories</a></li>
+      <li><a class="dropdown-item" href="/listings?category=Sports%20and%20outdoors">Sports and outdoors</a></li>
+    </ul>
+  </div>
+  
 </div>
 <div class="container">
   <div class="row">
@@ -23,6 +37,7 @@
           </a>
           <div class="card-body">
             <h5 class="card-title text-truncate"><%= listing.title %></h5>
+            <h6><%= listing.category %></h6>
             <h6 class="card-text"><i class="fas fa-user"></i> Seller: <%= listing.owner.username %></h6>
             <% let highestBid = 0; %>
             <% if (listing.bids.length === 0) { %>

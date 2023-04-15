@@ -24,14 +24,20 @@ const upload = multer({
   }
 })
 
-
 /*This route retrieves all the Listings that have been posted by users and approved by the admins*/
 router.get("/", catchAsync(async (req, res) => {
-  // Retrieve all the listings from the database
-  const listings = await Listing.find({})
+  // Get the selected category from the query parameter
+  const selectedCategory = req.query.category;
+
+  // Define the filter based on the selected category
+  const filter = selectedCategory ? { category: selectedCategory } : {};
+
+  // Retrieve the listings that match the filter
+  const listings = await Listing.find(filter)
     .populate("owner")
     .populate({ path: "bids", populate: { path: "owner" } });
-  res.render("listings/index.ejs", { listings, cloudinary});
+
+  res.render("listings/index.ejs", { listings, selectedCategory });
 }));
 
 
