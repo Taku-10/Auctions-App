@@ -12,10 +12,11 @@ const mapBoxToken = process.env.MAPBOX_TOKEN;
 const geoCoder = mbxGeocoding({accessToken: mapBoxToken});
 const multer = require("multer");
 const {storage, cloudinary} = require("../cloudinary/index");
+const { listingSchema } = require("../schemas.js");
+const validateListing  = require("../middleware/validate");
 const catchAsync = require("../utilities/catchAsync");
 const ExpressError = require("../utilities/ExpressError");
 const Joi = require("joi");
-const validateListing = require("../middleware/validate");
 const upload = multer({
   storage,
   limits: {
@@ -28,7 +29,6 @@ const upload = multer({
 router.get("/", catchAsync(async (req, res) => {
   // Get the selected category from the query parameter
   const selectedCategory = req.query.category;
-
   // Define the filter based on the selected category
   const filter = selectedCategory ? { category: selectedCategory } : {};
 
@@ -49,9 +49,12 @@ router.get("/new",isSignedIn, catchAsync(async (req, res) => {
   res.render("listings/new.ejs", { startTime, endTime });
 }));
 
+
+
 /*This route will be used to post the listing created by a user to the database and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it*/
-router.post("/", isSignedIn, validateListing, upload.array("image"), catchAsync(async (req, res) => {
+router.post("/", isSignedIn, upload.array("image"), validateListing, catchAsync(async (req, res) => {
+
   const geoData = await geoCoder.forwardGeocode({
     query: req.body.location,
     limit: 1
@@ -119,7 +122,7 @@ router.get("/:id", catchAsync(async (req, res) => {
 /*The route will be used to just render the form to edit a listing and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it. It also has the isOwner
 middleware which only authorizes the owner of that listing to upadate it*/
-router.get("/:id/edit", isSignedIn, validateListing, isOwner, catchAsync(async (req, res) => {
+router.get("/:id/edit", isSignedIn, isOwner, catchAsync(async (req, res) => {
   const { id } = req.params;
   // Find the listing from the databse by it's specific id
   const listing = await Listing.findById(id);
@@ -134,7 +137,7 @@ router.get("/:id/edit", isSignedIn, validateListing, isOwner, catchAsync(async (
 /*Thos route will be used to update the listing and post to the database. and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it. It also has the isOwnwer middleware protecting
 it which ensures that only the owner of that listing is authorized to update the listing*/
-router.put("/:id", isSignedIn, isOwner, upload.array("image"), catchAsync(async (req, res) => {
+router.put("/:id", isSignedIn, isOwner, upload.array("image"), validateListing, catchAsync(async (req, res) => {
   const { id } = req.params;
   // Find the listing from the database by it's specific id and then update it
   const listing = await Listing.findByIdAndUpdate(id, req.body);

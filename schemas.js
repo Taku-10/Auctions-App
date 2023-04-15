@@ -1,10 +1,12 @@
 const Joi = require("joi");
 
 module.exports.listingSchema = Joi.object({
+    startTime: Joi.date(),
+    endTime: Joi.date(),
     title: Joi.string().trim().required().messages({
       'any.required': 'Title must be provided'
     }),
-    description: Joi.string().trim(),
+    description: Joi.string().trim().allow(""),
     price: Joi.number().min(0).required().messages({
       'any.required': 'Price must be provided and greater than or equal to 0'
     }),
@@ -18,4 +20,6 @@ module.exports.listingSchema = Joi.object({
       'any.required': 'The location of your listing must be supplied'
     }),
   });
+
+
 

@@ -37,7 +37,6 @@
           </a>
           <div class="card-body">
             <h5 class="card-title text-truncate"><%= listing.title %></h5>
-            <h6><%= listing.category %></h6>
             <h6 class="card-text"><i class="fas fa-user"></i> Seller: <%= listing.owner.username %></h6>
             <% let highestBid = 0; %>
             <% if (listing.bids.length === 0) { %>

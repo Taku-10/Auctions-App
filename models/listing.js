@@ -10,8 +10,7 @@ const {Schema} = mongoose;
 
 const listingSchema = new Schema({
     startTime: {
-        type: String,
-        required: true
+        type: Date,
     },
 
     title: {
@@ -57,8 +56,7 @@ const listingSchema = new Schema({
     },
     
     endTime: {
-        type: String,
-        required: true
+        type: Date,
     },
     
     geometry: {
