@@ -10,6 +10,7 @@ const listingRoutes = require("./routes/listingsRoutes");
 const bidRoutes = require("./routes/bidsRoutes");
 const watchlistRoutes = require("./routes/watchlistRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const businessRoutes = require("./routes/businessRoutes");
 const moment = require("moment");
 const session = require("express-session");
 const flash = require("connect-flash");
@@ -125,11 +126,13 @@ app.get("/listings/search", async (req, res) => {
 
 
 
+
 app.use("/", userRoutes);
 app.use("/listings", listingRoutes);
 app.use("/watchlist", watchlistRoutes);
 app.use("/listings/:id/bids", bidRoutes);
 app.use("/admin", adminRoutes);
+app.use("/", businessRoutes);
 
 
 cron.schedule("* * * * *", async () => {
