@@ -1,6 +1,5 @@
 const express = require("express");
 const path = require("path");
-// const Joi = require("joi")
 const mongoose = require("mongoose");
 const Listing = require("./models/listing");
 const Bid = require("./models/bid");
@@ -23,7 +22,7 @@ const { isSignedIn} = require("./middleware/authenticate");
 const checkAndEndAuctions = require("./cron/auctionCron");
 const cron = require("node-cron");
 const ExpressError = require("./utilities/ExpressError");
-
+const mongoSanitize = require('express-mongo-sanitize');
 const app = express();
 
 mongoose.connect('mongodb://127.0.0.1:27017/Auctions', {
@@ -44,6 +43,8 @@ app.set("views", path.join(__dirname, "/views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(mongoSanitize())
+
 app.use(session({
     secret: 'thisshouldbeabettersecret',
     resave: false,
