@@ -61,7 +61,7 @@ router.post(
     failureRedirect: "/login",
   }),
   (req, res) => {
-    req.flash("success", "Welcome back");
+    req.flash("success", "Welcome back to Bid Mart");
     const redirectUrl = req.session.returnTo || "/listings";
     delete req.session.returnTo;
     res.redirect(redirectUrl);

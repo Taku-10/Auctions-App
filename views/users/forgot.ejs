@@ -1,9 +1,15 @@
 <% layout("layouts/boilerplate") %>
 <h1>Forgot Password</h1>
-<form action="/forgot" method="post">
+<form action="/forgot" method="post" class="needs-validation" novalidate>
   <div class="form-group">
-    <label for="email"><i class="fas fa-envelope"></i> Email address</label>
-    <input type="email" class="form-control" id="email" name="email" required>
+    <label for="email"><i class="fas fa-envelope"></i> Email address<span class="text-danger">*</span></label>
+    <input placeholder="Enter youe email address" type="email" class="form-control" id="email" name="email" required>
+    <div class="valid-feedback">
+      Looks good!
+    </div>
+    <div class="invalid-feedback">
+      Enter a valid email address to continue
+    </div>
   </div>
 <button type="submit" class="btn btn-primary"><i class="fas fa-key"></i> Reset Password</button>
 

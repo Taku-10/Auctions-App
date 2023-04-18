@@ -39,8 +39,11 @@
       cursor: pointer;
     }
 
-    
-
+    /* Styling the about us page product images */
+    .card-img-top {
+      height: 300px; /* Set a fixed height */
+      object-fit: cover; /* Ensure the image covers the entire container */
+    }
     
   
   

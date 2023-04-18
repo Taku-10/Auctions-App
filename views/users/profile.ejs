@@ -15,7 +15,7 @@
           <form action="/profile/<%= user._id %>?_method=PUT" method="post" class="needs-validation" novalidate>
             <div class="mb-3 mt-3">
               <label for="username" class="form-label">Username</label>
-              <input type="text" name="username" class="form-control" value="<%= user.username %>" required>
+              <input placeholder="Enter your username" type="text" name="username" class="form-control" value="<%= user.username %>" required>
               <div class="valid-feedback">
                 Looks good!
               </div>
@@ -26,7 +26,7 @@
            
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" name="email" class="form-control" value="<%= user.email %>" required>
+              <input placeholder="Enter your email" type="email" name="email" class="form-control" value="<%= user.email %>" required>
               <div class="valid-feedback">
                 Looks good!
               </div>
@@ -36,7 +36,7 @@
             </div>
             <div class="mb-3">
               <label for="number" class="form-label">Mobile Number</label>
-              <input type="tel" name="number" class="form-control" value="<%= user.number %>" required>
+              <input placeholder="Enter your mobile number" type="tel" name="number" class="form-control" value="<%= user.number %>" required>
               <div class="valid-feedback">
                 Looks good!
               </div>

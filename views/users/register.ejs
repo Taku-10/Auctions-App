@@ -10,7 +10,7 @@
           <form action="/register" class="needs-validation" method="post" novalidate>
             <div class="row mb-3">
               <div class="col-md-6">
-                <label class="form-label" for="firstname">First name</label>
+                <label class="form-label" for="firstname">First name<span class="text-danger">*</span></label>
                 <input class="form-control" type="text" name="firstname" id="firstname" required>
                 <div class="valid-feedback">
                   Looks good!
@@ -20,7 +20,7 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <label class="form-label" for="lastname">Last name</label>
+                <label class="form-label" for="lastname">Last name<span class="text-danger">*</span></label>
                 <input class="form-control" type="text" name="lastname" id="lastname" required>
                 <div class="valid-feedback">
                   Looks good!
@@ -32,8 +32,8 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label" for="email">Email address</label>
-              <input class="form-control" type="email" name="email" id="email" required>
+              <label class="form-label" for="email">Email address<span class="text-danger">*</span></label>
+              <input placeholder="Enter your email" class="form-control" type="email" name="email" id="email" required>
               <div class="valid-feedback">
                 Looks good!
               </div>
@@ -43,8 +43,8 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label" for="username">Username</label>
-              <input class="form-control" type="text" name="username" id="username" required>
+              <label class="form-label" for="username">Username<span class="text-danger">*</span></label>
+              <input placeholder="Enter your username" class="form-control" type="text" name="username" id="username" required>
               <div class="valid-feedback">
                 Looks good!
               </div>
@@ -54,8 +54,8 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label" for="password">Password</label>
-              <input class="form-control" type="password" name="password" id="password" required>
+              <label class="form-label" for="password">Password<span class="text-danger">*</span></label>
+              <input placeholder="Enter your password" class="form-control" type="password" name="password" id="password" required>
               <div class="valid-feedback">
                 Looks good!
               </div>
@@ -67,8 +67,8 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label" for="number">Mobile number</label>
-              <input class="form-control" type="text" name="number" id="number" required>
+              <label class="form-label" for="number">Mobile number<span class="text-danger">*</span></label>
+              <input placeholder="Enter phone number eg +2779" class="form-control" type="text" name="number" id="number" required>
               <div class="valid-feedback">
                 Looks good!
               </div>

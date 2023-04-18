@@ -6,22 +6,46 @@
       <p class="lead mb-5">
         Have a great idea for BidMart? We'd love to hear it! Use the form below to share your idea with us and we'll review it as soon as possible.
       </p>
-      <form>
+      <form class="needs-validation" novalidate>
         <div class="mb-3">
           <label for="inputName" class="form-label">Name</label>
           <input type="text" class="form-control" id="inputName" placeholder="Enter your name" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+          <div class="invalid-feedback">
+            Enter a name to continue
+          </div>
         </div>
         <div class="mb-3">
           <label for="inputEmail" class="form-label">Email address</label>
           <input type="email" class="form-control" id="inputEmail" placeholder="Enter your email" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+          <div class="invalid-feedback">
+            Enter a valid email address to continue
+          </div>
         </div>
         <div class="mb-3">
           <label for="inputIdeaTitle" class="form-label">Idea Title</label>
           <input type="text" class="form-control" id="inputIdeaTitle" placeholder="Enter a title for your idea" required>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+          <div class="invalid-feedback">
+            Enter an idea title to continue
+          </div>
         </div>
         <div class="mb-3">
           <label for="inputIdeaDescription" class="form-label">Idea Description</label>
           <textarea class="form-control" id="inputIdeaDescription" rows="5" placeholder="Enter a description of your idea" required></textarea>
+          <div class="valid-feedback">
+            Looks good!
+          </div>
+          <div class="invalid-feedback">
+            Enter a valid idea description to continue
+          </div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
