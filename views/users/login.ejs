@@ -23,7 +23,10 @@
             <div class="form-group mb-3">
               <label class="form-label" for="password"><i class="fas fa-lock"></i> Password <span class="text-danger">*</span></label>
               <div class="input-group">
-                <input type="password" id="password" name="password" class="form-control" required>
+                <input type="password" id="password" name="password" class="form-control password-input" required>
+                <div class="input-group-text password-toggle-icon">
+                  <i id="togglePasswordBtn" class="far fa-eye"></i>
+                </div>
                 <div class="invalid-feedback">
                   Please enter your password.
                 </div>
@@ -32,6 +35,7 @@
                 </div>
               </div>
             </div>
+
             <div class="d-grid gap-2">
               <button type="submit" class="btn btn-primary btn-block mt-4"><i class="fas fa-sign-in-alt"></i> Log in</button>
             </div>

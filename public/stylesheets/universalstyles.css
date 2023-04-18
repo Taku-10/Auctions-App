@@ -22,4 +22,34 @@ body {
     text-decoration: underline;
   }
   
+  .password-input {
+    padding-right: 2.5rem;
+  }
+
+  .password-toggle-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0.5rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+
+  .password-toggle-icon {
+    background-color: transparent;
+    border: none;
+    font-size: 1rem;
+    padding: 0;
+    margin-left: -30px; /* adjust as needed */
+    color: #6c757d;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .password-toggle-icon:hover {
+    color: #343a40;
+  }
   
