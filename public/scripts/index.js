@@ -1,11 +1,14 @@
 
 // Toggle the eye button icon for showing and hiding the password
-const passwordInput = document.querySelector('#password');
-const togglePasswordBtn = document.querySelector('#togglePasswordBtn');
+const passwordInputs = document.querySelectorAll('.password-input');
+  const togglePasswordBtns = document.querySelectorAll('.toggle-password-btn');
 
-togglePasswordBtn.addEventListener('click', function() {
-  const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-  passwordInput.setAttribute('type', type);
-  this.classList.toggle('fa-eye-slash');
-  this.classList.toggle('fa-eye');
-});
+  togglePasswordBtns.forEach(function(togglePasswordBtn) {
+    togglePasswordBtn.addEventListener('click', function() {
+      const index = Array.from(togglePasswordBtns).indexOf(this);
+      const type = passwordInputs[index].getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInputs[index].setAttribute('type', type);
+      this.classList.toggle('fa-eye-slash');
+      this.classList.toggle('fa-eye');
+    });
+  });

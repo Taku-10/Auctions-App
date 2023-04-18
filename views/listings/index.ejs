@@ -2,43 +2,42 @@
 <head>
   <link rel="stylesheet" href="/stylesheets/index.css">
 </head>
-
-<div class="container" style="background: linear-gradient(to right, #ff4b2b, #ff416c); color: white; padding: 3rem;">
-  <div class="row">
-    <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3 text-center">
-      <h1><i class="fas fa-gavel"></i>Going Once, Going Twice Sold! </h1>
-      <p class="lead">The best deals on the hottest <i class="fas fa-fire"></i> products are here!</p>
+<div class="container mb-5 mt-5">
+  <div class="row" style="background: linear-gradient(to right, #ff4b2b, #ff416c); color: white; padding: 2.5rem;">
+    <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1 col-sm-12 text-center py-5">
+      <h1 class="text-white">Get in on the Action!</h1>
+      <p class="lead text-white">Join the excitement of our online auctions and bid on the products you love!</p>
+      <form class="d-flex justify-content-center mt-5 mb-4" action="/listings/search" method="GET">
+        <div class="input-group input-group-lg">
+          <input type="text" name="q" class="form-control" placeholder='Search listings by name or description' required>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </form>
+      <div class="btn-group dropend">
+        <button type="button" class="btn btn-outline-light dropdown-toggle text-uppercase fw-bold" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-bars me-2"></i> Shop by category
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="/listings?category=Electronics">Electronics</a></li>
+          <li><a class="dropdown-item" href="/listings?category=Home%20%26%20garden">Home & garden</a></li>
+          <li><a class="dropdown-item" href="/listings?category=Entertainment">Entertainment</a></li>
+          <li><a class="dropdown-item" href="/listings?category=Clothing%20and%20accessories">Clothing and accessories</a></li>
+          <li><a class="dropdown-item" href="/listings?category=Sports%20and%20outdoors">Sports and outdoors</a></li>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
-
-<div class="container mt-5 mb-5">
-  <form class="input-group input-group-md" action="/listings/search" method="GET">
-    <input type="text" name="q" class="form-control" placeholder='Search listings by name or description, e.g. "Samsung"' required>
-    <button type="submit" class="btn btn-primary">
-      <i class="fas fa-search"></i>
-    </button>
-  </form>
-  <br>
-  <div class="btn-group dropend">
-    <button type="button" class="btn btn-outline-secondary dropdown-toggle text-uppercase fw-bold" data-bs-toggle="dropdown" aria-expanded="false">
-      <i class="fas fa-bars me-2"></i> Shop by category
-    </button>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="/listings?category=Electronics">Electronics</a></li>
-      <li><a class="dropdown-item" href="/listings?category=Home%20%26%20garden">Home & garden</a></li>
-      <li><a class="dropdown-item" href="/listings?category=Entertainment">Entertainment</a></li>
-      <li><a class="dropdown-item" href="/listings?category=Clothing%20and%20accessories">Clothing and accessories</a></li>
-      <li><a class="dropdown-item" href="/listings?category=Sports%20and%20outdoors">Sports and outdoors</a></li>
-    </ul>
+  <div class="row mt-5 mb-3">
+    <div class="col-md-6 offset-md-3 col-sm-12 text-center">
+      <h2>Hottest Listings<i class="fas fa-fire"></i></h2>
+    </div>
   </div>
-  
-</div>
-<div class="container">
-  <div class="row">
+  <div class="row g-4">
     <% for (let listing of listings) { %>
       <% let endTime = new Date(listing.endTime); %>
-      <div class="col-12 col-md- col-lg-3 mb-4">
+      <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 mb-4">
         <div class="card mb-3 product-card<%= endTime < new Date() ? 'auction-ended' : '' %>">
           <a href="/listings/<%=listing._id%>">
             <div class="image-container d-flex justify-content-center align-items-center">
@@ -55,13 +54,13 @@
               <% for (let bid of listing.bids) { %>
                 <% if (bid.bidAmount > highestBid) { %>
                   <% highestBid = bid.bidAmount; %>
-                <% } %>
+                   <% } %>
               <% } %>
               <% if (highestBid > 0) { %>
                 <h6 class="card-text"><i class="fas fa-money-bill-wave"></i> Highest bid: $<%= highestBid %></h6>
               <% } %>
             <% } %>
-            <h6 class="card-text text-muted"><i class="fas fa-map-marker-alt"></i> <%= listing.location %></h6>
+            <h6 class="card-text text-truncate text-muted"><i class="fas fa-map-marker-alt"></i> <%= listing.location %></h6>
             <form action="/watchlist/add" method="post">
               <input type="hidden" name="listingId" value="<%= listing._id %>">
               <button type="submit" class="btn btn-info w-100 <%= endTime < new Date() ? 'disabled' : '' %>">
