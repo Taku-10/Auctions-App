@@ -2,14 +2,16 @@
 <main class="container my-5">
   <div class="row">
     <div class="col-md-6">
-      <h1 class="mb-5">Submit an Idea</h1>
-      <p class="lead mb-5">
-        Have a great idea for BidMart? We'd love to hear it! Use the form below to share your idea with us and we'll review it as soon as possible.
-      </p>
-      <form class="needs-validation" novalidate>
+      <header>
+        <h1 class="mb-5">Submit Your Ideas for BidMart</h1>
+        <p class="lead mb-5">
+          We're always looking for ways to improve our platform, and your ideas and feedback are essential to helping us grow. Use the form below to share your thoughts and suggestions with us.
+        </p>
+      </header>
+      <form method="post" action="/submit-an-idea" class="needs-validation" novalidate>
         <div class="mb-3">
-          <label for="inputName" class="form-label">Name</label>
-          <input type="text" class="form-control" id="inputName" placeholder="Enter your name" required>
+          <label for="name" class="form-label">Name</label>
+          <input name="name" type="text" class="form-control" id="name" placeholder="Enter your name" required>
           <div class="valid-feedback">
             Looks good!
           </div>
@@ -18,8 +20,8 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="inputEmail" class="form-label">Email address</label>
-          <input type="email" class="form-control" id="inputEmail" placeholder="Enter your email" required>
+          <label for="email" class="form-label">Email address</label>
+          <input name="email" type="email" class="form-control" id="email" placeholder="Enter your email" required>
           <div class="valid-feedback">
             Looks good!
           </div>
@@ -28,8 +30,8 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="inputIdeaTitle" class="form-label">Idea Title</label>
-          <input type="text" class="form-control" id="inputIdeaTitle" placeholder="Enter a title for your idea" required>
+          <label for="ideatitle" class="form-label">Idea Title</label>
+          <input name="ideatitle" type="text" class="form-control" id="ideatitle" placeholder="Enter a title for your idea" required>
           <div class="valid-feedback">
             Looks good!
           </div>
@@ -38,8 +40,8 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="inputIdeaDescription" class="form-label">Idea Description</label>
-          <textarea class="form-control" id="inputIdeaDescription" rows="5" placeholder="Enter a description of your idea" required></textarea>
+          <label for="ideaDescription" class="form-label">Idea Description</label>
+          <textarea name="ideaDescription" class="form-control" id="ideaDescription" rows="5" placeholder="Enter a description of your idea" required></textarea>
           <div class="valid-feedback">
             Looks good!
           </div>
@@ -51,7 +53,7 @@
       </form>
     </div>
     <div class="col-md-6 d-flex justify-content-center align-items-center">
-      <img src="https://cdn.pixabay.com/photo/2017/09/27/19/46/idea-2792273_960_720.png" alt="Lightbulb icon" height="250">
+      <img src="https://images.unsplash.com/photo-1493612276216-ee3925520721?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8aWRlYXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60" alt="Lightbulb icon" height="250">
     </div>
   </div>
 </main>
