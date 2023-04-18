@@ -186,7 +186,7 @@ router.post("/forgot", catchAsync(async (req, res) => {
   <p>You requested to reset your password. Please click the link below to set a new password.</p>
   <p>If you did not request a password reset, you can ignore this email</p>
   <a href="${resetUrl}">Reset password</a>
-  <p>Best regards, <br/> The Auctions WA Team</p>, `;
+  <p>Best regards, <br/> The Bid Mart Team</p>, `;
 
   await sendEmail(user.email, subject, message);
   req.flash("success", "An email has been sent to your email address with further instructions.");
@@ -230,7 +230,7 @@ router.post("/reset/:token", resetPasswordLimiter, catchAsync(async (req, res) =
   <p>Your password has been successfully reset</p>
   <p>If you did this, you can safely disregard this email</p>
   <p>If you didn't dot his, please go to the log in page and click "Forgot password" to reset your password</p>
-  <p>Best regards, <br/> The Auctions WA Team</p>, 
+  <p>Best regards, <br/> The Bid Mart Team</p>, 
   `;
   // Send confirmation email
   await sendEmail(user.email, subject, message);
