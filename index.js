@@ -30,8 +30,8 @@ const mongoSanitize = require('express-mongo-sanitize');
 const MongoStore = require('connect-mongo');
 
 const app = express();
-
-const dbURL = process.env.DB_URL || "mongodb://127.0.0.1:27017/Auctions";
+// process.env.DB_URL ||
+const dbURL =  "mongodb://127.0.0.1:27017/Auctions";
 
 mongoose.connect(dbURL, {
   useNewUrlParser: true,
@@ -95,11 +95,6 @@ app.use((req, res, next) => {
 });
 
 
-app.get("/", (req, res) => {
-  res.render("home");
-})
-
-
 /*This route will be used to retrieve all the listings that a user has posted*/
 app.get("/listings/mylistings", isSignedIn, async(req, res) => {
   try {
@@ -147,8 +142,6 @@ app.get("/listings/search", async (req, res) => {
     res.redirect("/listings");
   }
 });
-
-
 
 
 app.use("/", userRoutes);
