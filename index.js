@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
@@ -23,9 +27,13 @@ const checkAndEndAuctions = require("./cron/auctionCron");
 const cron = require("node-cron");
 const ExpressError = require("./utilities/ExpressError");
 const mongoSanitize = require('express-mongo-sanitize');
+const MongoStore = require('connect-mongo');
+
 const app = express();
 
-mongoose.connect('mongodb://127.0.0.1:27017/Auctions', {
+const dbURL = process.env.DB_URL || "mongodb://127.0.0.1:27017/Auctions";
+
+mongoose.connect(dbURL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -45,17 +53,32 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize())
 
+const secret = process.env.SECRET || "mariebiscuitsarethebest"
+const store = MongoStore.create({
+  mongoUrl: dbURL,
+  secret,
+  touchAfter: 24 * 60 * 60
+  
+})
+
+store.on("error", function (e) {
+  console.log("SESSION STORE ERROR", e)
+})
+
 app.use(session({
-    secret: 'thisshouldbeabettersecret',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-    }
-  }))
+  store,
+  name: "session",
+  secret,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+    // secure: true,
+    expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
+  }
+}));
+
 
 app.use(passport.initialize());
 app.use(passport.session());
