@@ -29,11 +29,11 @@ router.post("/register", catchAsync(async (req, res, next) => {
   const { firstname, lastname, email, username, number, password } = req.body;
   const user = new User({ firstname, lastname, email, username, number });
   const registeredUser = await User.register(user, password);
-  const subject = "Welcome to Auctions WA";
+  const subject = "Welcome to Bid Mart";
   const message = `Hello ${req.body.firstname}, </p>
-      <p>Thank you for joining Auctions WA! We are excited to have you on board.</p>
-      <p>You can start browsing listings by visising <a href="http://localhost:3000/listings">Go to listings page</a>.</p>
-      <p>Best regards, <br/> The Auctions WA Team</p>,`;
+      <p>Thank you for joining Bid Mart! We are excited to have you on board.</p>
+      <p>You can start browsing listings by visising <a href="https://still-refuge-95536.herokuapp.com/listings">Go to listings page</a>.</p>
+      <p>Best regards, <br/> The Bid Mart Team</p>,`;
   await sendEmail(req.body.email, subject, message);
   req.logIn(registeredUser, (err) => {
     if (err) {
