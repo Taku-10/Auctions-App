@@ -2,7 +2,7 @@
 <head>
   <link rel="stylesheet" href="/stylesheets/styles.css">
 </head>
-<div class="container mt-5 mb-5">
+<div class="container mt-5 mb-3">
   <div class="row mt-4 justify-content-center">
     <div class="col-md-8">
       <!-- Carousel to display all the listings images -->
@@ -27,7 +27,7 @@
       </div>
 
      <section class="mb-3">
-      <div class="p-3 bg-white mt-4 mb-4 rounded ">
+      <div class="p-2 bg-white mt-4 mb-4 rounded ">
         <h1 class="card-title text-truncate pt-2 border-bottom pb-3"><%= listing.title %></h1>
         <div class="row mb-3 mt-2">
           <div class="col-md-6">
@@ -50,7 +50,7 @@
     </section>
   
     <section class="mb-3">
-      <div class="p-3 bg-white mt-4 mb-4 rounded ">
+      <div class="p-2 bg-white mt-4 mb-4 rounded ">
         <h4 class="card-subtitle card-text mb-4">Auction Information</h4>
         <div class="row">
           <div class="col-12 mb-3">
@@ -63,10 +63,10 @@
               <% } %>
             <% } %>
             <% if (highestBid > 0) { %>
-              <h6 class="card-text"><i class="fas fa-money-bill-wave"></i> Winning bid: $<%= highestBid %> </h6>
+              <h6 class="card-text pb-2"><i class="fas fa-money-bill-wave"></i> Highest Bid: $<%= highestBid %> </h6>
             <% } %>
-            <p class="card-text winner"><i class="fas fa-trophy"></i>
-              Winner: 
+            <h6 class="card-text winner pb-2"><i class="fas fa-trophy"></i>
+             
               <% let winner = ''; %>
               <% for (let bid of listing.bids) { %>
                 <% if (bid.bidAmount === highestBid) { %>
@@ -74,8 +74,12 @@
                   <% break; %>
                 <% } %>
               <% } %>
-              <%= winner %>
-            </p>
+              <% if (winner) {%>
+                Winner: <%= winner %>
+                <% } else {%>
+                  No bids 
+                  <%}%>
+                </h6>
             <%}else {%>
                  <% let highestBid = 0; %>
             <% if (listing.bids.length === 0) { %>
@@ -91,8 +95,8 @@
               <% } %>
             <% } %>
             <% }%>
-            <div class="card-text mb-3" id="countdown">
-            </div>
+            <h6 class="card-text pb-2" id="countdown">
+            </h6>
           </div>
           <!-- Place bid for a listing -->
           <% if (!currentUser || !listing.owner.equals(currentUser._id)) {%>
@@ -102,7 +106,7 @@
                 <label class="form-label" for="bidAmount">Bid Amount</label>
                 <div class="input-group">
                   <span class="input-group-text">$</span>
-                  <input placeholder="Enter you bid amount" type="text" name="bidAmount" id="bidAmount" class="form-control" required>
+                  <input placeholder="Enter your bid amount" type="text" name="bidAmount" id="bidAmount" class="form-control" required>
                   <div class="valid-feedback">
                     Looks good!
                   </div>
@@ -142,13 +146,13 @@
     </section>
 
     <section class="mb-3">
-      <div class="p-3 bg-white mt-4 mb-5 rounded ">
+      <div class="p-2 bg-white mt-4 mb-5 rounded ">
         <h4 class="card-subtitle card-text mb-4">Seller Information</h4>
         <div class="row">
           <div class="col-12 mb-3">
-            <p class="card-text"><i class="fas fa-user"></i> <%= listing.owner.username %></p>
-            <div style='width: 100%; height: 10vh; border: 1px solid #ccc;' id='map' class="mb-3 mt-3"></div>
-            <div class="card-text text-muted"><i class="fas fa-map-marker-alt"></i> <%= listing.location %></div>
+            <p class="card-text pb-2"><i class="far fa-user"></i> <%= listing.owner.username %></p>
+            <div style='width: 100%; height: 10vh; border: 1px solid #ccc;' id='map' class="mb-3 mt-3 pb-2"></div>
+            <div class="card-text text-muted pb-2"><i class="fas fa-map-marker-alt"></i> <%= listing.location %></div>
           </div>
         </div>
       </div>
@@ -157,7 +161,7 @@
   </div>
 
     
-<% if (endTime) { %>
+
   <script>
 
 // Get a reference to the "Place Bid" form
@@ -223,7 +227,7 @@ confirmBidBtn.addEventListener('click', (event) => {
     }
 
   </script>
-<% } %>
+
 
 <script>
   const mapToken = '<%-process.env.MAPBOX_TOKEN%>'

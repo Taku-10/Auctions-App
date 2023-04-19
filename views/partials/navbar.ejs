@@ -12,7 +12,7 @@
         </div>
         <div class="navbar-nav ms-auto order-sm-last">
           <% if (!currentUser) { %>
-          <a class="nav-link" href="/login">Login <i class="fas fa-sign-in-alt"></i></a>
+          <a class="nav-link" href="/login">Log in <i class="fas fa-sign-in-alt"></i></a>
           <a class="nav-link" href="/register">Register</a>
           <% } else { %>
           <div class="dropdown">
@@ -27,7 +27,7 @@
               <li><a class="dropdown-item" href="/mylistings">My Listings</a></li>
             </ul>
           </div>
-          <a href="/logout" class="nav-link">Logout <i class="fas fa-sign-out-alt"></i></a>
+          <a href="/logout" class="nav-link">Log out <i class="fas fa-sign-out-alt"></i></a>
           <% } %>
         </div>
       </div>

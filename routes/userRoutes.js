@@ -177,9 +177,8 @@ router.post("/forgot", catchAsync(async (req, res) => {
   // Generate reset token
   user.generateResetToken();
   await user.save();
-
   // Send reset email
-  const resetUrl = `http://${req.headers.host}/reset/${user.resetPasswordToken}`;
+  const resetUrl = ` https://still-refuge-95536.herokuapp.com/reset/${user.resetPasswordToken}`;
   const subject = "Password Reset";
   const message = `
   <p>Hello ${user.firstname} ${user.lastname}</p>

@@ -46,10 +46,10 @@
           </a>
           <div class="card-body">
             <h5 class="card-title text-truncate"><%= listing.title %></h5>
-            <h6 class="card-text"><i class="fas fa-user"></i> Seller: <%= listing.owner.username %></h6>
+            <h6 class="card-text pb-1"><i class="far fa-user"></i> Seller: <%= listing.owner.username %></h6>
             <% let highestBid = 0; %>
             <% if (listing.bids.length === 0) { %>
-              <h6 class="card-text"><i class="fas fa-comment-alt"></i> No bids yet</h6>
+              <h6 class="card-text pb-1"><i class="far fa-comment-alt"></i> No bids yet</h6>
             <% } else { %>
               <% for (let bid of listing.bids) { %>
                 <% if (bid.bidAmount > highestBid) { %>
@@ -57,13 +57,13 @@
                    <% } %>
               <% } %>
               <% if (highestBid > 0) { %>
-                <h6 class="card-text"><i class="fas fa-money-bill-wave"></i> Highest bid: $<%= highestBid %></h6>
+                <h6 class="card-text pb-1"><i class="fas fa-money-bill-wave"></i> Highest bid: $<%= highestBid %></h6>
               <% } %>
             <% } %>
-            <h6 class="card-text text-truncate text-muted"><i class="fas fa-map-marker-alt"></i> <%= listing.location %></h6>
+            <h6 class="card-text text-truncate text-muted pb-1"><i class="fas fa-map-marker-alt"></i> <%= listing.location %></h6>
             <form action="/watchlist/add" method="post">
               <input type="hidden" name="listingId" value="<%= listing._id %>">
-              <button type="submit" class="btn btn-info w-100 <%= endTime < new Date() ? 'disabled' : '' %>">
+              <button type="submit" class="btn btn-info w-100 pb-1 <%= endTime < new Date() ? 'disabled' : '' %>">
                 <i class="fas fa-plus"></i> Add To Watchlist
               </button>
             </form>
