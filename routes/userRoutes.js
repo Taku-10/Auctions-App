@@ -82,7 +82,7 @@ router.get("/logout", (req, res, next) => {
 // This will render the form with the user's personal details
 
 router.get("/profile", isSignedIn, catchAsync(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.user._id, {deleted: false});
   res.render("users/profile", { user });
 }));
 
@@ -90,10 +90,7 @@ router.get("/profile", isSignedIn, catchAsync(async (req, res) => {
 // This route will post the users updates to the form
 router.put("/profile/:id", isSignedIn, catchAsync(async (req, res, next) => {
   const userId = req.params.id;
-  const updatedUser = await User.findByIdAndUpdate(userId, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const updatedUser = await User.findByIdAndUpdate(userId, req.body, {deleted: false}, {new: true, runValidators: true,});
   req.login(updatedUser, (err) => {
     if (err) {
       console.log(err);

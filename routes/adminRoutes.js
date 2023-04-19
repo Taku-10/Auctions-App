@@ -6,25 +6,22 @@ const passport = require("passport");
 const Admin = require("../models/admin");
 const { isSignedIn, isAdmin } = require("../middleware/authenticate");
 const catchAsync = require("../utilities/catchAsync");
-
-
-
 router.get("/all-users", isSignedIn, isAdmin, catchAsync(async(req, res) => {
-  const users = await User.find({});
+  const users = await User.find({deleted: false});
   res.render("admin/AllUsers", {users});
 }));
 
 
 router.get('/users/:id', catchAsync(async (req, res) => {
   const { id } = req.params;
-  const user = await User.findById(id);
+  const user = await User.findById(id, { deleted: false });
   res.render('admin/usersShow', { user });
  
 }));
 
 // Edit user form route
 router.get('/users/:id/edit', isSignedIn, isAdmin, catchAsync(async (req, res) => {
-  const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id, {deleted: false});
   if (!user) {
     req.flash("error", "User not found");
     res.redirect("/listings");
@@ -34,11 +31,27 @@ router.get('/users/:id/edit', isSignedIn, isAdmin, catchAsync(async (req, res) =
 
 router.put("/:id", isSignedIn, isAdmin, catchAsync(async (req, res) => {
   const { id } = req.params;
-  const user = await User.findByIdAndUpdate(id, req.body, { runValidators: true, new: true });
+  const user = await User.findByIdAndUpdate(id, req.body, {deleted: false} , { runValidators: true, new: true });
   await user.save();
   req.flash("success", "Successfully updated the user's details");
   res.redirect(`/admin/users/${user._id}`);
 }))
+
+
+router.delete("/:id", isSignedIn, isAdmin, catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  if (!user) {
+    req.flash("error", "User not found");
+    return res.redirect("/admin/all-users");
+  }
+  user.deleted = true;
+  await user.save();
+  req.flash("success", "Successfully deleted the user");
+  res.redirect("/admin/all-users");
+}));
+
+
 
 
 

@@ -31,13 +31,13 @@
             <label for="role">Role:</label>
             <input type="text" id="role" name="role" class="form-control" value="<%= user.role %>" disabled>
           </div>
-          <div class="text-center">
-            <a href="/admin/users/<%=user._id %>/edit" class="btn btn-primary">Edit</a>
-            <a href="" id="deleteBtn" class="btn btn-danger">Delete</a>
-            <a href="" id="suspendBtn" class="btn btn-warning">Suspend</a>
-            <!-- <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#deleteUserModal">Delete</button>
-            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#suspendUserModal">Suspend</button>
-            <button type="submit" class="btn btn-success d-none" id="saveButton">Save Changes</button> -->
+          <div class="d-flex justify-content-center">
+            <a href="/admin/users/<%=user._id %>/edit" class="btn btn-primary mx-2">Edit</a>
+            <form id="deleteUserForm" action="/admin/<%=user._id%>?_method=DELETE" method="POST">
+              <button id="deleteUserButton" class="btn btn-danger mx-2">Delete</button>
+            </form>
+            
+            <a href="" id="suspendBtn" class="btn btn-warning mx-2">Suspend</a>
           </div>
         </div>
       </div>
@@ -45,6 +45,9 @@
   </div>
 </div>
 
+<!-- <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#deleteUserModal">Delete</button>
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#suspendUserModal">Suspend</button>
+            <button type="submit" class="btn btn-success d-none" id="saveButton">Save Changes</button> -->
 <script>
   const editButton = document.querySelector("#editButton");
   const saveButton = document.querySelector("#saveButton");

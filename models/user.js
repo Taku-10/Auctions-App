@@ -34,11 +34,22 @@ const userSchema = new Schema({
         default: "user"
     },
 
+    deleted: {
+        type: Boolean,
+        default: false,
+      },
+
     resetPasswordToken: String,
     
     resetPasswordExpires: Date
 
 })
+
+userSchema.pre('remove', async function(next) {
+    const user = this;
+    await mongoose.model('Listing').deleteMany({ user: user._id });
+    next();
+  });
 
 userSchema.plugin(passportLocalMongoose);
 
