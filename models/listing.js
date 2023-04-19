@@ -4,9 +4,8 @@ const Bid = require("./bid");
 const User = require("./user");
 const Admin = require("./admin");
 const { Number } = require("core-js");
+const Watchlist = require("./watchlist")
 const {Schema} = mongoose;
-
-
 
 const listingSchema = new Schema({
     startTime: {
@@ -101,6 +100,14 @@ const listingSchema = new Schema({
     }
 
 });
+
+
+listingSchema.post('findOneAndDelete', async function(doc) {
+    if (doc) {
+      await Watchlist.deleteMany({listing: doc._id});
+    }
+  });
+  
 
 listingSchema.index({title: "text", description: "text"});
 

@@ -6,6 +6,11 @@ const User = require("../models/user");
 const { isSignedIn } = require("../middleware/authenticate");
 const catchAsync = require("../utilities/catchAsync");
 
+router.get('/', isSignedIn, catchAsync(async (req, res) => {
+  const watchlist = await Watchlist.find({owner: req.user._id}).populate('listing');
+  const validItems = watchlist.filter(item => item.listing !== null && item.listing !== undefined);
+  res.render('listings/watchlist', {watchlist: validItems});
+}));
 
 /*This route will be used to get all the listings that a user added to their watchlist and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it*/
@@ -17,7 +22,8 @@ router.get("/", isSignedIn, catchAsync(async (req, res) => {
         populate: { path: "owner" },
       })
       .populate("owner");
-    res.render("listings/watchlist", { watchlist });
+      const validItems = watchlist.filter(item => item.listing !== null && item.listing !== undefined);
+    res.render("listings/watchlist", { watchlist: validItems });
 }));
 
 /*This route will be used to post a listing to a user's Watchlist and it has the isSignedIn middleware
