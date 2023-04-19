@@ -6,6 +6,7 @@ const express = require("express");
 const router = express.Router({ mergeParams: true });
 const Listing = require("../models/listing");
 const User = require("../models/user");
+const DeletedListing = require("../models/deletedListing");
 const {isSignedIn, isOwner, resetPasswordLimiter} = require("../middleware/authenticate");
 const mbxGeocoding = require ("@mapbox/mapbox-sdk/services/geocoding");
 const mapBoxToken = process.env.MAPBOX_TOKEN;
@@ -154,7 +155,20 @@ middleware protecting it which ensures that only the owner of that listing is au
 router.delete("/:id", isSignedIn, isOwner, catchAsync(async (req, res) => {
   const { id } = req.params;
   // Find the listing to be deleted from the database by it's specific id and then delete it
-  const listing = await Listing.findByIdAndDelete(id);
+  const listing = await Listing.findById(id);
+  if (!listing) {
+    req.flash("error", "Could not find the listing");
+    return res.redirect("/listings");
+  }
+
+  // Create a new document in the deletedListing collection with the data from the deleted listing
+  const deletedListing = await DeletedListing.create(listing.toObject());
+  // Set the deletedAt field to the current time
+  deletedListing.deletedAt = new Date();
+  await deletedListing.save();
+  // Delete the listing from the listings collection
+  await listing.deleteOne();
+
   req.flash("success", "Successfully deleted your listing");
   res.redirect("/listings");
 }));

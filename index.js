@@ -31,7 +31,7 @@ const MongoStore = require('connect-mongo');
 
 const app = express();
 
-const dbURL = process.env.DB_URL || "mongodb://127.0.0.1:27017/Auctions";
+const dbURL = "mongodb://127.0.0.1:27017/Auctions" || process.env.DB_URL;
 
 mongoose.connect(dbURL, {
   useNewUrlParser: true,
