@@ -9,6 +9,22 @@
         <a class="nav-link" href="/listings">Listings</a>
         <a class="nav-link" href="/listings/new">Create Listing</a>
         <a class="nav-link" href="/watchlist">Watchlist</a>
+        
+        <% if (currentUser && currentUser.role === "admin") { %>
+          <div class="dropdown">
+            <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Manage
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="/admin/all-users">Users</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/bids">Bids</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="/listings">Listings</a></li>
+            </ul>
+          </div>
+        <% } %>
+        
       </div>
       <div class="navbar-nav ms-auto order-sm-last">
         <% if (!currentUser) { %>

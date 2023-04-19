@@ -35,9 +35,18 @@ const isOwner = async(req, res, next) => {
     return next();
   };
 
+  const isAdmin = (req, res, next) => {
+    if (req.user && req.isAuthenticated() && req.user.role === 'admin') {
+      return next();
+    }
+    req.flash("error", "You do not have permission to access that route");
+    res.redirect('/listings');
+  };
+
   
   module.exports = {
     isOwner,
     isSignedIn,
+    isAdmin,
     resetPasswordLimiter
   };

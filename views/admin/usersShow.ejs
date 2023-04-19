@@ -1,0 +1,114 @@
+<% layout("layouts/boilerplate") %>
+<div class="container mb-5 mt-5">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <div class="card">
+        <div class="card-header bg-danger text-white">
+          User Information
+        </div>
+        <div class="card-body">
+          <div class="form-group mb-3">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" class="form-control" value="<%= user.firstname %>" disabled>
+          </div>
+          <div class="form-group mb-3">
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" class="form-control" value="<%= user.lastname %>" disabled>
+          </div>
+          <div class="form-group mb-3">
+            <label for="firstName">Username:</label>
+            <input type="text" id="firstName" name="firstName" class="form-control" value="<%= user.username %>" disabled>
+          </div>
+          <div class="form-group mb-3">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" value="<%= user.email %>" disabled>
+          </div>
+          <div class="form-group mb-3">
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" class="form-control" value="<%= user.number %>" disabled>
+          </div>
+          <div class="form-group mb-3">
+            <label for="role">Role:</label>
+            <input type="text" id="role" name="role" class="form-control" value="<%= user.role %>" disabled>
+          </div>
+          <div class="text-center">
+            <a href="/admin/users/<%=user._id %>/edit" class="btn btn-primary">Edit!</a>
+            <a href="" id="deleteBtn" class="btn btn-danger">Delete</a>
+            <a href="" id="suspendBtn" class="btn btn-warning">Suspend</a>
+            <!-- <button type="button" class="btn btn-danger mr-2" data-toggle="modal" data-target="#deleteUserModal">Delete</button>
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#suspendUserModal">Suspend</button>
+            <button type="submit" class="btn btn-success d-none" id="saveButton">Save Changes</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const editButton = document.querySelector("#editButton");
+  const saveButton = document.querySelector("#saveButton");
+  const inputs = document.querySelectorAll("input");
+
+  editButton.addEventListener("click", () => {
+    inputs.forEach(input => {
+      input.removeAttribute("disabled");
+    });
+    editButton.classList.add("d-none");
+    saveButton.classList.remove("d-none");
+  });
+
+  saveButton.addEventListener("click", () => {
+    saveButton.classList.add("d-none");
+    editButton.classList.remove("d-none");
+    inputs.forEach(input => {
+      input.setAttribute("disabled", true);
+    });
+  });
+</script>
+
+
+<!-- Delete User Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="deleteUserModalLabel">Delete User?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this user?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <a href="/admin/users/<%= user._id %>/delete" class="btn btn-danger">Delete</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <div class="modal fade" id="suspendModal" tabindex="-1" role="dialog" aria-labelledby="suspendModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="suspendModalLabel">Suspend User</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to suspend this user's account?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <form action="/admin/users/<%= user._id %>/suspend" method="POST">
+            <button type="submit" class="btn btn-danger">Suspend</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  

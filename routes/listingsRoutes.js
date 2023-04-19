@@ -145,7 +145,7 @@ router.put("/:id", isSignedIn, isOwner, upload.array("image"), validateListing, 
   const images = req.files.map(f =>({url: f.path, filename: f.filename}));
   listing.images.push(...images);
   await listing.save();
-  req.flash("success", "Successfully update the listing");
+  req.flash("success", "Successfully updated the listing details");
   res.redirect(`/listings/${listing._id}`);
 }));
 

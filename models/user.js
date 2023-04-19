@@ -29,6 +29,11 @@ const userSchema = new Schema({
         required: [true, "Phone number must be supplied"]
     },
 
+    role: {
+        type: String,
+        default: "user"
+    },
+
     resetPasswordToken: String,
     
     resetPasswordExpires: Date

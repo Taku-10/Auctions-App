@@ -53,3 +53,11 @@ body {
     color: #343a40;
   }
   
+  .table td a {
+    text-decoration: none;
+    color: #333;
+  }
+  .table td a:hover {
+    color: #007bff;
+    text-decoration: underline;
+  }

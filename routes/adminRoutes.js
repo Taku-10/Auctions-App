@@ -4,8 +4,44 @@ const User = require("../models/user");
 const Listing = require("../models/listing");
 const passport = require("passport");
 const Admin = require("../models/admin");
-const { isSignedIn } = require("../middleware/authenticate");
+const { isSignedIn, isAdmin } = require("../middleware/authenticate");
 const catchAsync = require("../utilities/catchAsync");
+
+
+
+router.get("/all-users", isSignedIn, isAdmin, catchAsync(async(req, res) => {
+  const users = await User.find({});
+  res.render("admin/AllUsers", {users});
+}));
+
+
+router.get('/users/:id', catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  res.render('admin/usersShow', { user });
+ 
+}));
+
+// Edit user form route
+router.get('/users/:id/edit', isSignedIn, isAdmin, catchAsync(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (!user) {
+    req.flash("error", "User not found");
+    res.redirect("/listings");
+  }
+  res.render('admin/editUser', { user })
+}))
+
+router.put("/:id", isSignedIn, isAdmin, catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findByIdAndUpdate(id, req.body, { runValidators: true, new: true });
+  await user.save();
+  req.flash("success", "Successfully updated the user's details");
+  res.redirect(`/admin/users/${user._id}`);
+}))
+
+
+
 
 /*Retrieve all the listings from the database that have been posted by users. They all have
 a default ststus of pending which will need to be approved or rejected by an admin*/
