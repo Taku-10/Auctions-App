@@ -55,33 +55,39 @@ router.get("/new",isSignedIn, catchAsync(async (req, res) => {
 /*This route will be used to post the listing created by a user to the database and it has the isSignedIn middleware
 that protects it. A user has to be authenticated(signed in) inorder to access it*/
 router.post("/", isSignedIn, upload.array("image"), validateListing, catchAsync(async (req, res) => {
-
-  const geoData = await geoCoder.forwardGeocode({
-    query: req.body.location,
-    limit: 1
-  }).send()
-
-  const startTime = new Date();
-  // Set endTime when the auction ends to be 48 hours from the moment its posted
-  // const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000); // 48 Hours
-  const endTime = new Date(startTime.getTime() + 5 * 60 * 1000); // 5 minutes
-  //const endTime = new Date(startTime.getTime() + 7 * 24 * 60 * 60 * 1000); // 1 week
-  const listing = new Listing({
-    startTime: startTime,
-    title: req.body.title,
-    category: req.body.category,
-    description: req.body.description,
-    price: req.body.price,
-    condition: req.body.condition,
-    endTime: endTime,
-    location: req.body.location,
-  });
-  listing.images = req.files.map(f =>({url: f.path, filename: f.filename}));
-  listing.geometry = geoData.body.features[0].geometry;
-  listing.owner = req.user._id; // Current person logged in
-  await listing.save();
-  req.flash("success", "Successfuly posted your listing!");
-  res.redirect("/listings");
+  try {
+    const geoData = await geoCoder.forwardGeocode({
+      query: req.body.location,
+      limit: 1
+    }).send()
+  
+    const startTime = new Date();
+    // Set endTime when the auction ends to be 48 hours from the moment its posted
+    // const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000); // 48 Hours
+    const endTime = new Date(startTime.getTime() + 5 * 60 * 1000); // 5 minutes
+    //const endTime = new Date(startTime.getTime() + 7 * 24 * 60 * 60 * 1000); // 1 week
+    const listing = new Listing({
+      startTime: startTime,
+      title: req.body.title,
+      category: req.body.category,
+      description: req.body.description,
+      price: req.body.price,
+      condition: req.body.condition,
+      endTime: endTime,
+      location: req.body.location,
+    });
+    listing.images = req.files.map(f =>({url: f.path, filename: f.filename}));
+    listing.geometry = geoData.body.features[0].geometry;
+    listing.owner = req.user._id; // Current person logged in
+    await listing.save();
+    req.flash("success", "Successfuly posted your listing!");
+    res.redirect("/listings");
+  } catch (error) {
+    console.log(error);
+    req.flash("error", "Invalid location");
+    res.redirect("/listings/new");
+  }
+  
 }));
 
 
