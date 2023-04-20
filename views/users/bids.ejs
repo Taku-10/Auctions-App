@@ -37,7 +37,7 @@
                 <p class="card-text">Bids Placed: <%= count %></p>
                 <p class="card-text">Bid Amount: <span class="fw-bold">$</span><%= bid.bidAmount %></p>
                 <p class="card-text text-muted">Date: <%= bid.date %></p>
-                <% if (bid.wonAuction === "Won" || bid.wonAuction === "Auction still running and you are Winning") { %>
+                <% if (bid.wonAuction === "Won" || bid.wonAuction === "In progress. Winning") { %>
                   <p class="card-text text-success"><%= bid.wonAuction %></p>
                 <% } else { %>
                   <p class="card-text text-danger"><%= bid.wonAuction %></p>
