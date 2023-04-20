@@ -14,6 +14,7 @@ const twilioClient = require("twilio")(
 );
 const sendTextMessage = require("../utilities/sendTextMessage");
 const catchAsync = require("../utilities/catchAsync");
+const sendEmail = require("../utilities/sendEmail");
 
 router.post(
   "/",
@@ -59,8 +60,20 @@ router.post(
       const previousMaxBid = currentBids.length > 0 ? currentBids[0] : null;
       if (previousMaxBid) {
         const previousMaxBidOwner = await User.findById(previousMaxBid.owner);
-        const message = `Hi ${previousMaxBidOwner.firstname}. You have been outbid on the auction of ${listing.title}. The new highest bid is $${req.body.bidAmount}.`;
-        await sendTextMessage(previousMaxBidOwner.number, message);
+        const auctionURL = `https://still-refuge-95536.herokuapp.com/listings/${listing._id}`;
+        const subject = "You have been outbid on an auction";
+        const message = `<p>Dear ${previousMaxBidOwner.firstname} ${previousMaxBidOwner.lastname}</p>
+        <p>We regret to inform you that you have been outbid on the auction for ${listing.title}.</p>
+        <p>The current highest bid for the item is now $${req.body.bidAmount}.</p>
+        <p>If you are interested in winning the auction, you may place another bid by visiting <br> the auction page here: ${auctionURL}.</p>
+        <p>If you choose not to place another bid, we thank you for your participation in the auction and <br> encourage you to keep an eye out for other great deals on our platform. </p>
+        <hr>
+        <p>Best regards,</p>
+        <p>The Bid Mart Team</p>`;
+
+        await sendEmail(previousMaxBidOwner.email, subject, message);
+        // const message = `Hi ${previousMaxBidOwner.firstname}. You have been outbid on the auction of ${listing.title}. The new highest bid is $${req.body.bidAmount}.`;
+        // await sendTextMessage(previousMaxBidOwner.number, message);
       }
 
       res.redirect("/listings");
@@ -69,3 +82,4 @@ router.post(
 );
 
 module.exports = router;
+

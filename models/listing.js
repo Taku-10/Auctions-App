@@ -53,7 +53,7 @@ const listingSchema = new Schema({
         ref: "User"
 
     },
-    
+
     endTime: {
         type: Date,
     },

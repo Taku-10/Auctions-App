@@ -1,7 +1,6 @@
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
-
 const express = require("express");
 const router = express.Router({ mergeParams: true });
 const nodemailer = require("nodemailer");
@@ -12,10 +11,10 @@ const passport = require("passport");
 const moment = require("moment");
 const {isSignedIn, isOwnwer, resetPasswordLimiter} = require("../middleware/authenticate");
 const sgMail = require("@sendgrid/mail");
-const crypto = require("crypto");
-const rateLimit = require("express-rate-limit");
 const sendEmail = require("../utilities/sendEmail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const crypto = require("crypto");
+const rateLimit = require("express-rate-limit");
 const { getBids, formatDate } = require("../utilities/BidOutcome");
 const catchAsync = require("../utilities/catchAsync");
 
@@ -32,8 +31,11 @@ router.post("/register", catchAsync(async (req, res, next) => {
   const subject = "Welcome to Bid Mart";
   const message = `Hello ${req.body.firstname}, </p>
       <p>Thank you for joining Bid Mart! We are excited to have you on board.</p>
-      <p>You can start browsing listings by visising <a href="https://still-refuge-95536.herokuapp.com/listings">Go to listings page</a>.</p>
-      <p>Best regards, <br/> The Bid Mart Team</p>,`;
+      <p>Ready to get started? Head over to our <a href="https://still-refuge-95536.herokuapp.com/listings">listings page</a> to see all the great deals that are available.</p>
+      <p>If you have any questions or concerns, please don't hesitate to reach out to our support team at bidmartadmi@gmail.com.</p>
+      <hr>
+      <p>Best regards,</p>
+      <p>The Bid Mart Team</p>,`;
   await sendEmail(req.body.email, subject, message);
   req.logIn(registeredUser, (err) => {
     if (err) {
@@ -176,14 +178,17 @@ router.post("/forgot", catchAsync(async (req, res) => {
   await user.save();
   // Send reset email
   const resetUrl = ` https://still-refuge-95536.herokuapp.com/reset/${user.resetPasswordToken}`;
-  const subject = "Password Reset";
+  const subject = "Password reset request";
   const message = `
-  <p>Hello ${user.firstname} ${user.lastname}</p>
-  <p>You requested to reset your password. Please click the link below to set a new password.</p>
-  <p>If you did not request a password reset, you can ignore this email</p>
+  <p>Dear ${user.firstname} ${user.lastname}</p>
+  <p>We received a request to reset your password. If you did not request this change, please ignore this email.</p>
+  <p>To reset your password, please click the link below: </p>
   <a href="${resetUrl}">Reset password</a>
-  <p>Best regards, <br/> The Bid Mart Team</p>, `;
-
+  <p>The link will expire in 24 hours</p>
+  <p>If you have any questions or concerns, please contact our support team at support@bidmart.com.</p>
+  <hr>
+  <p>Best regards,</p>
+  <p>The Bid Mart Team</p>,`;
   await sendEmail(user.email, subject, message);
   req.flash("success", "An email has been sent to your email address with further instructions.");
   res.redirect("/login");
@@ -226,8 +231,12 @@ router.post("/reset/:token", resetPasswordLimiter, catchAsync(async (req, res) =
   <p>Your password has been successfully reset</p>
   <p>If you did this, you can safely disregard this email</p>
   <p>If you didn't dot his, please go to the log in page and click "Forgot password" to reset your password</p>
-  <p>Best regards, <br/> The Bid Mart Team</p>, 
+  <p>Thank you for using Bid Mart</p>
+  <hr>
+  <p>Best regards,</p>
+  <p>The Bid Mart Team</p>, 
   `;
+
   // Send confirmation email
   await sendEmail(user.email, subject, message);
   req.flash("success", "Your password has been successfully reset.");
