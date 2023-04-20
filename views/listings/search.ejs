@@ -12,16 +12,23 @@
     <div class="row">
       <% listings.forEach(listing => { %>
         <div class="col-12 col-md-4 col-lg-3 mb-4">
-          <div class="card h-100">
+          <div class="card shadow h-100">
             <a href="/listings/<%=listing._id%>">
               <div class="image-container d-flex justify-content-center align-items-center">
                 <img src="<%=listing.images[0].url%>" alt="A picture of <%= listing.title %>" class="thumbnail" >
               </div>
             </a>
             <div class="card-body">
-              <h5 class="card-title mb-2"><%= listing.title %></h5>
-              <p class="card-text mb-0"><strong>Starting Bid:</strong> $<%= listing.price%></p>
-              <a href="/listings/<%= listing._id %>" class="btn btn-primary mt-3">View Listing</a>
+              <h5 class="card-title mb-2 pb-1"><%= listing.title %></h5>
+              <h6 class="card-text text-muted pb-1"><strong>Price:</strong> $<%= listing.price%></h6>
+              <%if (listing.endTime < new Date()) { %>
+                <h6 class="card-text text-muted pb-1"><i class="bi bi-flag"></i> Auction ended</h6>
+              <%} else { %>
+                <h6 class="card-text text-muted pb-1"><i class="bi bi-clock"></i> Auction open</h6>
+              <%}%>       
+              <h6 class="card-text text-muted mb-2"><i class="bi bi-geo-alt"></i> <%=listing.location %></h6>
+              <hr>
+              <a href="/listings/<%= listing._id %>" class="btn btn-primary mt-1 w-100">View Listing</a>
             </div>
           </div>
         </div>
