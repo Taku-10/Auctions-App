@@ -46,7 +46,7 @@ router.get("/", catchAsync(async (req, res) => {
 that protects it. A user has to be authenticated(signed in) inorder to access it */
 router.get("/new",isSignedIn, catchAsync(async (req, res) => {
   const startTime = new Date();
-  const endTime = new Date(startTime.getTime() + 5 * 60 * 1000); // 5 minutes
+  const endTime = new Date(startTime.getTime() + 10 * 60 * 1000); // 5 minutes
   res.render("listings/new.ejs", { startTime, endTime });
 }));
 
@@ -64,7 +64,7 @@ router.post("/", isSignedIn, upload.array("image"), validateListing, catchAsync(
     const startTime = new Date();
     // Set endTime when the auction ends to be 48 hours from the moment its posted
     // const endTime = new Date(startTime.getTime() + 48 * 60 * 60 * 1000); // 48 Hours
-    const endTime = new Date(startTime.getTime() + 5 * 60 * 1000); // 5 minutes
+    const endTime = new Date(startTime.getTime() + 10 * 60 * 1000); // 5 minutes
     //const endTime = new Date(startTime.getTime() + 7 * 24 * 60 * 60 * 1000); // 1 week
     const listing = new Listing({
       startTime: startTime,
