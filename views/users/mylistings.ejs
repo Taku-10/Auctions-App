@@ -16,10 +16,10 @@
               </div>
             </a>
             <div class="card-body">
-              <h5 class="card-title text-truncate"><%= listing.title %></h5>
-              <p class="card-text"><strong>Start Date:</strong> <%= formatDate(listing.startTime) %></p>
+              <h5 class="card-title text-truncate pb-2"><%= listing.title %></h5>
               <p class="card-text"><strong>Price:</strong> <span class="fw-bold">$</span><%= listing.price%></p>
               <p class="card-text"><strong>Number of Bids:</strong> <%= listing.bids.length%></p>
+              <p class="card-text text-muted pb-2"><strong>Start Date:</strong> <%= formatDate(listing.startTime) %></p>
                 <div class="mt-auto d-flex justify-content-between align-items-center">
                   <div>
                     <% if (currentUser && listing.owner.equals(currentUser._id)) { %>
