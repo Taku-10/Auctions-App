@@ -53,7 +53,7 @@ router.post("/add", isSignedIn, catchAsync(async (req, res) => {
   if (watchlist) {
     // If the user already has the same listing in their watchlist, display an appropriate message
     req.flash("error", "You have already added this listing to your watchlist");
-    return res.redirect("/watchlist");
+    return res.redirect("/listings");
   }
 
   // If the user does not have the same listing in their watchlist and is not the owner of the listing, create a new watchlist item
@@ -65,7 +65,7 @@ router.post("/add", isSignedIn, catchAsync(async (req, res) => {
   // Save the new watchlist item to the database
   await newWatchlistItem.save();
   req.flash("success", "Listing added to your watchlist");
-  res.redirect("/watchlist");
+  res.redirect("/listings");
 }));
 
 

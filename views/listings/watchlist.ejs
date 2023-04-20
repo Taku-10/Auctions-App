@@ -15,7 +15,7 @@
             </a>
             <div class="card-body">
               <h5 class="card-title mb-3"><%= item.listing.title %></h5>                
-              <p class="card-text text-muted mb-2">Seller: <%= item.listing.owner.username %></p>
+              <p class="card-text text-muted mb-2">Seller: <%= item.listing.owner.username%></p>
               <p class="card-text text-muted mb-2"><%= item.listing.location %></p>
               <hr>
                 <form action="/watchlist/<%= item.listing._id %>?_method=DELETE" method="POST">
