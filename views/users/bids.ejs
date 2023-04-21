@@ -32,15 +32,15 @@
                 <img src="<%=bid.image%>" alt="A picture of <%= bid.listing.title %>" class="thumbnail" >
               </div>
               <div class="card-body">
-                <h5 class="card-title"><%= bid.listing.title %></h5>
-                <!--  <-- <p class="card-text">Bid ID: <%= bid._id %></p> -->
-                <p class="card-text">Bids Placed: <%= count %></p>
-                <p class="card-text">Bid Amount: <span class="fw-bold">$</span><%= bid.bidAmount %></p>
-                <p class="card-text text-muted">Date: <%= bid.date %></p>
+                <h5 class="card-title pb-2"><%= bid.listing.title %></h5>
+                <!--  <-- <p class="card-text">Bid ID: <%= bid._id %></h6> -->
+                <h6 class="card-text text-muted pb-1">Bids Placed: <%= count %></h6>
+                <h6 class="card-text text-muted pb-1">Bid Amount:<i class="bi bi-currency-dollar"></i><%=bid.bidAmount %></h6>
+                <h6 class="card-text text-muted pb-1"><%= bid.date %></h6>
                 <% if (bid.wonAuction === "Won" || bid.wonAuction === "In progress. Winning") { %>
-                  <p class="card-text text-success"><%= bid.wonAuction %></p>
+                  <h6 class="card-text text-success"><%= bid.wonAuction %></h6>
                 <% } else { %>
-                  <p class="card-text text-danger"><%= bid.wonAuction %></p>
+                  <h6 class="card-text text-danger"><%= bid.wonAuction %></h6>
                 <% } %>
               </div>
             </div>
