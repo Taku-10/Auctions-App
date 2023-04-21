@@ -33,7 +33,7 @@ router.get("/about-us", (req, res) => {
 
     await sgMail.send(msg);
     req.flash('success', 'Message sent successfully! We will be in contact with you soon');
-    res.redirect('/submit-an-idea');
+    res.redirect('/contact-us');
 
   })
   
