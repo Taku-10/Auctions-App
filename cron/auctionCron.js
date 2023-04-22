@@ -11,12 +11,12 @@ const { formatDate } = require("../utilities/BidOutcome");
 
   
 const checkAndEndAuctions = async () => {
-  console.log("Running check And End Auctions function...........")
+  // console.log("Running check And End Auctions function...........")
   // Get all listings with an auctionStatus of Open and whose end date is less than or equal to the current date
   const now = new Date();
   const listings = await Listing.find({auctionStatus: "Open", endTime: {$lte: now}});
   
-  console.log(`Found ${listings.length} listings to update`);
+  // console.log(`Found ${listings.length} listings to update`);
   
     // For each open listing whose auctions has ended, set the auction status to closed
     for (const listing of listings) {
@@ -24,7 +24,7 @@ const checkAndEndAuctions = async () => {
       listing.auctionStatus = "Closed";
       await listing.save();
 
-      console.log(`Listing ${listing._id} updated to Closed status......`);
+      // console.log(`Listing ${listing._id} updated to Closed status......`);
       // Find the winner of the auction
       const bids = await Bid.find({_id: {$in: listing.bids}}).sort("-bidAmount");
       const date = listing.date;
