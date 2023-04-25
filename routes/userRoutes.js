@@ -9,7 +9,7 @@ const Bid = require("../models/bid");
 const Listing = require("../models/listing");
 const passport = require("passport");
 const moment = require("moment");
-const {isSignedIn, isOwnwer, resetPasswordLimiter} = require("../middleware/authenticate");
+const {isSignedIn, isOwnwer, resetPasswordLimiter, storeReturnTo} = require("../middleware/authenticate");
 const sgMail = require("@sendgrid/mail");
 const sendEmail = require("../utilities/sendEmail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -58,14 +58,14 @@ router.get("/login", (req, res) => {
  ones in the database*/
 router.post(
   "/login",
+  storeReturnTo,
   passport.authenticate("local", {
     failureFlash: true,
     failureRedirect: "/login",
   }),
   (req, res) => {
     req.flash("success", "Welcome back to Bid Mart");
-    const redirectUrl = req.session.returnTo || "/listings";
-    delete req.session.returnTo;
+    const redirectUrl = res.locals.returnTo || "/listings";
     res.redirect(redirectUrl);
   }
 );

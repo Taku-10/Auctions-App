@@ -43,10 +43,18 @@ const isOwner = async(req, res, next) => {
     res.redirect('/listings');
   };
 
-  
+  const storeReturnTo = (req, res, next) => {
+    if (req.session.returnTo) {
+      res.locals.returnTo = req.session.returnTo;
+    }
+    next();
+  }
+ 
+
   module.exports = {
     isOwner,
     isSignedIn,
     isAdmin,
-    resetPasswordLimiter
+    resetPasswordLimiter,
+    storeReturnTo
   };
