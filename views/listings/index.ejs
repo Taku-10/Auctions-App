@@ -40,7 +40,7 @@
     <% for (let listing of listings) { %>
       <% let endTime = new Date(listing.endTime); %>
       <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 mb-4">
-        <div class="card mb-3 product-card<%= endTime < new Date() ? 'auction-ended' : '' %>">
+        <div class="card p-2 mb-3 product-card<%= endTime < new Date() ? 'auction-ended' : '' %>">
           <a href="/listings/<%=listing._id%>">
             <div class="image-container d-flex justify-content-center align-items-center">
               <img src="<%=listing.images[0].url%>" alt="A picture of <%= listing.title %>" class="thumbnail" >
@@ -74,6 +74,8 @@
       </div>
     <% } %>
   </div>
+  
 </div>
+
 
 
