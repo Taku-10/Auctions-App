@@ -32,7 +32,7 @@ Bid Mart is an online auction webb app i built that brings buyers and sellers to
 The app is already hosted online, there is no need to install anything. Simply visit the website at https://still-refuge-95536.herokuapp.com/listings to view it in your web browser.
 
 ## Usage
-To use bidmart simply visit https://still-refuge-95536.herokuapp.com/listings in your web browser. You can register, log in and start bidding on items listed on the website.
+To use bidmart simply visit https://bid-mart.onrender.com/listings in your web browser. You can register, log in and start bidding on items listed on the website.
 	
 ## Contributing
 Contributions are welcome! Please submit a pull request or create an issue if you encounter any bugs or have suggestions for new features.
